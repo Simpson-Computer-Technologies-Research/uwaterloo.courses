@@ -200,21 +200,21 @@ func SetCourseDescription(cs *CourseScrape) {
 func SetCourseAnti_Co_PreReqs(cs *CourseScrape) {
 	if len(cs.Data) > 2 {
 		// Start with anti reqs
-		var name_1, name_2 string = "Antireq:", "anti_reqs"
+		var splitBy, key string = "Antireq: ", "anti_reqs"
 
 		// If it shows coreqs instead of antireqs, change the names
 		if strings.Contains(cs.Data[2], "Coeq: ") {
-			name_1, name_2 = "Coreq: ", "co_reqs"
+			splitBy, key = "Coreq: ", "co_reqs"
 		}
 		// If it shows prereqs instead of antireqs, change the names
 		if strings.Contains(cs.Data[2], "Prereq: ") {
-			name_1, name_2 = "Prereq: ", "pre_reqs"
+			splitBy, key = "Prereq: ", "pre_reqs"
 		}
 
 		// Split the string by the name_1
-		var split []string = strings.Split(cs.Data[2], name_1)
+		var split []string = strings.Split(cs.Data[2], splitBy)
 		if len(split) > 1 {
-			cs.Result[name_2] = split[1]
+			cs.Result[key] = split[1]
 		}
 	}
 }
