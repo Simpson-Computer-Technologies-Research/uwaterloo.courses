@@ -89,7 +89,7 @@ func ScrapeSubjectCodes(client *fasthttp.Client) ([]string, error) {
 //														  //
 //														  //
 //														  //
-// 				   Course Info Scraping 	     		  //
+// 				   Course Data Scraping 	     		  //
 //														  //
 //														  //
 //														  //
@@ -99,7 +99,7 @@ func ScrapeSubjectCodes(client *fasthttp.Client) ([]string, error) {
 // The Course Scrape struct holds three keys
 // - Index: int -> used to select which Result key to use
 // - Data: []string -> the index data
-// - Result: map[string]string -> the course info result map
+// - Result: map[string]string -> the course data result map
 type CourseScrape struct {
 	Index  int
 	Data   []string
@@ -188,14 +188,14 @@ func SetCourseAnti_CoReqs(cs *CourseScrape) {
 func IndexCourseScrapeResult(cs *CourseScrape) *map[string]string {
 	// The map for the CourseScrape.Index
 	var indexMap map[int]func(cs *CourseScrape) = map[int]func(cs *CourseScrape){
-		1: SetCourseInfo,        // title, components, unit
-		2: SetCourseId,          // id
-		3: SetCourseName,        // name
-		4: SetCourseDescription, // desc
-		5: func(_ *CourseScrape) {},
-		6: SetCoursePreReqs,     // pre_reqs
-		7: SetCourseAnti_CoReqs, // anti_reqs or co_reqs
-		8: SetCourseAnti_CoReqs, // anti_reqs or co_reqs
+		1: SetCourseInfo,            // title, components, unit
+		2: SetCourseId,              // id
+		3: SetCourseName,            // name
+		4: SetCourseDescription,     // desc
+		5: func(_ *CourseScrape) {}, // [empty]
+		6: SetCoursePreReqs,         // pre_reqs
+		7: SetCourseAnti_CoReqs,     // anti_reqs or co_reqs
+		8: SetCourseAnti_CoReqs,     // anti_reqs or co_reqs
 	}
 	// Call the function
 	indexMap[cs.Index](cs)
@@ -281,10 +281,10 @@ func _ScrapeCourseTitle(body *string) string {
 	return CleanCourseTitle(title)
 }
 
-// The ScrapeCourseInfo() function is the main course scraper function
+// The ScrapeCourseData() function is the main course scraper function
 // This is because it scrapes all the course information and appends
 // it to a map
-func ScrapeCourseInfo(client *fasthttp.Client, course string) (string, *map[string]map[string]string, error) {
+func ScrapeCourseData(client *fasthttp.Client, course string) (string, *map[string]map[string]string, error) {
 	// Utilize the HttpRequest struct to easily send an http request
 	var _Req *HttpRequest = &HttpRequest{
 		Client: client,
@@ -296,7 +296,7 @@ func ScrapeCourseInfo(client *fasthttp.Client, course string) (string, *map[stri
 	}
 	// Define Variables
 	// resp, err -> request response and error
-	// result: map[string]map[string]string -> The result map that holds all the course info
+	// result: map[string]map[string]string -> The result map that holds all the course data
 	var (
 		resp, err = _Req.Send()
 		result    = make(map[string]map[string]string)
@@ -309,7 +309,7 @@ func ScrapeCourseInfo(client *fasthttp.Client, course string) (string, *map[stri
 
 	// Define Variables
 	// body: string -> The http response body
-	// courseTables: []string -> The tables with each course program info
+	// courseTables: []string -> The tables with each course program data
 	// courseTitle: string -> The courses title (ex: CS -> computerscience)
 	var (
 		body         string   = string(resp.Body())

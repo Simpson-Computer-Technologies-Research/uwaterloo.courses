@@ -18,7 +18,7 @@ func main() {
 		// RequestClient to use for sending htp requests
 		RequestClient *fasthttp.Client = &fasthttp.Client{}
 		// The Scraped course codes
-		title, result, err = ScrapeCourseInfo(RequestClient, "CS")
+		title, result, err = ScrapeCourseData(RequestClient, "CS")
 	)
 
 	// THIS ITERATION TAKES 20+ms
