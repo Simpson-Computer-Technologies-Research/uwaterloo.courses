@@ -95,14 +95,8 @@ func IndexCourseInfo(title string) (string, string, string) {
 // PLEASE give me suggestions!
 func IndexCourseInfoScrapeResult(index *int, data []string, result map[string]string) map[string]string {
 	if *index == 1 {
-		// Get the course title, components and unit
-		var courseTitle, courseComps, courseUnit = IndexCourseInfo(data[0])
-		// Course Title Key
-		result["title"] = courseTitle
-		// Course Components Key
-		result["components"] = courseComps
-		// Course Unit Key
-		result["unit"] = courseUnit
+		// Set the course title, components and unit
+		result["title"], result["components"], result["unit"] = IndexCourseInfo(data[0])
 		//
 	} else if *index == 2 {
 		// Set the "Course ID" key, this is the unique int id of the course
