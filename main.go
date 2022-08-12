@@ -37,6 +37,7 @@ WHAT TO DO NEXT:
 - Cache data into redis db
 - Create Frontend
 
+
 PROJECT NOTES:
 
 // Get the course title with the Yellow Highlighted Title at the top of the page

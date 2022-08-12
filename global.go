@@ -54,7 +54,7 @@ var CourseCodes []string = []string{
 
 // The BasicSplitString() function is equivalent to the strings.Split() function
 // The only different is that the BasicSplitString() function can only split by a
-// single letter
+// single letter. This makes it faster than the strings.Split() function.
 //
 // Notes: I decided to make my own function instead of using the strings module
 // to have more control over what is happening inside the function

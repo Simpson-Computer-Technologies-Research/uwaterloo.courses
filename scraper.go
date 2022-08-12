@@ -149,7 +149,7 @@ func _ScrapeCourseInfo(table *string) (string, map[string]string) {
 	// Iterate through each segment
 	for i := 0; i < len(splitTable); i++ {
 		// Split the segment by >
-		var data []string = strings.Split(splitTable[i], ">")[1:]
+		var data []string = BasicSplitString(splitTable[i], ">")[1:]
 		// Increase index variable by 1
 		if len(data[0]) > 1 {
 			index++
