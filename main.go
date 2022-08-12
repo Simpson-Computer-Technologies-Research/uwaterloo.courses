@@ -18,10 +18,16 @@ func main() {
 		// RequestClient to use for sending htp requests
 		RequestClient *fasthttp.Client = &fasthttp.Client{}
 		// The Scraped course codes
-		codes, err = ScrapeSubjectCodes(RequestClient)
+		title, result, err = ScrapeCourseInfo(RequestClient, "CS")
 	)
+	d := *result
+	for k1 := range d {
+		for k, v := range d[k1] {
+			fmt.Printf("%v: %v\n\n", k, v)
+		}
+	}
 	// Print the result
-	fmt.Printf("%v: %v: %v", time.Since(startTime), err, codes)
+	fmt.Printf("%v: %v: %v", time.Since(startTime), err, title)
 }
 
 /*

@@ -1,4 +1,4 @@
-module uw-course-finder
+module github.com/realTristan/The_University_of_Waterloo
 
 go 1.19
 

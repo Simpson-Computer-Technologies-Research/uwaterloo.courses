@@ -5,8 +5,8 @@ import (
 	"github.com/valyala/fasthttp"
 )
 
-// _Request struct to hold headers, method, url, etc.
-type _Request struct {
+// httpRequest struct to hold headers, method, url, etc.
+type HttpRequest struct {
 	Client  *fasthttp.Client
 	Url     string
 	Method  string
@@ -14,7 +14,7 @@ type _Request struct {
 }
 
 // Function to return a fasthttp response
-func SetResponse(req *_Request) *fasthttp.Response {
+func SetResponse(req *HttpRequest) *fasthttp.Response {
 	// Acquire the fasthttp response
 	var response *fasthttp.Response = fasthttp.AcquireResponse()
 
@@ -26,7 +26,7 @@ func SetResponse(req *_Request) *fasthttp.Response {
 }
 
 // Function to return a fasthttp request
-func SetRequest(req *_Request) *fasthttp.Request {
+func SetRequest(req *HttpRequest) *fasthttp.Request {
 	// Acquire the fasthttp request
 	var request *fasthttp.Request = fasthttp.AcquireRequest()
 
@@ -43,7 +43,7 @@ func SetRequest(req *_Request) *fasthttp.Request {
 }
 
 // Function to send an http request using the _Request struct
-func (_req *_Request) Send() (*fasthttp.Response, error) {
+func (_req *HttpRequest) Send() (*fasthttp.Response, error) {
 	var (
 		// Set the request object
 		req *fasthttp.Request = SetRequest(_req)

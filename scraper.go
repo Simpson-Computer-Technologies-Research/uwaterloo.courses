@@ -8,6 +8,16 @@ import (
 	"github.com/valyala/fasthttp"
 )
 
+////////////////////////////////////////////////////////////
+//														  //
+//														  //
+//														  //
+// 				   Subject Code Scraping 	     		  //
+//														  //
+//														  //
+//														  //
+////////////////////////////////////////////////////////////
+
 // The _ScrapSubjectCodes() function will return a slice containing all
 // the course codes from the provided html
 // The html is from: https://classes.uwaterloo.ca/uwpcshtm.html
@@ -50,7 +60,7 @@ func _ScrapeSubjectCodes(html *string) []string {
 // website.
 func ScrapeSubjectCodes(client *fasthttp.Client) ([]string, error) {
 	// Utilize the _Request struct to easily send an http request
-	var _Req *_Request = &_Request{
+	var _Req *HttpRequest = &HttpRequest{
 		Client: client,
 		Url:    "https://classes.uwaterloo.ca/uwpcshtm.html",
 		Method: "GET",
@@ -74,6 +84,27 @@ func ScrapeSubjectCodes(client *fasthttp.Client) ([]string, error) {
 	return _ScrapeSubjectCodes(&body), nil
 }
 
+////////////////////////////////////////////////////////////
+//														  //
+//														  //
+//														  //
+// 				   Course Info Scraping 	     		  //
+//														  //
+//														  //
+//														  //
+////////////////////////////////////////////////////////////
+
+// Course Scrape struct to help organize the data
+// The Course Scrape struct holds three keys
+// - Index: int -> used to select which Result key to use
+// - Data: []string -> the index data
+// - Result: map[string]string -> the course info result map
+type CourseScrape struct {
+	Index  int
+	Data   []string
+	Result map[string]string
+}
+
 // Convert the course course info into categories
 // For example it will convert MATH 235 LEC,IST,TUT 0.50
 // to -> var courseTitle, components, unit = MATH 235, LEC,IST,TUT, 0.50
@@ -81,7 +112,7 @@ func IndexCourseInfo(title string) (string, string, string) {
 	// splitTitle: []string -> splits the given title by spaces
 	// courseTitle: string -> the course name and catalog number (MATH 232)
 	var (
-		splitTitle  []string = BasicSplitString(title, " ")
+		splitTitle  []string = strings.Split(title, " ")
 		courseTitle string   = fmt.Sprintf("%s %s", splitTitle[0], splitTitle[1])
 	)
 	// Return the Course Title ex: CS 201
@@ -90,105 +121,142 @@ func IndexCourseInfo(title string) (string, string, string) {
 	return courseTitle, splitTitle[2], splitTitle[3]
 }
 
-// The IndexCourseInfoScrapeResult() will index all the course information into a map
-// Notes: yes i know this code is nasty but I didn't know what else to do.
-// PLEASE give me suggestions!
-func IndexCourseInfoScrapeResult(index *int, data []string, result map[string]string) map[string]string {
-	if *index == 1 {
-		// Set the course title, components and unit
-		result["title"], result["components"], result["unit"] = IndexCourseInfo(data[0])
-		//
-	} else if *index == 2 {
-		// Set the "Course ID" key, this is the unique int id of the course
-		result["id"] = strings.Split(data[1], "Course ID: ")[1]
-		//
-	} else if *index == 3 {
-		// Set the "Course Name" key, this is the courses name
-		result["name"] = data[2]
-		//
-	} else if *index == 4 {
-		// Set the "Course Description" key, this is a description of the course
-		result["desc"] = data[1]
-		//
-	} else if *index == 6 {
-		// Set the "Pre-Reqs" key, these are all the required requisites
-		result["pre_reqs"] = strings.Split(data[2], "Prereq: ")[1]
-		//
-	} else if *index == 7 {
-		// Set the "Anti-Reqs" key, these are the requisites you can't have
-		result["anti_reqs"] = strings.Split(data[2], "Antireq: ")[1]
-		//
-	} else if *index == 8 {
-		// Set the "Other" key, this key is usually an "Online Only" url
-		result["other"] = strings.Split(data[2], "<a href=")[1]
+// Set the course title, components and unit
+func SetCourseInfo(cs *CourseScrape) {
+	if len(cs.Data) > 0 {
+		cs.Result["title"],
+			cs.Result["components"],
+			cs.Result["unit"] = IndexCourseInfo(cs.Data[0])
 	}
-	// Return the result map
-	return result
 }
 
-// The _ScrapeCourseInfo() function will create a result map
-// that stores the course info. The course info map holds the
-// course id, name, description, pre-reqs, anti-reqs, etc.
-func _ScrapeCourseInfo(table *string) (string, map[string]string) {
-	// Define Variables
-	// result: map[string]string -> The result map that holds the course info
-	var result map[string]string = make(map[string]string)
+// Set the "id" key, this is the unique int id of the course
+func SetCourseId(cs *CourseScrape) {
+	if len(cs.Data) > 1 {
+		var split []string = strings.Split(cs.Data[1], "Course ID: ")
+		if len(split) > 1 {
+			cs.Result["id"] = split[1]
+		}
+	}
+}
 
-	// Create a seperate index variable for the IndexCourseInfoScrapeResult() function
-	// Split the table into the segments that contain the course info
+// Set the "name" key, this is the courses name
+func SetCourseName(cs *CourseScrape) {
+	if len(cs.Data) > 2 {
+		cs.Result["name"] = cs.Data[2]
+	}
+}
+
+// Set the "desc" key, this is a description of the course
+func SetCourseDescription(cs *CourseScrape) {
+	if len(cs.Data) > 1 {
+		cs.Result["desc"] = cs.Data[1]
+	}
+}
+
+// Set the "Pre-Reqs" key, these are all the required requisites
+func SetCoursePreReqs(cs *CourseScrape) {
+	if len(cs.Data) > 2 {
+		var split []string = strings.Split(cs.Data[2], "Prereq: ")
+		if len(split) > 1 {
+			cs.Result["pre_reqs"] = split[1]
+		}
+	}
+}
+
+// Set the "anti_reqs" key, these are the requisites you can't have
+// or Set the "co_reqs" key
+func SetCourseAnti_CoReqs(cs *CourseScrape) {
+	fmt.Println(cs.Data)
+	if len(cs.Data) > 2 {
+		// Start with anti reqs
+		var name_1, name_2 string = "Antireq:", "anti_reqs"
+
+		// If it shows coreqs instead of antireqs, change the names
+		if strings.Contains(cs.Data[2], "Coeq: ") {
+			name_1, name_2 = "Coreq: ", "co_reqs"
+		}
+		// Split the string by the name_1
+		var split []string = strings.Split(cs.Data[2], name_1)
+		if len(split) > 1 {
+			cs.Result[name_2] = split[1]
+		}
+	}
+}
+
+// The IndexCourseScrapeResult() will index all the course information into a map
+func IndexCourseScrapeResult(cs *CourseScrape) *map[string]string {
+	// The map for the CourseScrape.Index
+	var indexMap map[int]func(cs *CourseScrape) = map[int]func(cs *CourseScrape){
+		1: SetCourseInfo,        // title, components, unit
+		2: SetCourseId,          // id
+		3: SetCourseName,        // name
+		4: SetCourseDescription, // desc
+		5: func(_ *CourseScrape) {},
+		6: SetCoursePreReqs,     // pre_reqs
+		7: SetCourseAnti_CoReqs, // anti_reqs or co_reqs
+		8: SetCourseAnti_CoReqs, // anti_reqs or co_reqs
+	}
+	// Call the function
+	indexMap[cs.Index](cs)
+
+	// Return result map
+	return &cs.Result
+}
+
+// The _ScrapeCourseData() function will create a result map
+// that stores the course data. The course data map holds the
+// course id, name, description, pre-reqs, anti-reqs, etc.
+func _ScrapeCourseData(table *string) (string, map[string]string) {
+	// Define Variables
 	var (
-		index      int      = 0
+		// Create a CourseScrap struct object
+		cs *CourseScrape = &CourseScrape{
+			Result: make(map[string]string),
+			Index:  0,
+		}
+		// Split the table into the segments that contain the course info
 		splitTable []string = strings.Split(*table, "</")[1:]
 	)
-	// Iterate through each segment
+
+	// Iterate through the split table
 	for i := 0; i < len(splitTable); i++ {
 		// Split the segment by >
-		var data []string = BasicSplitString(splitTable[i], ">")[1:]
+		cs.Data = strings.Split(splitTable[i], ">")[1:]
+
 		// Increase index variable by 1
-		if len(data[0]) > 1 {
-			index++
-			// Append the result
-			result = IndexCourseInfoScrapeResult(&index, data, result)
+		if len(cs.Data[0]) > 1 {
+			if !strings.Contains(splitTable[i], "Note:") {
+				cs.Index++
+				// Break the loop if the index is higher than 8
+				if cs.Index > 8 {
+					break
+				}
+				// Index the scrape result
+				cs.Result = *IndexCourseScrapeResult(cs)
+
+			} else {
+				// Split the string to get note content
+				var split []string = strings.Split(splitTable[i], "[Note: ")
+				if len(split) > 1 {
+					// Set the note in the result map
+					cs.Result["note"] = split[1]
+				}
+			}
 		}
 	}
 	// Return the course id and the course info map (result)
-	return result["id"], result
+	return cs.Result["id"], cs.Result
 }
 
-/*
-
-// The _ScrapeCourseNotes() functon will return the notes at the top of
-// "https://classes.uwaterloo.ca/uwpcshtm.html" website
-// then return them as a single string
-func _ScrapeCourseNotes(body *string) {
-	// Check if the body contains the Notes
-	if strings.Contains(*body, "<ol>") {
-		// Split by <li> and </li>
-	}
-}
-
-*/
-
-// The CleaCourseTitle() function will remove spaces from the scraped course
-// title, except for the double space in the title, it will only leave one
-// space. The course title will be used for querying the database
+// The CleaCourseTitle() function will remove all spaces and
+// new lines from the h2 header
 func CleanCourseTitle(title string) string {
-	// Iterate over the title string
-	for i := 0; i < len(title); i++ {
-		// Make sure the indexed value is a space and i is greater than 0
-		// This is so we can check the title's previous index without getting
-		// any errors
-		if title[i] == ' ' && i > 0 {
-			// Make sure the previous indexed value is not a space
-			if title[i-1] != ' ' {
-				// Remove the current index value
-				title = title[:i] + title[i+1:]
-			}
-		}
-
-	}
-	// Return the new title in lowercase
-	return strings.ToLower(title)
+	var (
+		_title_ string = strings.ReplaceAll(title, "\n", "")
+		_title  string = strings.ReplaceAll(_title_, " ", "")
+	)
+	return strings.ToLower(strings.ReplaceAll(_title, "&nbsp;", ""))
 }
 
 // The _ScrapeCourseTitle() function will return the title of the course at
@@ -210,9 +278,9 @@ func _ScrapeCourseTitle(body *string) string {
 // The ScrapeCourseInfo() function is the main course scraper function
 // This is because it scrapes all the course information and appends
 // it to a map
-func ScrapeCourseInfo(client *fasthttp.Client, course string) (string, map[string]map[string]string) {
-	// Utilize the _Request struct to easily send an http request
-	var _Req *_Request = &_Request{
+func ScrapeCourseInfo(client *fasthttp.Client, course string) (string, *map[string]map[string]string, error) {
+	// Utilize the HttpRequest struct to easily send an http request
+	var _Req *HttpRequest = &HttpRequest{
 		Client: client,
 		Url:    fmt.Sprintf("https://ucalendar.uwaterloo.ca/2021/COURSE/course-%s.html", course),
 		Method: "GET",
@@ -220,28 +288,36 @@ func ScrapeCourseInfo(client *fasthttp.Client, course string) (string, map[strin
 			"User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/15.2 Safari/605.1.15",
 		},
 	}
-	// Send Http Request
-	var resp, _ = _Req.Send()
+	// Define Variables
+	// resp, err -> request response and error
+	// result: map[string]map[string]string -> The result map that holds all the course info
+	var (
+		resp, err = _Req.Send()
+		result    = make(map[string]map[string]string)
+	)
+
+	// Handle response error
+	if err != nil {
+		return "", &result, err
+	}
 
 	// Define Variables
 	// body: string -> The http response body
 	// courseTables: []string -> The tables with each course program info
-	// result: map[string]map[string]string -> The result map that holds all the course info
 	// courseTitle: string -> The courses title (ex: CS -> computer science)
 	var (
 		body         string   = string(resp.Body())
 		courseTables []string = strings.Split(body, "<div class=\"divTable\">")[1:]
-		result                = make(map[string]map[string]string)
 		courseTitle  string   = _ScrapeCourseTitle(&body)
 	)
 
 	// Iterate over the html tables
 	for _, table := range courseTables {
-		var courseID, courseInfo = _ScrapeCourseInfo(&table)
+		var courseID, courseInfo = _ScrapeCourseData(&table)
 		result[courseID] = courseInfo
 	}
 
 	// Return the course title and it's result map containing
 	// all the courses information
-	return courseTitle, result
+	return courseTitle, &result, nil
 }

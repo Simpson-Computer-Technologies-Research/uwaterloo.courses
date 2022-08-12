@@ -52,39 +52,6 @@ var CourseCodes []string = []string{
 	"THPERF", "UNIV", "VCULT", "WKRPT",
 }
 
-// The BasicSplitString() function is equivalent to the strings.Split() function
-// The only different is that the BasicSplitString() function can only split by a
-// single letter. This makes it faster than the strings.Split() function.
-//
-// Notes: I decided to make my own function instead of using the strings module
-// to have more control over what is happening inside the function
-func BasicSplitString(s string, splitBy string) []string {
-	// Declare variables
-	// - str: string -> the string being appending to res
-	// - res: []string -> the slice containing the split strings
-	var (
-		str string = ""
-		res []string
-	)
-	// Iterate over the s: string variable
-	for i := 0; i < len(s); i++ {
-		// Convert st[i] from byte to string
-		var strI string = string(s[i])
-		// Check if the str[i] doesn't equal the string to split by
-		if strI != splitBy {
-			// Add the str[i] to the str
-			str += strI
-		} else {
-			// Append the str to the result slice
-			res = append(res, str)
-			// Reset the str
-			str = ""
-		}
-	}
-	// Return the split strings slice
-	return res
-}
-
 // The SliceContains() function returns whether or not the provided
 // slice contains the provided string
 func SliceContains(s *[]string, str string) bool {
