@@ -205,9 +205,9 @@ func SetCourseAnti_Co_PreReqs(cs *CourseScrape) {
 		// If it shows coreqs instead of antireqs, change the names
 		if strings.Contains(cs.Data[2], "Coeq: ") {
 			splitBy, key = "Coreq: ", "co_reqs"
-		}
-		// If it shows prereqs instead of antireqs, change the names
-		if strings.Contains(cs.Data[2], "Prereq: ") {
+
+			// If it shows prereqs instead of antireqs, change the names
+		} else if strings.Contains(cs.Data[2], "Prereq: ") {
 			splitBy, key = "Prereq: ", "pre_reqs"
 		}
 
