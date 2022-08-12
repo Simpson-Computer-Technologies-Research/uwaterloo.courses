@@ -174,7 +174,7 @@ func SetCourseId(cs *CourseScrape) {
 }
 
 // The SetCourseName() function will set the CourseScrape struct object
-// Result map name.
+// Result map name -> Example result["name"] = "Intro to Computer Science"
 //
 // The function takes the cs: *CourseScrape parameter
 func SetCourseName(cs *CourseScrape) {
@@ -184,12 +184,26 @@ func SetCourseName(cs *CourseScrape) {
 }
 
 // The SetCourseDescription() function will set the CourseScrape struct object
-// Result map description.
+// Result map description -> Example result["desc"] = "Learn about..."
 //
 // The function takes the cs: *CourseScrape parameter
 func SetCourseDescription(cs *CourseScrape) {
 	if len(cs.Data) > 1 {
 		cs.Result["desc"] = cs.Data[1]
+	}
+}
+
+// The SetCourseNote() function will set the CourseScrape struct object
+// Result map note -> Example result["note"] = "Only available for..."
+//
+// The function takes the cs: *CourseScrape parameter
+// and the data string parameter which is the html row of the note
+func SetCourseNote(cs *CourseScrape, data string) {
+	// Split the string to get note content
+	var split []string = strings.Split(data, "[Note: ")
+	if len(split) > 1 {
+		// Set the note in the result map
+		cs.Result["note"] = split[1]
 	}
 }
 
@@ -276,21 +290,16 @@ func _ScrapeCourseData(table *string) (string, map[string]string) {
 		// Check Data length
 		if len(cs.Data[0]) > 1 {
 			// Check if the splitTable contains a note about the course
-			if !strings.Contains(splitTable[i], "[Note: ") {
+			if strings.Contains(splitTable[i], "[Note: ") {
+				SetCourseNote(cs, splitTable[i])
+			} else {
 				cs.Index++
-				// Break the loop if the index is higher than 8
+				// Break the loop if the index is greater than 8
 				if cs.Index > 8 {
 					break
 				}
 				// Index the scrape result
 				IndexCourseScrapeResult(cs)
-			} else {
-				// Split the string to get note content
-				var split []string = strings.Split(splitTable[i], "[Note: ")
-				if len(split) > 1 {
-					// Set the note in the result map
-					cs.Result["note"] = split[1]
-				}
 			}
 		}
 	}
