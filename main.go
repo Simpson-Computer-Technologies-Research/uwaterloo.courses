@@ -1,5 +1,6 @@
 package main
 
+// Import packages
 import (
 	"fmt"
 	"time"
@@ -34,8 +35,8 @@ func main() {
 
 // Map Data
 "Computer Science": {
-	"CS 100": {
-		"info": "LAB,LEC,TST,TUT 0.50",
+	"course id": {
+		"info": "CS 100 LAB,LEC,TST,TUT 0.50",
 		"course_id": 012765,
 		"title": "Introduction to Computing through Applications",
 		"desc": "Using personal computers as effective problem solving tools for...",
@@ -50,7 +51,7 @@ func main() {
 
 // MEMORY USAGE
 // if the memory usage is too high which it probably will be
-// use redis a database system and have a map caching system
+// use redis a database system and have a temp map caching system
 
 // MAP CACHING SYSTEM
 // have a maximum sized map for example only 100 keys
@@ -60,5 +61,7 @@ func main() {
 // FRONTEND
 // finish the backend and the mapping, caching and database systems
 // before creating a frontend
-
+//
+// Style Ideas:
+// background is the red color of the uni of waterloo logo
 */
