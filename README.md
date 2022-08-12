@@ -5,7 +5,7 @@ This project is unfinished but I wanted to put it on github for
 any suggestions on what I should add or any improvements to my code
 
 
-# Copyright
+# License
 Copyright (C) 2022 Tristan Simpson <heytristaann@gmail.com>
 
 This file is part of the University of Waterloo Course Catalog project.
