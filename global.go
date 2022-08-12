@@ -1,13 +1,11 @@
 package main
 
-// Import packages
-
-// The slice that contains all the university of waterloo's course codes
+// The slice that contains all the university of waterloo's subject codes
 // I'm going to set them manually for now, but there is a webscrape section
 // for getting them using info from https://classes.uwaterloo.ca/uwpcshtm.html
 //
 // Sorted them by alphabet because I was bored
-var CourseCodes []string = []string{
+var SubjectCodes []string = []string{
 	// Alpha: A
 	"ACTSC", "AE", "AFM", "AMATH", "ANTH", "APPLS", "ARABIC",
 	"ARBUS", "ARCH", "ARTS", "ASL", "AVIA",
@@ -51,6 +49,12 @@ var CourseCodes []string = []string{
 	// Alpha: T, U, V, W
 	"THPERF", "UNIV", "VCULT", "WKRPT",
 }
+
+// The Subject Names for search indexing the course catalog
+//
+// I haven't added them yet because my wifi is brutal and I can't
+// send any http requests, but I when I can, I will pre-insert them
+var SubjectNames []string = []string{}
 
 // The SliceContains() function returns whether or not the provided
 // slice contains the provided string

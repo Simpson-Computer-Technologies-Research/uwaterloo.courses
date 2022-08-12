@@ -5,7 +5,7 @@ import (
 	"github.com/valyala/fasthttp"
 )
 
-// httpRequest struct to hold headers, method, url, etc.
+// HttpRequest struct to hold headers, method, url, etc.
 type HttpRequest struct {
 	Client  *fasthttp.Client
 	Url     string
