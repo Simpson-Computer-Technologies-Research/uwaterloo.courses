@@ -98,35 +98,35 @@ func IndexCourseInfoScrapeResult(index *int, data []string, result map[string]st
 		// Get the course title, components and unit
 		var courseTitle, courseComps, courseUnit = IndexCourseInfo(data[0])
 		// Course Title Key
-		result["Course Title"] = courseTitle
+		result["title"] = courseTitle
 		// Course Components Key
-		result["Course Components"] = courseComps
+		result["components"] = courseComps
 		// Course Unit Key
-		result["Course Unit"] = courseUnit
+		result["unit"] = courseUnit
 		//
 	} else if *index == 2 {
 		// Set the "Course ID" key, this is the unique int id of the course
-		result["Course ID"] = strings.Split(data[1], "Course ID: ")[1]
+		result["id"] = strings.Split(data[1], "Course ID: ")[1]
 		//
 	} else if *index == 3 {
 		// Set the "Course Name" key, this is the courses name
-		result["Course Name"] = data[2]
+		result["name"] = data[2]
 		//
 	} else if *index == 4 {
 		// Set the "Course Description" key, this is a description of the course
-		result["Course Description"] = data[1]
+		result["desc"] = data[1]
 		//
 	} else if *index == 6 {
 		// Set the "Pre-Reqs" key, these are all the required requisites
-		result["Pre-Reqs"] = strings.Split(data[2], "Prereq: ")[1]
+		result["pre_reqs"] = strings.Split(data[2], "Prereq: ")[1]
 		//
 	} else if *index == 7 {
 		// Set the "Anti-Reqs" key, these are the requisites you can't have
-		result["Anti-Reqs"] = strings.Split(data[2], "Antireq: ")[1]
+		result["anti_reqs"] = strings.Split(data[2], "Antireq: ")[1]
 		//
 	} else if *index == 8 {
 		// Set the "Other" key, this key is usually an "Online Only" url
-		result["Other"] = strings.Split(data[2], "<a href=")[1]
+		result["other"] = strings.Split(data[2], "<a href=")[1]
 	}
 	// Return the result map
 	return result
@@ -158,7 +158,7 @@ func _ScrapeCourseInfo(table *string) (string, map[string]string) {
 		}
 	}
 	// Return the course id and the course info map (result)
-	return result["Course ID"], result
+	return result["id"], result
 }
 
 /*

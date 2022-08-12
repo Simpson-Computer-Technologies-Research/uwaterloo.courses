@@ -25,23 +25,35 @@ func main() {
 }
 
 /*
-
 # UNIVERSITY OF WATERLOO COURSE FINDER
 
-// Get the course title with the Yellow Highlighted Title at the top of the page
+WHAT TO DO NEXT:
 
->> For holding data in https://ucalendar.uwaterloo.ca/2021/COURSE/course-CS.html
->> Map Type: map[string][interface{}]
+// Learning
+- Learn Redis
+- Learn Svelte
+
+// Doing
+- Cache data into redis db
+- Create Frontend
+
+PROJECT NOTES:
+
+// Get the course title with the Yellow Highlighted Title at the top of the page
+>> Course Data: https://ucalendar.uwaterloo.ca/2021/COURSE/course-CS.html
 
 // Map Data
 "Computer Science": {
-	"course id": {
-		"info": "CS 100 LAB,LEC,TST,TUT 0.50",
-		"course_id": 012765,
+	"course_id": {
+		"title": "CS 100",
+		"components": LAB,LEC,TST,TUT",
+		"unit": "0.50",
+		"id": 012765,
 		"title": "Introduction to Computing through Applications",
 		"desc": "Using personal computers as effective problem solving tools for...",
 		"pre_req": "Prereq: Not open to Mathematics,Biomedical...",
-		"anti_req": "All second,third or fourth year CS courses or equivalents"
+		"anti_req": "All second,third or fourth year CS courses or equivalents",
+		"other": "online url"
 	}
 }
 
