@@ -155,7 +155,7 @@ func SetCourseInfo(cs *CourseScrape) {
 	}
 }
 
-// The SetCourseId() function will set the CourseScrape struct object
+// The SetCourseId() function will set the CourseScrape
 // Result map id. The Course id is the key used to categorize all the data
 // from each course. Example: id: {data: values}
 //
@@ -173,7 +173,7 @@ func SetCourseId(cs *CourseScrape) {
 	}
 }
 
-// The SetCourseName() function will set the CourseScrape struct object
+// The SetCourseName() function will set the CourseScrape
 // Result map name -> Example result["name"] = "Intro to Computer Science"
 //
 // The function takes the cs: *CourseScrape parameter
@@ -183,7 +183,7 @@ func SetCourseName(cs *CourseScrape) {
 	}
 }
 
-// The SetCourseDescription() function will set the CourseScrape struct object
+// The SetCourseDescription() function will set the CourseScrape
 // Result map description -> Example result["desc"] = "Learn about..."
 //
 // The function takes the cs: *CourseScrape parameter
@@ -193,7 +193,7 @@ func SetCourseDescription(cs *CourseScrape) {
 	}
 }
 
-// The SetCourseNote() function will set the CourseScrape struct object
+// The SetCourseNote() function will set the CourseScrape
 // Result map note -> Example result["note"] = "Only available for..."
 //
 // The function takes the cs: *CourseScrape parameter
@@ -207,8 +207,8 @@ func SetCourseNote(cs *CourseScrape, data string) {
 	}
 }
 
-// The SetCourseAnti_CoReqs() function will set the CourseScrape struct object
-// Result map anti_reqs key or the co_reqs key pr the pre_reqs
+// The SetCourseAnti_CoReqs() function will set the CourseScrape
+// Result map anti_reqs key or the co_reqs key or the pre_reqs
 //
 // The Anti Reqs key, Co Reqs key and the pre reqs key are in the same function because
 // Sometimes the university of waterloo website will have Pre Requisites,
@@ -273,7 +273,7 @@ func IndexCourseScrapeResult(cs *CourseScrape) {
 func _ScrapeCourseData(table *string) (string, map[string]string) {
 	// Define Variables
 	var (
-		// Create a CourseScrap struct object
+		// Create a CourseScrap object
 		cs *CourseScrape = &CourseScrape{
 			Result: make(map[string]string),
 			Index:  0,
