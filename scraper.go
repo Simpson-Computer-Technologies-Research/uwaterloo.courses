@@ -233,9 +233,7 @@ func SetCourseAnti_Co_PreReqs(cs *CourseScrape) {
 // of having to call if strings.Contains() {} a bunch of times
 //
 // The function takes the cs: *CourseScrape parameter
-//
-// The function returns the CourseScrape Result map pointer
-func IndexCourseScrapeResult(cs *CourseScrape) *map[string]string {
+func IndexCourseScrapeResult(cs *CourseScrape) {
 	// The map for the CourseScrape.Index
 	var indexMap map[int]func(cs *CourseScrape) = map[int]func(cs *CourseScrape){
 		1: SetCourseInfo,            // title, components, unit
@@ -249,9 +247,6 @@ func IndexCourseScrapeResult(cs *CourseScrape) *map[string]string {
 	}
 	// Call the function
 	indexMap[cs.Index](cs)
-
-	// Return result map
-	return &cs.Result
 }
 
 // The _ScrapeCourseData() function will create a result map
@@ -288,7 +283,7 @@ func _ScrapeCourseData(table *string) (string, map[string]string) {
 					break
 				}
 				// Index the scrape result
-				cs.Result = *IndexCourseScrapeResult(cs)
+				IndexCourseScrapeResult(cs)
 			} else {
 				// Split the string to get note content
 				var split []string = strings.Split(splitTable[i], "[Note: ")
