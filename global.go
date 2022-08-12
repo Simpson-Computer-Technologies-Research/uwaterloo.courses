@@ -2,29 +2,56 @@ package main
 
 import (
 	"fmt"
-	"strings"
 )
 
-// The CleaCourseTitle() function will remove spaces from the scraped course
-// title, except for the double space in the title, it will only leave one
-// space. The course title will be used for querying the database
-func CleanCourseTitle(title string) string {
-	// Iterate over the title string
-	for i := 0; i < len(title); i++ {
-		// Make sure the indexed value is a space and i is greater than 0
-		// This is so we can check the title's previous index without getting
-		// any errors
-		if title[i] == ' ' && i > 0 {
-			// Make sure the previous indexed value is not a space
-			if title[i-1] != ' ' {
-				// Remove the current index value
-				title = title[:i] + title[i+1:]
-			}
-		}
-
-	}
-	// Return the new title in lowercase
-	return strings.ToLower(title)
+// The slice that contains all the university of waterloo's course codes
+// I'm going to set them manually for now, but there is a webscrape section
+// for getting them using info from https://classes.uwaterloo.ca/uwpcshtm.html
+//
+// Sorted them by alphabet because I was bored
+var CourseCodes []string = []string{
+	// Alpha: A
+	"ACTSC", "AE", "AFM", "AMATH", "ANTH", "APPLS", "ARABIC",
+	"ARBUS", "ARCH", "ARTS", "ASL", "AVIA",
+	// Alpha: B
+	"BET", "BIOL", "BLKST", "BME", "BUS",
+	// Alpha: C
+	"CDNST", "CFM", "CHE", "CHEM", "CHINA", "CI", "CIVE", "CLAS", "CMW",
+	"CO", "COMM", "CROAT", "CS",
+	// Alpha: D
+	"DAC", "DUTCH",
+	// Alpha: E
+	"EARTH", "EASIA", "ECE", "ECON", "EMLS", "ENBUS",
+	"ENGL", "ENTR", "ENVE", "ENVS", "ERS",
+	// Alpha: F
+	"FINE", "FR",
+	// Alpha: G
+	"GBDA", "GENE", "GEOE", "GEOG", "GER", "GERON", "GRK", "GSJ",
+	// Alpha: H
+	"HEALTH", "HIST", "HLTH", "HRM", "HRTS", "HUMSC",
+	// Alpha: I
+	"INDENT", "INDEV", "INDG", "INTEG", "INTST", "ITAL", "ITALST",
+	// Alpha: J
+	"JAPAN", "JS",
+	// Alpha: K
+	"KIN", "KOREA",
+	// Alpha: L
+	"LAT", "LS",
+	// Alpha: M
+	"MATBUS", "MATH", "ME", "MEDVL", "MGMT", "MNS", "MOHAWK",
+	"MSCI", "MTE", "MTHEL", "MUSIC",
+	// Alpha: N, O
+	"NE", "OPTOM",
+	// Alpha: P
+	"PACS", "PD", "PDARCH", "PHARM", "PHIL", "PHYS", "PLAN", "PMATH",
+	"PSCI", "PSYCH",
+	// Alpha: R
+	"REC", "RS", "RSCH", "RUSS",
+	// Alpha: S
+	"SCBUS", "SCI", "SDS", "SE", "SFM", "SI", "SMF", "SOC",
+	"SOCWK", "SPAN", "SPCOM", "STAT", "STV", "SYDE",
+	// Alpha: T, U, V, W
+	"THPERF", "UNIV", "VCULT", "WKRPT",
 }
 
 // The BasicSplitString() function is equivalent to the strings.Split() function

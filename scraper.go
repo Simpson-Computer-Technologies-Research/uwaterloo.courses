@@ -18,6 +18,7 @@ func _ScrapeSubjectCodes(html string) []string {
 		res        []string = []string{}
 		tableIndex int      = 1
 	)
+	// Set the html to past the </table>
 	html = strings.Split(html, "</table>")[1]
 
 	// Iterate over the split strings
@@ -39,7 +40,7 @@ func _ScrapeSubjectCodes(html string) []string {
 	return res
 }
 
-// The ScrapSubjectCodes() function will utilizes the _ScrapeSubjectCodes()
+// The ScrapSubjectCodes() function utilizes the _ScrapeSubjectCodes()
 // function to webscrape all the subject codes on the
 // "https://classes.uwaterloo.ca/uwpcshtm.html" website
 //
@@ -106,7 +107,7 @@ func IndexCourseInfoScrapeResult(index int, data []string, result map[string]str
 }
 
 // The _ScrapeCourseInfo() function will create a result map
-// that stores the course info.  The course info map holds the
+// that stores the course info. The course info map holds the
 // course id, name, description, pre-reqs, anti-reqs, etc.
 func _ScrapeCourseInfo(table string) (string, map[string]string) {
 	// Define Variables
@@ -134,8 +135,62 @@ func _ScrapeCourseInfo(table string) (string, map[string]string) {
 	return result["Course ID"], result
 }
 
-// The ScrapeCourseInfo() function
-func ScrapeCourseInfo(client *fasthttp.Client, course string) map[string]map[string]string {
+/*
+
+// The _ScrapeCourseNotes() functon will return the notes at the top of
+// "https://classes.uwaterloo.ca/uwpcshtm.html" website
+// then return them as a single string
+func _ScrapeCourseNotes(body *string) {
+	// Check if the body contains the Notes
+	if strings.Contains(*body, "<ol>") {
+		// Split by <li> and </li>
+	}
+}
+
+*/
+
+// The CleaCourseTitle() function will remove spaces from the scraped course
+// title, except for the double space in the title, it will only leave one
+// space. The course title will be used for querying the database
+func CleanCourseTitle(title string) string {
+	// Iterate over the title string
+	for i := 0; i < len(title); i++ {
+		// Make sure the indexed value is a space and i is greater than 0
+		// This is so we can check the title's previous index without getting
+		// any errors
+		if title[i] == ' ' && i > 0 {
+			// Make sure the previous indexed value is not a space
+			if title[i-1] != ' ' {
+				// Remove the current index value
+				title = title[:i] + title[i+1:]
+			}
+		}
+
+	}
+	// Return the new title in lowercase
+	return strings.ToLower(title)
+}
+
+// The _ScrapeCourseTitle() function will return the title of the course at
+// the top of the "https://classes.uwaterloo.ca/uwpcshtm.html" website
+//
+// This title will be used for search indexing thus it needs to be cleaned using
+// the CleanCourseTitle() function
+func _ScrapeCourseTitle(body *string) string {
+	// Define variables -> Getting the course title string
+	var (
+		_title string = strings.Split(*body, "<h2 class=\"subject\">")[1]
+		title  string = strings.Split(_title, "</h2>")[0]
+	)
+	// Clean the course title and return it
+	// Example: C O M P U T E R -> computer
+	return CleanCourseTitle(title)
+}
+
+// The ScrapeCourseInfo() function is the main course scraper function
+// This is because it scrapes all the course information and appends
+// it to a map
+func ScrapeCourseInfo(client *fasthttp.Client, course string) (string, map[string]map[string]string) {
 	// Utilize the _Request struct to easily send an http request
 	var _Req *_Request = &_Request{
 		Client: client,
@@ -149,11 +204,15 @@ func ScrapeCourseInfo(client *fasthttp.Client, course string) map[string]map[str
 	var resp, _ = _Req.Send()
 
 	// Define Variables
+	// body: string -> The http response body
 	// courseTables: []string -> The tables with each course program info
-	// result: map[string]map[string]string -> The result map that holds all the course data
+	// result: map[string]map[string]string -> The result map that holds all the course info
+	// courseTitle: string -> The courses title (ex: CS -> computer science)
 	var (
-		courseTables []string = strings.Split(string(resp.Body()), "<div class=\"divTable\">")[1:]
+		body         string   = string(resp.Body())
+		courseTables []string = strings.Split(body, "<div class=\"divTable\">")[1:]
 		result                = make(map[string]map[string]string)
+		courseTitle  string   = _ScrapeCourseTitle(&body)
 	)
 
 	// Iterate over the html tables
@@ -161,5 +220,8 @@ func ScrapeCourseInfo(client *fasthttp.Client, course string) map[string]map[str
 		var courseID, courseInfo = _ScrapeCourseInfo(table)
 		result[courseID] = courseInfo
 	}
-	return result
+
+	// Return the course title and it's result map containing
+	// all the courses information
+	return courseTitle, result
 }
