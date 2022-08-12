@@ -87,9 +87,9 @@ func BasicSplitString(s string, splitBy string) []string {
 
 // The SliceContains() function returns whether or not the provided
 // slice contains the provided string
-func SliceContains(s []string, str string) bool {
+func SliceContains(s *[]string, str string) bool {
 	// Iterate over the slice
-	for _, v := range s {
+	for _, v := range *s {
 		// if the slice value equals the string then return true
 		if v == str {
 			return true
