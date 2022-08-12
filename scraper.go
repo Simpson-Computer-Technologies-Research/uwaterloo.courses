@@ -71,13 +71,35 @@ func ScrapeSubjectCodes(client *fasthttp.Client) ([]string, error) {
 	return _ScrapeSubjectCodes(string(resp.Body())), nil
 }
 
+// Convert the course course info into categories
+// For example it will convert MATH 235 LEC,IST,TUT 0.50
+// to -> var courseTitle, components, unit = MATH 235, LEC,IST,TUT, 0.50
+func IndexCourseInfo(title string) (string, string, string) {
+	// splitTitle: []string -> splits the given title by spaces
+	// courseTitle: string -> the course name and catalog number (MATH 232)
+	var (
+		splitTitle  []string = BasicSplitString(title, " ")
+		courseTitle string   = fmt.Sprintf("%s %s", splitTitle[0], splitTitle[1])
+	)
+	// Return the Course Title ex: CS 201
+	// Return the Components (splitTitle[2]) ex: LAB,LEC,TST
+	// Return the Unit (splitTitle[3]) ex: 0.50
+	return courseTitle, splitTitle[2], splitTitle[3]
+}
+
 // The IndexCourseInfoScrapeResult() will index all the course information into a map
 // Notes: yes i know this code is nasty but I didn't know what else to do.
 // PLEASE give me suggestions!
 func IndexCourseInfoScrapeResult(index int, data []string, result map[string]string) map[string]string {
 	if index == 1 {
-		// Set the "Course Info" key, this contains the course name, catalog num, components and unit
-		result["Course Info"] = data[0]
+		// Get the course title, components and unit
+		var courseTitle, courseComps, courseUnit = IndexCourseInfo(data[0])
+		// Course Title Key
+		result["Course Title"] = courseTitle
+		// Course Components Key
+		result["Course Components"] = courseComps
+		// Course Unit Key
+		result["Course Unit"] = courseUnit
 		//
 	} else if index == 2 {
 		// Set the "Course ID" key, this is the unique int id of the course

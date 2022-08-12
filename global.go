@@ -1,9 +1,6 @@
 package main
 
 // Import packages
-import (
-	"fmt"
-)
 
 // The slice that contains all the university of waterloo's course codes
 // I'm going to set them manually for now, but there is a webscrape section
@@ -100,20 +97,4 @@ func SliceContains(s []string, str string) bool {
 	}
 	// Else return false
 	return false
-}
-
-// Convert the course subject info into categories
-// For example it will convert MATH 235 LEC,IST,TUT 0.50
-// to -> var subjectTitle, components, unit = MATH 235, LEC,IST,TUT, 0.50
-func IndexCourseSubjectInfo(title string) (string, string, string) {
-	// splitTitle: []string -> splits the given title by spaces
-	// subjectTitle: string -> the subject name and catalog number (MATH 232)
-	var (
-		splitTitle   []string = BasicSplitString(title, " ")
-		subjectTitle string   = fmt.Sprintf("%s %s", splitTitle[0], splitTitle[1])
-	)
-	// Return the Course Subject Title ex: CS 201
-	// Return the Components (splitTitle[2]) ex: LAB,LEC,TST
-	// Return the Unit (splitTitle[3]) ex: 0.50
-	return subjectTitle, splitTitle[2], splitTitle[3]
 }

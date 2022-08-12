@@ -64,4 +64,11 @@ func main() {
 //
 // Style Ideas:
 // background is the red color of the uni of waterloo logo
+
+// DATA API
+// Create an api that will return data from the redis database
+// for anyone to use
+
+// HOSTING
+// host with fly.io
 */
