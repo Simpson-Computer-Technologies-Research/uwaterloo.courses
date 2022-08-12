@@ -19,6 +19,8 @@ import (
 //														  //
 ////////////////////////////////////////////////////////////
 
+/*
+
 // The _ScrapSubjectCodes() function will return a slice containing all
 // the course codes from the provided html
 // The html is from: https://classes.uwaterloo.ca/uwpcshtm.html
@@ -95,6 +97,8 @@ func ScrapeSubjectCodes(client *fasthttp.Client) ([]string, error) {
 	// Then return the codes alongside no error
 	return _ScrapeSubjectCodes(&body), nil
 }
+
+*/
 
 ////////////////////////////////////////////////////////////
 //														  //
@@ -277,7 +281,7 @@ func _ScrapeCourseData(table *string) (string, map[string]string) {
 		// Check Data length
 		if len(cs.Data[0]) > 1 {
 			// Check if the splitTable contains a note about the course
-			if !strings.Contains(splitTable[i], "Note:") {
+			if !strings.Contains(splitTable[i], "[Note: ") {
 				cs.Index++
 				// Break the loop if the index is higher than 8
 				if cs.Index > 8 {
