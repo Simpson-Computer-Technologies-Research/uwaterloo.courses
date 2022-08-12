@@ -4,6 +4,7 @@ package main
 import (
 	"fmt"
 	"strings"
+	"unicode"
 
 	"github.com/valyala/fasthttp"
 )
@@ -167,7 +168,6 @@ func SetCoursePreReqs(cs *CourseScrape) {
 // Set the "anti_reqs" key, these are the requisites you can't have
 // or Set the "co_reqs" key
 func SetCourseAnti_CoReqs(cs *CourseScrape) {
-	fmt.Println(cs.Data)
 	if len(cs.Data) > 2 {
 		// Start with anti reqs
 		var name_1, name_2 string = "Antireq:", "anti_reqs"
@@ -221,11 +221,12 @@ func _ScrapeCourseData(table *string) (string, map[string]string) {
 
 	// Iterate through the split table
 	for i := 0; i < len(splitTable); i++ {
-		// Split the segment by >
+		// Split the splitted table by >
 		cs.Data = strings.Split(splitTable[i], ">")[1:]
 
-		// Increase index variable by 1
+		// Check Data length
 		if len(cs.Data[0]) > 1 {
+			// Check if the splitTable contains a note about the course
 			if !strings.Contains(splitTable[i], "Note:") {
 				cs.Index++
 				// Break the loop if the index is higher than 8
@@ -252,11 +253,15 @@ func _ScrapeCourseData(table *string) (string, map[string]string) {
 // The CleaCourseTitle() function will remove all spaces and
 // new lines from the h2 header
 func CleanCourseTitle(title string) string {
-	var (
-		_title_ string = strings.ReplaceAll(title, "\n", "")
-		_title  string = strings.ReplaceAll(_title_, " ", "")
-	)
-	return strings.ToLower(strings.ReplaceAll(_title, "&nbsp;", ""))
+	var res string = ""
+	for i := 0; i < len(title); i++ {
+		if title[i] == '&' {
+			i += 4
+		} else if unicode.IsLetter(rune(title[i])) {
+			res += string(title[i])
+		}
+	}
+	return strings.ToLower(res)
 }
 
 // The _ScrapeCourseTitle() function will return the title of the course at
@@ -270,6 +275,7 @@ func _ScrapeCourseTitle(body *string) string {
 		_title string = strings.Split(*body, "<h2 class=\"subject\">")[1]
 		title  string = strings.Split(_title, "</h2>")[0]
 	)
+
 	// Clean the course title and return it
 	// Example: C O M P U T E R -> computer
 	return CleanCourseTitle(title)
@@ -304,7 +310,7 @@ func ScrapeCourseInfo(client *fasthttp.Client, course string) (string, *map[stri
 	// Define Variables
 	// body: string -> The http response body
 	// courseTables: []string -> The tables with each course program info
-	// courseTitle: string -> The courses title (ex: CS -> computer science)
+	// courseTitle: string -> The courses title (ex: CS -> computerscience)
 	var (
 		body         string   = string(resp.Body())
 		courseTables []string = strings.Split(body, "<div class=\"divTable\">")[1:]

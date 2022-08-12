@@ -20,6 +20,10 @@ func main() {
 		// The Scraped course codes
 		title, result, err = ScrapeCourseInfo(RequestClient, "CS")
 	)
+
+	// THIS ITERATION TAKES 20+ms
+	// The actual scraping takes under 1ms
+	// ^ This does not include sending the http request
 	d := *result
 	for k1 := range d {
 		for k, v := range d[k1] {
