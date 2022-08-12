@@ -30,7 +30,8 @@ func SetRequest(req *HttpRequest) *fasthttp.Request {
 	// Acquire the fasthttp request
 	var request *fasthttp.Request = fasthttp.AcquireRequest()
 
-	// Set the Request Method
+	// Set the Request Url and Method
+	request.SetRequestURI(req.Url)
 	request.Header.SetMethod(req.Method)
 
 	// Set the request headers
@@ -42,7 +43,7 @@ func SetRequest(req *HttpRequest) *fasthttp.Request {
 	return request
 }
 
-// Function to send an http request using the _Request struct
+// Function to send an http request using the HttpRequest struct
 func (_req *HttpRequest) Send() (*fasthttp.Response, error) {
 	var (
 		// Set the request object
