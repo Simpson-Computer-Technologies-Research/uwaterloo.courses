@@ -1,8 +1,14 @@
 # The University of Waterloo Course Catalog
-
 This was made by Tristan Simpson, do not steal lmao
 This project is unfinished but I wanted to put it on github for
 any suggestions on what I should add or any improvements to my code
+
+
+# Challenge
+My challenge for this project is to use solely native golang modules
+other than fasthttp which is used to host the api and send http requests.
+- This challenge does not include hosting services, database services, etc.
+- God help my soul for webscraping..
 
 
 # License
