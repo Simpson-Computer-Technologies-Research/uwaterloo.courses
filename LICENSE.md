@@ -1,5 +1,5 @@
 
-Copyright (C) 2022 Tristan Simpson <{email}>
+Copyright (C) 2022 Tristan Simpson <heytristaann@gmail.com>
 
 This file is part of the University of Waterloo Course Catalog project.
 
