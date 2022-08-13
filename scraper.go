@@ -4,7 +4,6 @@ package main
 import (
 	"fmt"
 	"strings"
-	"unicode"
 
 	"github.com/valyala/fasthttp"
 )
@@ -100,6 +99,68 @@ func ScrapeSubjectCodes(client *fasthttp.Client) ([]string, error) {
 
 */
 
+/*
+
+////////////////////////////////////////////////////////////
+//							  //
+//							  //
+//							  //
+// 		     Course Title Scraping 	 	  //
+//						          //
+//							  //
+//							  //
+////////////////////////////////////////////////////////////
+
+// The CleaCourseTitle() function will remove all spaces and
+// new lines from the h2 header
+//
+// The function returns the cleaned title string
+func CleanCourseTitle(title string) string {
+	var res string = ""
+	for i := 0; i < len(title); i++ {
+		// If the value == "&" increase by four to avoid
+		// the &nmbp string
+		if title[i] == '&' {
+			i += 4
+		} else if unicode.IsLetter(rune(title[i])) {
+			// Append the letter to the result string
+			res += string(title[i])
+		}
+	}
+	// Return the res string in lowercase
+	return strings.ToLower(res)
+}
+
+// The ScrapeCourseTitle() function will return the title of the course at
+// the top of the "https://classes.uwaterloo.ca/uwpcshtm.html" website
+//
+// This title will be used for search indexing thus it needs to be cleaned using
+// the CleanCourseTitle() function
+//
+// The function uses the scraped title to return the cleaned course title string
+func ScrapeCourseTitle(body *string) string {
+	// First split
+	var temp []string = strings.Split(*body, "<h2 class=\"subject\">")
+	// Check length of first split
+	if len(temp) > 1 {
+		// First split
+		var (
+			_title string   = temp[1]
+			_temp  []string = strings.Split(_title, "</h2>")
+		)
+		// Check the length of the secind split
+		if len(_temp) > 0 {
+			// Clean the course title and return it
+			// Example: C O M P U T E R -> computer
+			return CleanCourseTitle(_temp[0])
+		}
+	}
+	// Return an empty string
+	return ""
+}
+
+*/
+
 ////////////////////////////////////////////////////////////
 //							  //
 //							  //
@@ -113,7 +174,7 @@ func ScrapeSubjectCodes(client *fasthttp.Client) ([]string, error) {
 // Course Scrape struct to help organize the data
 // The Course Scrape struct holds three keys
 // - Index: int -> used to select which Result key to use
-// - Row: []string -> the row with the data
+// - Row: []string -> the row with data
 // - Result: map[string]string -> the course data result map
 type CourseScrape struct {
 	Index  int
@@ -307,45 +368,6 @@ func _ScrapeCourseData(table *string) (string, map[string]string) {
 	return cs.Result["id"], cs.Result
 }
 
-// The CleaCourseTitle() function will remove all spaces and
-// new lines from the h2 header
-//
-// The function returns the cleaned title string
-func CleanCourseTitle(title string) string {
-	var res string = ""
-	for i := 0; i < len(title); i++ {
-		// If the value == "&" increase by four to avoid
-		// the &nmbp string
-		if title[i] == '&' {
-			i += 4
-		} else if unicode.IsLetter(rune(title[i])) {
-			// Append the letter to the result string
-			res += string(title[i])
-		}
-	}
-	// Return the res string in lowercase
-	return strings.ToLower(res)
-}
-
-// The ScrapeCourseTitle() function will return the title of the course at
-// the top of the "https://classes.uwaterloo.ca/uwpcshtm.html" website
-//
-// This title will be used for search indexing thus it needs to be cleaned using
-// the CleanCourseTitle() function
-//
-// The function uses the scraped title to return the cleaned course title string
-func ScrapeCourseTitle(body *string) string {
-	// Define variables -> Getting the course title string
-	var (
-		_title string = strings.Split(*body, "<h2 class=\"subject\">")[1]
-		title  string = strings.Split(_title, "</h2>")[0]
-	)
-
-	// Clean the course title and return it
-	// Example: C O M P U T E R -> computer
-	return CleanCourseTitle(title)
-}
-
 // The ScrapeCourseData() function is the main course scraper function
 // This is because it scrapes all the course information and appends
 // it to a map
@@ -354,7 +376,7 @@ func ScrapeCourseTitle(body *string) string {
 //
 // The function returns the course title string, the course data result map
 // and the http request error
-func ScrapeCourseData(client *fasthttp.Client, course string) (string, *map[string]map[string]string, error) {
+func ScrapeCourseData(client *fasthttp.Client, course string) (*map[string]map[string]string, error) {
 	// Utilize the HttpRequest struct to easily send an http request
 	var _Req *HttpRequest = &HttpRequest{
 		Client: client,
@@ -374,7 +396,7 @@ func ScrapeCourseData(client *fasthttp.Client, course string) (string, *map[stri
 
 	// Handle response error
 	if err != nil {
-		return "", &result, err
+		return &result, err
 	}
 
 	// Define Variables
@@ -384,7 +406,6 @@ func ScrapeCourseData(client *fasthttp.Client, course string) (string, *map[stri
 	var (
 		body         string   = string(resp.Body())
 		courseTables []string = strings.Split(body, "<div class=\"divTable\">")[1:]
-		courseTitle  string   = ScrapeCourseTitle(&body)
 	)
 
 	// Iterate over the html tables
@@ -395,5 +416,5 @@ func ScrapeCourseData(client *fasthttp.Client, course string) (string, *map[stri
 
 	// Return the course title and it's result map containing
 	// all the courses information
-	return courseTitle, &result, nil
+	return &result, nil
 }

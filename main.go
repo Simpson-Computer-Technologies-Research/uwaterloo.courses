@@ -15,8 +15,8 @@ var RequestClient *fasthttp.Client = &fasthttp.Client{}
 func ResponseHandler(ctx *fasthttp.RequestCtx) {
 	// Scrape the course data
 	var (
-		course         []byte = ctx.QueryArgs().Peek("course")
-		_, result, err        = ScrapeCourseData(RequestClient, string(course))
+		course      []byte = ctx.QueryArgs().Peek("course")
+		result, err        = ScrapeCourseData(RequestClient, string(course))
 	)
 	// Handle the error
 	if err != nil {
@@ -29,6 +29,22 @@ func ResponseHandler(ctx *fasthttp.RequestCtx) {
 		fmt.Fprint(ctx, string(_json))
 	}
 }
+
+/*
+func main() {
+	for _, k := range SubjectCodes {
+		var _req *HttpRequest = &HttpRequest{
+			Url:    fmt.Sprintf("https://ucalendar.uwaterloo.ca/2021/COURSE/course-%s.html", k),
+			Method: "GET",
+			Client: RequestClient,
+		}
+		var resp, _ = _req.Send()
+		if resp.StatusCode() != 200 {
+			fmt.Println(k)
+		}
+	}
+}
+*/
 
 // Main function
 func main() {
