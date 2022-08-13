@@ -25,11 +25,13 @@ var (
 //
 // The function takes the ctx *fasthttp.RequestCtx parameter
 func CourseDataHandler(ctx *fasthttp.RequestCtx) {
-	// Get the course to search for
-	var course string = QueryHandler(ctx)
-
-	// Scrape the course data
-	var result, err = scraper.ScrapeCourseData(RequestClient, strings.ToUpper(course))
+	// Define Variables
+	// course: string -> Get the course to search for
+	// result, err -> Scrape the course data
+	var (
+		course      string = QueryHandler(ctx)
+		result, err        = scraper.ScrapeCourseData(RequestClient, strings.ToUpper(course))
+	)
 
 	// Handle the error
 	if err != nil {
