@@ -24,17 +24,9 @@ instead of having to scrape them.
 # API
 <h3>Usage</h3>
 
+⭐ Example Response (Get Computer Science Data)
+⭐ $ curl -X GET http://localhost:8000/courses?course=CS
 ```json
-//////////////////////////////////////////////////////////////////////////////////////////
-//                                                                                      //
-// The University of Waterloo API doesn't provide much information about courses.       //
-// Thus, I have decided to not only create a course catalog, but an open source api     //
-// That is free to use, free of charge.                                                 //
-//                                                                                      //
-//////////////////////////////////////////////////////////////////////////////////////////
-
-// Example Response (Get Computer Science Data)
-// $ curl -X GET http://localhost:8000/courses?course=CS
 {
     "003352": {
         "title": "CS 476",
@@ -49,19 +41,19 @@ instead of having to scrape them.
 }
 ```
 
+⭐ Example Response (Get Subjects)
+⭐ $ curl -X GET http://localhost:8000/subjects
 ```json
-// Example Response (Get Subjects)
-// $ curl -X GET http://localhost:8000/subjects
 {
     "subjects": [
         "CS", "PHYS", "CHEM", "ART", "HLTH" ...
     ]
 }
 ```
+⭐ Example Response (Get Subjects and Names)
+⭐ $ curl -X GET http://localhost:8000/subjects/names
 
 ```json
-// Example Response (Get Subjects and Names)
-// $ curl -X GET http://localhost:8000/subjects/names
 {
     "actuarialscience":                       "ACTSC",
 	"architecturalengineering":               "AE",
