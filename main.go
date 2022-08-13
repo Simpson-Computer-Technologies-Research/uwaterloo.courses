@@ -2,36 +2,38 @@ package main
 
 // Import packages
 import (
+	"encoding/json"
 	"fmt"
-	"time"
 
 	"github.com/valyala/fasthttp"
 )
 
+// Fasthttp request client
+var RequestClient *fasthttp.Client = &fasthttp.Client{}
+
+// Function to handle incoming http requests
+func ResponseHandler(ctx *fasthttp.RequestCtx) {
+	// Scrape the course data
+	var _, result, _ = ScrapeCourseData(RequestClient, "CS")
+
+	// Marshal the data result
+	_json, _ := json.Marshal(result)
+
+	// Set the response body
+	fmt.Fprint(ctx, string(_json))
+
+}
+
 // Main function
 func main() {
-	// Function start time
-	var startTime = time.Now()
+	// Localhost port
+	var port string = ":8080"
 
-	// Define Variables
-	var (
-		// RequestClient to use for sending htp requests
-		RequestClient *fasthttp.Client = &fasthttp.Client{}
-		// The Scraped course codes
-		title, result, err = ScrapeCourseData(RequestClient, "CS")
-	)
+	// Print the localhost url
+	fmt.Printf("Listening on: http://localhost%s", port)
 
-	// THIS ITERATION TAKES 20+ms
-	// The actual scraping takes under 1ms
-	// ^ This does not include sending the http request
-	d := *result
-	for k1 := range d {
-		for k, v := range d[k1] {
-			fmt.Printf("%v: %v\n\n", k, v)
-		}
-	}
-	// Print the result
-	fmt.Printf("%v: %v: %v", time.Since(startTime), err, title)
+	// Listen and Server the port
+	fasthttp.ListenAndServe(port, ResponseHandler)
 }
 
 /*

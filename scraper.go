@@ -327,14 +327,14 @@ func CleanCourseTitle(title string) string {
 	return strings.ToLower(res)
 }
 
-// The _ScrapeCourseTitle() function will return the title of the course at
+// The ScrapeCourseTitle() function will return the title of the course at
 // the top of the "https://classes.uwaterloo.ca/uwpcshtm.html" website
 //
 // This title will be used for search indexing thus it needs to be cleaned using
 // the CleanCourseTitle() function
 //
 // The function uses the scraped title to return the cleaned course title string
-func _ScrapeCourseTitle(body *string) string {
+func ScrapeCourseTitle(body *string) string {
 	// Define variables -> Getting the course title string
 	var (
 		_title string = strings.Split(*body, "<h2 class=\"subject\">")[1]
@@ -384,7 +384,7 @@ func ScrapeCourseData(client *fasthttp.Client, course string) (string, *map[stri
 	var (
 		body         string   = string(resp.Body())
 		courseTables []string = strings.Split(body, "<div class=\"divTable\">")[1:]
-		courseTitle  string   = _ScrapeCourseTitle(&body)
+		courseTitle  string   = ScrapeCourseTitle(&body)
 	)
 
 	// Iterate over the html tables
