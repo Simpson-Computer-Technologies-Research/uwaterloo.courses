@@ -15,6 +15,12 @@ func ListenAndServe(port string) {
 	// Listen and Server the port
 	fasthttp.ListenAndServe(port, func(ctx *fasthttp.RequestCtx) {
 		switch string(ctx.Path()) {
+
+		// Show the home page of the course catalog
+		// This is the area where you can search for courses
+		case "/":
+			HomePageHandler(ctx)
+
 		// Show course data with the paramter ?course={course_code}
 		case "/courses":
 			CourseDataHandler(ctx)
@@ -26,6 +32,11 @@ func ListenAndServe(port string) {
 		// Show the list of subjects with their corresponding names
 		// at the university of waterloo
 		case "/subjects/names":
+			SubjectCodesWithNamesHandler(ctx)
+
+		// Developement Testing
+		case "/dev":
+			DevTestingHandler(ctx)
 
 		// Invalid path error
 		default:

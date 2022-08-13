@@ -4,14 +4,19 @@ package api
 import (
 	"encoding/json"
 	"fmt"
+	"strings"
+	"text/template"
 
 	"github.com/realTristan/The_University_of_Waterloo/global"
 	scraper "github.com/realTristan/The_University_of_Waterloo/scraper"
 	"github.com/valyala/fasthttp"
 )
 
-// Fasthttp request client
-var RequestClient *fasthttp.Client = &fasthttp.Client{}
+// Define Global Variables
+var (
+	RequestClient *fasthttp.Client   = &fasthttp.Client{}
+	Template      *template.Template = template.Must(template.ParseGlob("public/templates/*.html"))
+)
 
 // The CourseDataHandler() function handles the incoming requests
 // with the /courses?course={course_code} path.
@@ -23,7 +28,7 @@ func CourseDataHandler(ctx *fasthttp.RequestCtx) {
 	// Scrape the course data
 	var (
 		course      []byte = ctx.QueryArgs().Peek("course")
-		result, err        = scraper.ScrapeCourseData(RequestClient, string(course))
+		result, err        = scraper.ScrapeCourseData(RequestClient, strings.ToUpper(string(course)))
 	)
 	// Handle the error
 	if err != nil {
@@ -62,4 +67,20 @@ func SubjectCodesWithNamesHandler(ctx *fasthttp.RequestCtx) {
 
 	// Set the response body
 	fmt.Fprint(ctx, string(_json))
+}
+
+// The HomePageHandler() function handles the incoming requests
+// using with / path.
+//
+// The function renders the index.html file
+func HomePageHandler(ctx *fasthttp.RequestCtx) {
+	// Set the content type
+	ctx.Response.Header.Set("Content-Type", "text/html")
+	// Execute the html template
+	Template.Execute(ctx, nil)
+}
+
+// The DevTestingHandler() function is used for developement testing
+func DevTestingHandler(ctx *fasthttp.RequestCtx) {
+	fmt.Fprint(ctx, "Developement Testing Endpoint")
 }
