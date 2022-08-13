@@ -21,8 +21,8 @@ type CourseScrape struct {
 }
 
 // Convert the course course info into categories
-// For example it will convert MATH 235 LEC,IST,TUT 0.50
-// to -> var courseTitle, components, unit = MATH 235, LEC,IST,TUT, 0.50
+// For example it will convert MATH 235 LEC,IST,TUT 0.50 to
+// var courseTitle, components, unit = MATH 235, LEC,IST,TUT, 0.50
 //
 // The function takes the title: string paramater
 //
@@ -146,7 +146,7 @@ func SetCourseAnti_Co_PreReqs(cs *CourseScrape) {
 // of having to call if strings.Contains() a bunch of times
 //
 // The function takes the cs: *CourseScrape parameter
-func IndexCourseScrapeResult(cs *CourseScrape) {
+func (cs *CourseScrape) IndexScrapeResult() {
 	// The map for the CourseScrape.Index
 	var indexMap map[int]func(cs *CourseScrape) = map[int]func(cs *CourseScrape){
 		1: SetCourseInfo,            // title, components, unit
@@ -198,7 +198,7 @@ func _ScrapeCourseData(table *string) (string, map[string]string) {
 					break
 				}
 				// Index the scrape result
-				IndexCourseScrapeResult(cs)
+				cs.IndexScrapeResult()
 			}
 		}
 	}

@@ -25,7 +25,7 @@ type HttpRequest struct {
 //
 // The function requires the HttpRequest object which is used
 // for determining whether to skip the request body by HEAD method
-func SetResponse(req *HttpRequest) *fasthttp.Response {
+func (req *HttpRequest) SetResponse() *fasthttp.Response {
 	// Acquire the fasthttp response
 	var response *fasthttp.Response = fasthttp.AcquireResponse()
 
@@ -41,7 +41,7 @@ func SetResponse(req *HttpRequest) *fasthttp.Response {
 //
 // The function requires the HttpRequest object which is used
 // for setting the request url, method, body and headers
-func SetRequest(req *HttpRequest) *fasthttp.Request {
+func (req *HttpRequest) SetRequest() *fasthttp.Request {
 	// Acquire the fasthttp request
 	var request *fasthttp.Request = fasthttp.AcquireRequest()
 
@@ -75,9 +75,9 @@ func SetRequest(req *HttpRequest) *fasthttp.Request {
 func (_req *HttpRequest) Send() (*fasthttp.Response, error) {
 	var (
 		// Set the request object
-		req *fasthttp.Request = SetRequest(_req)
+		req *fasthttp.Request = _req.SetRequest()
 		// Set the respone object
-		resp *fasthttp.Response = SetResponse(_req)
+		resp *fasthttp.Response = _req.SetResponse()
 		// Send the request and store any errors
 		err error = _req.Client.Do(req, resp)
 	)
