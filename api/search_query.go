@@ -5,6 +5,7 @@ import (
 	"unicode"
 
 	"github.com/realTristan/The_University_of_Waterloo/global"
+	"github.com/valyala/fasthttp"
 )
 
 // The CleanQuery() function removes all spaces from the query
@@ -46,7 +47,7 @@ func SearchQuery(query string) string {
 			if i < len(subjectName) {
 				// Check if the characters at the indexes are the same
 				if subjectName[i] == query[i] {
-					count += 1
+					count += 1 * (len(query) / len(subjectName))
 				}
 			}
 		}
@@ -56,4 +57,33 @@ func SearchQuery(query string) string {
 		}
 	}
 	return bestMatch
+}
+
+// The QueryHandler() function handles the search query and whether
+// to use the native course arg or the query arg
+//
+// It'll also check for special searches for example: @code:
+// will search for a specific subject code instead of for example:
+// searching "computer science"
+func QueryHandler(ctx *fasthttp.RequestCtx) string {
+	// Define Variables
+	// course: string -> the course code arg
+	// query: string -> the course search query arg
+	var (
+		course string = string(ctx.QueryArgs().Peek("course"))
+		query  string = string(ctx.QueryArgs().Peek("q"))
+	)
+
+	// Check if the query contains a special search
+	if len(course) == 0 && len(query) > 0 {
+		// Check if the user is searching for a specific subject code
+		if strings.Contains(query, "@code:") {
+			return CleanQuery(strings.Split(query, "@code:")[1])
+		}
+		// If using a search query (ex: computerscience) then match the query
+		// to a subject code
+		return SearchQuery(query)
+	}
+	// Return the course arg
+	return course
 }

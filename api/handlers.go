@@ -25,18 +25,8 @@ var (
 //
 // The function takes the ctx *fasthttp.RequestCtx parameter
 func CourseDataHandler(ctx *fasthttp.RequestCtx) {
-	// Define Variables
-	// course: string -> the course code arg
-	// query: []byte -> the course search query arg
-	var (
-		course string = string(ctx.QueryArgs().Peek("course"))
-		query  []byte = ctx.QueryArgs().Peek("q")
-	)
-	// If using a search query (ex: computerscience) then match the query
-	// to a subject code
-	if len(query) > 0 {
-		course = SearchQuery(string(query))
-	}
+	// Get the course to search for
+	var course string = QueryHandler(ctx)
 
 	// Scrape the course data
 	var result, err = scraper.ScrapeCourseData(RequestClient, strings.ToUpper(course))
