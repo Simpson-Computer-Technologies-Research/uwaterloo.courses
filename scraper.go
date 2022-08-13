@@ -117,7 +117,7 @@ func ScrapeSubjectCodes(client *fasthttp.Client) ([]string, error) {
 // - Result: map[string]string -> the course data result map
 type CourseScrape struct {
 	Index  int
-	Data   []string
+	Row    []string
 	Result map[string]string
 }
 
@@ -148,10 +148,10 @@ func IndexCourseInfo(title string) (string, string, string) {
 //
 // The function takes the cs: *CourseScrape parameter
 func SetCourseInfo(cs *CourseScrape) {
-	if len(cs.Data) > 0 {
+	if len(cs.Row) > 0 {
 		cs.Result["title"],
 			cs.Result["components"],
-			cs.Result["unit"] = IndexCourseInfo(cs.Data[0])
+			cs.Result["unit"] = IndexCourseInfo(cs.Row[0])
 	}
 }
 
@@ -162,9 +162,9 @@ func SetCourseInfo(cs *CourseScrape) {
 // The function takes the cs: *CourseScrape parameter
 func SetCourseId(cs *CourseScrape) {
 	// Data Length is greater than one
-	if len(cs.Data) > 1 {
+	if len(cs.Row) > 1 {
 		// Split the string by "Course ID: " to get the exact id
-		var split []string = strings.Split(cs.Data[1], "Course ID: ")
+		var split []string = strings.Split(cs.Row[1], "Course ID: ")
 		// Make sure the split length is greater than one
 		if len(split) > 1 {
 			// Set the result map value
@@ -178,8 +178,8 @@ func SetCourseId(cs *CourseScrape) {
 //
 // The function takes the cs: *CourseScrape parameter
 func SetCourseName(cs *CourseScrape) {
-	if len(cs.Data) > 2 {
-		cs.Result["name"] = cs.Data[2]
+	if len(cs.Row) > 2 {
+		cs.Result["name"] = cs.Row[2]
 	}
 }
 
@@ -188,8 +188,8 @@ func SetCourseName(cs *CourseScrape) {
 //
 // The function takes the cs: *CourseScrape parameter
 func SetCourseDescription(cs *CourseScrape) {
-	if len(cs.Data) > 1 {
-		cs.Result["desc"] = cs.Data[1]
+	if len(cs.Row) > 1 {
+		cs.Result["desc"] = cs.Row[1]
 	}
 }
 
@@ -216,21 +216,21 @@ func SetCourseNote(cs *CourseScrape, data string) {
 //
 // The function takes the cs: *CourseScrape parameter
 func SetCourseAnti_Co_PreReqs(cs *CourseScrape) {
-	if len(cs.Data) > 2 {
+	if len(cs.Row) > 2 {
 		// Start with anti reqs
 		var splitBy, key string = "Antireq: ", "anti_reqs"
 
 		// If it shows coreqs instead of antireqs, change the names
-		if strings.Contains(cs.Data[2], "Coeq: ") {
+		if strings.Contains(cs.Row[2], "Coeq: ") {
 			splitBy, key = "Coreq: ", "co_reqs"
 
 			// If it shows prereqs instead of antireqs, change the names
-		} else if strings.Contains(cs.Data[2], "Prereq: ") {
+		} else if strings.Contains(cs.Row[2], "Prereq: ") {
 			splitBy, key = "Prereq: ", "pre_reqs"
 		}
 
 		// Split the string by the name_1
-		var split []string = strings.Split(cs.Data[2], splitBy)
+		var split []string = strings.Split(cs.Row[2], splitBy)
 		if len(split) > 1 {
 			cs.Result[key] = split[1]
 		}
@@ -285,10 +285,10 @@ func _ScrapeCourseData(table *string) (string, map[string]string) {
 	// Iterate through the split table
 	for i := 0; i < len(splitTable); i++ {
 		// Split the splitted table by >
-		cs.Data = strings.Split(splitTable[i], ">")[1:]
+		cs.Row = strings.Split(splitTable[i], ">")[1:]
 
 		// Check Data length
-		if len(cs.Data[0]) > 1 {
+		if len(cs.Row[0]) > 1 {
 			// Check if the splitTable contains a note about the course
 			if strings.Contains(splitTable[i], "[Note: ") {
 				SetCourseNote(cs, splitTable[i])
