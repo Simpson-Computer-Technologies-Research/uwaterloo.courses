@@ -7,7 +7,9 @@ import (
 	"github.com/valyala/fasthttp"
 )
 
-// Main function
+// The ListenAndServe() function hosts the api
+// And corresponds the request path to the correct
+// api functions
 func ListenAndServe(port string) {
 	// Print the localhost url
 	fmt.Printf("Listening on: http://localhost%s", port)
