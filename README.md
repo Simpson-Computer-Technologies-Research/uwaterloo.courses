@@ -23,6 +23,7 @@ instead of having to scrape them.
 
 # API
 <h3>Usage</h3>
+
 ```go
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -48,7 +49,6 @@ instead of having to scrape them.
         "co_reqs": "...",
         "unit":"0.50",
     }
-
 }
 ```
 
