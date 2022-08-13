@@ -52,9 +52,6 @@ instead of having to scrape them.
 }
 ```
 
-
-
-
 # License
 Copyright (C) 2022 Tristan Simpson <heytristaann@gmail.com>
 
