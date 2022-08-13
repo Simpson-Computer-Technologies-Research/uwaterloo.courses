@@ -25,7 +25,9 @@ instead of having to scrape them.
 <h3>Usage</h3>
 
 ⭐ Example Response (Get Computer Science Data)
+<br>
 ⭐ $ curl -X GET http://localhost:8000/courses?course=CS
+
 ```json
 {
     "003352": {
@@ -37,12 +39,14 @@ instead of having to scrape them.
         "anti_reqs": "None",
         "co_reqs": "None",
         "unit":"0.50"
-    }...
+    } ...
 }
 ```
 
 ⭐ Example Response (Get Subjects)
+<br>
 ⭐ $ curl -X GET http://localhost:8000/subjects
+
 ```json
 {
     "subjects": [
@@ -51,6 +55,7 @@ instead of having to scrape them.
 }
 ```
 ⭐ Example Response (Get Subjects and Names)
+<br>
 ⭐ $ curl -X GET http://localhost:8000/subjects/names
 
 ```json
@@ -64,7 +69,7 @@ instead of having to scrape them.
 	"arabic":                                 "ARABIC",
 	"artsandbusiness":                        "ARBUS",
 	"headbodyarchitecture":                   "ARCH",
-	"arts":                                   "ARTS"
+	"arts":                                   "ARTS" ...
 }
 
 ```
