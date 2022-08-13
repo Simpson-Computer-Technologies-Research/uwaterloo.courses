@@ -14,14 +14,20 @@ var RequestClient *fasthttp.Client = &fasthttp.Client{}
 // Function to handle incoming http requests
 func ResponseHandler(ctx *fasthttp.RequestCtx) {
 	// Scrape the course data
-	var _, result, _ = ScrapeCourseData(RequestClient, "CS")
+	var (
+		course         []byte = ctx.QueryArgs().Peek("course")
+		_, result, err        = ScrapeCourseData(RequestClient, string(course))
+	)
+	// Handle the error
+	if err != nil {
+		fmt.Fprintf(ctx, "{\"error\": \"%v\"}", err)
+	} else {
+		// Marshal the data result
+		_json, _ := json.Marshal(result)
 
-	// Marshal the data result
-	_json, _ := json.Marshal(result)
-
-	// Set the response body
-	fmt.Fprint(ctx, string(_json))
-
+		// Set the response body
+		fmt.Fprint(ctx, string(_json))
+	}
 }
 
 // Main function

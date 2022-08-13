@@ -34,7 +34,7 @@ instead of having to scrape them.
 //////////////////////////////////////////////////////////////////////////////////////////
 
 // Example Response (Get Computer Science Data)
-// $ curl -X GET http://localhost:8000/CS
+// $ curl -X GET http://localhost:8000?course=CS
 {
     "course id": {
         "title": "CS 476",
