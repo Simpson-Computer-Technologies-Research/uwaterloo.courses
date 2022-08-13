@@ -24,7 +24,7 @@ instead of having to scrape them.
 # API
 <h3>Usage</h3>
 
-```go
+```json
 //////////////////////////////////////////////////////////////////////////////////////////
 //                                                                                      //
 // The University of Waterloo API doesn't provide much information about courses.       //
@@ -44,18 +44,22 @@ instead of having to scrape them.
         "pre_reqs": "(AMATH 242/CS 371 or CS 370) and STAT 231/241",
         "anti_reqs": "None",
         "co_reqs": "None",
-        "unit":"0.50",
+        "unit":"0.50"
     }...
 }
+```
 
+```json
 // Example Response (Get Subjects)
 // $ curl -X GET http://localhost:8000/subjects
 {
     "subjects": [
-        "CS", "PHYS", "CHEM", "ART", "HLTH", ...
+        "CS", "PHYS", "CHEM", "ART", "HLTH" ...
     ]
 }
+```
 
+```json
 // Example Response (Get Subjects and Names)
 // $ curl -X GET http://localhost:8000/subjects/names
 {
@@ -68,7 +72,7 @@ instead of having to scrape them.
 	"arabic":                                 "ARABIC",
 	"artsandbusiness":                        "ARBUS",
 	"headbodyarchitecture":                   "ARCH",
-	"arts":                                   "ARTS",
+	"arts":                                   "ARTS"
 }
 
 ```

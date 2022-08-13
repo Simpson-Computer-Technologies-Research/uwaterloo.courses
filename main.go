@@ -14,13 +14,8 @@ func main() {
 # UNIVERSITY OF WATERLOO COURSE FINDER
 
 WHAT TO DO NEXT:
-
-// Learning
 - Learn Redis
 - Learn Svelte
-
-// Doing
-- Cache data into redis db
 - Create Frontend
 
 
