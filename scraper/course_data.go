@@ -4,16 +4,16 @@ package scraper
 import (
 	"fmt"
 	"strings"
+	"sync"
 
 	http "github.com/realTristan/The_University_of_Waterloo/http"
 	"github.com/valyala/fasthttp"
 )
 
-// Course Scrape struct to help organize the data
 // The Course Scrape struct holds three keys
-// - Index: int -> used to select which Result key to use
-// - Row: []string -> the row with data
-// - Result: map[string]string -> the course data result map
+/* - Index: int -> used to select which Result key to use 		*/
+/* - Row: []string -> the row with data							*/
+/* - Result: map[string]string -> the course data result map	*/
 type CourseScrape struct {
 	Index  int
 	Row    []string
@@ -128,7 +128,7 @@ func SetCourseAnti_Co_PreReqs(cs *CourseScrape) {
 			splitBy, key = "Prereq: ", "pre_reqs"
 		}
 
-		// Split the string by the name_1
+		// Split the string
 		var split []string = strings.Split(cs.Row[2], splitBy)
 		if len(split) > 1 {
 			cs.Result[key] = split[1]
@@ -143,7 +143,7 @@ func SetCourseAnti_Co_PreReqs(cs *CourseScrape) {
 // a bunch of if and else if statements
 //
 // I also decided to use an int index for categorizing everything instead
-// of having to call if strings.Contains() {} a bunch of times
+// of having to call if strings.Contains() a bunch of times
 //
 // The function takes the cs: *CourseScrape parameter
 func IndexCourseScrapeResult(cs *CourseScrape) {
@@ -241,16 +241,29 @@ func ScrapeCourseData(client *fasthttp.Client, course string) (*map[string]map[s
 	// body: string -> The http response body
 	// courseTables: []string -> The tables with each course program data
 	// courseTitle: string -> The courses title (ex: CS -> computerscience)
+	// waitGroup: sync.WaitGroup -> waitgroup for the scraping goroutines
 	var (
-		body         string   = string(resp.Body())
-		courseTables []string = strings.Split(body, "<div class=\"divTable\">")[1:]
+		body         string          = string(resp.Body())
+		courseTables []string        = strings.Split(body, "<div class=\"divTable\">")[1:]
+		waitGroup    *sync.WaitGroup = &sync.WaitGroup{}
 	)
 
 	// Iterate over the html tables
 	for _, table := range courseTables {
-		var courseID, courseInfo = _ScrapeCourseData(&table)
-		result[courseID] = courseInfo
+		waitGroup.Add(1)
+		// Goroutine to scrape data
+		go func(table *string) {
+			defer waitGroup.Done()
+
+			// Scrape the course data
+			var courseID, courseData = _ScrapeCourseData(table)
+
+			// Append the course data to the result map
+			result[courseID] = courseData
+		}(&table)
 	}
+	// Wait for all scraping goroutines to finish
+	waitGroup.Wait()
 
 	// Return the course title and it's result map containing
 	// all the courses information

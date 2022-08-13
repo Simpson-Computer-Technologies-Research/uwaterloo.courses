@@ -2,7 +2,7 @@ package global
 
 // The slice that contains all the university of waterloo's subject codes
 // I'm going to set them manually for now, but there is a webscrape section
-// for getting them using info from https://classes.uwaterloo.ca/uwpcshtm.html
+// for getting them from https://classes.uwaterloo.ca/uwpcshtm.html
 //
 // Sorted them by alphabet because I was bored
 var SubjectCodes []string = []string{
@@ -51,9 +51,6 @@ var SubjectCodes []string = []string{
 }
 
 // The Subject Names for search querying the course catalog
-//
-// I haven't added them yet because my wifi is brutal and I can't
-// send any http requests, but I when I can, I will pre-insert them
 var SubjectNames map[string]string = map[string]string{
 	"actuarialscience":                       "ACTSC",
 	"architecturalengineering":               "AE",

@@ -11,6 +11,7 @@ func main() {
 }
 
 /*
+
 # UNIVERSITY OF WATERLOO COURSE FINDER
 
 WHAT TO DO NEXT:
@@ -20,24 +21,6 @@ WHAT TO DO NEXT:
 
 
 PROJECT NOTES:
-
-// Get the course title with the Yellow Highlighted Title at the top of the page
->> Course Data: https://ucalendar.uwaterloo.ca/2021/COURSE/course-CS.html
-
-// Map Data
-"Computer Science": {
-	"course_id": {
-		"title": "CS 100",
-		"components": LAB,LEC,TST,TUT",
-		"unit": "0.50",
-		"id": 012765,
-		"title": "Introduction to Computing through Applications",
-		"desc": "Using personal computers as effective problem solving tools for...",
-		"pre_req": "Prereq: Not open to Mathematics,Biomedical...",
-		"anti_req": "All second,third or fourth year CS courses or equivalents",
-		"other": "online url"
-	}
-}
 
 // PRE REQUISITE MAPPING
 // Let's say another course requires CS 100 as a pre_req, it'll list each
@@ -65,4 +48,5 @@ PROJECT NOTES:
 
 // HOSTING
 // host with fly.io
+
 */

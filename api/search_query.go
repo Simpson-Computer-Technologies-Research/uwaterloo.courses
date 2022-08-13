@@ -51,6 +51,8 @@ func SearchQuery(query string) string {
 				}
 			}
 		}
+		// Check if the current subject is more accurate
+		// than the previous ones
 		if count > bestMatchValue {
 			bestMatchValue = count
 			bestMatch = subjectCode

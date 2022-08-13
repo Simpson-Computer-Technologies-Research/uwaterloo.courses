@@ -12,14 +12,16 @@ import (
 	"github.com/valyala/fasthttp"
 )
 
-// Define Global Variables
+// Global Variables
+/* - RequestClient *fasthttp.Client -> Used for sending http requests */
+/* - Template *template.Template -> Used for rendering html templates */
 var (
 	RequestClient *fasthttp.Client   = &fasthttp.Client{}
 	Template      *template.Template = template.Must(template.ParseGlob("public/templates/*.html"))
 )
 
 // The CourseDataHandler() function handles the incoming requests
-// with the /courses?course={course_code} path.
+// using the "/courses?course={course_code}" path.
 // The function is used to scrape the data of a subject using the
 // ScrapeCourseData() function, then return it as a json string
 //
@@ -49,7 +51,7 @@ func CourseDataHandler(ctx *fasthttp.RequestCtx) {
 }
 
 // The SubjectCodesHandler() function handles the incoming
-// requests with the /subjects path
+// requests using the "/subjects" path
 //
 // The function returns the global SubjectCodes array
 func SubjectCodesHandler(ctx *fasthttp.RequestCtx) {
@@ -63,7 +65,7 @@ func SubjectCodesHandler(ctx *fasthttp.RequestCtx) {
 }
 
 // The SubjectCodesWithNamesHandler() function handles the incoming
-// requests with the /subjects/names path
+// requests using the "/subjects/names" path
 //
 // The function returns the global SubjectNames
 func SubjectCodesWithNamesHandler(ctx *fasthttp.RequestCtx) {
@@ -75,10 +77,19 @@ func SubjectCodesWithNamesHandler(ctx *fasthttp.RequestCtx) {
 }
 
 // The HomePageHandler() function handles the incoming requests
-// using with / path.
+// using the "/" path.
 //
 // The function renders the index.html file
 func HomePageHandler(ctx *fasthttp.RequestCtx) {
+	// Find out how to create a list with all the data
+	// This is the page that handles the query search
+	//
+	// Use the university waterloo text logo as the header for the main page
+	// Use the university of waterloo badge logo inside the course data list
+	//
+	// For the home page learn svelte with go and typescript
+	// and tailwind css
+	//
 	// Set the content type
 	ctx.Response.Header.Set("Content-Type", "text/html")
 	// Execute the html template

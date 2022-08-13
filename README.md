@@ -12,13 +12,8 @@ other than fasthttp which is used to host the api and send http requests.
 - This challenge does not include hosting services, database services, etc.
 - God help my soul for webscraping..
 
-# Plan
-My plan is to have a backend that will scrape all the course codes then use those codes
-to scrape the course info whenever the university of waterloo's website changes.
-It'll then replace the data inside the redis database with the new data.
-
-If the process takes to long, I can increase the speed by storing the course codes in memory
-instead of having to scrape them.
+# Notes
+- I'm not the best at frontend developement, so go easy on me
 
 
 # API
@@ -27,6 +22,10 @@ instead of having to scrape them.
 ⭐ Example Response (Get Computer Science Data)
 <br>
 ⭐ $ curl -X GET http://localhost:8000/courses?course=CS
+<br>
+or
+<br>
+⭐ $ curl -X GET http://localhost:8000/courses?q=computer+science
 
 ```json
 {
