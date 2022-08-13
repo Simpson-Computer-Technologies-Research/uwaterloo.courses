@@ -207,8 +207,8 @@ func SetCourseNote(cs *CourseScrape, data string) {
 	}
 }
 
-// The SetCourseAnti_CoReqs() function will set the CourseScrape
-// Result map anti_reqs key or the co_reqs key or the pre_reqs
+// The SetCourseAnti_Co_PreReqs() function will set the CourseScrape
+// Result map anti_reqs, co_reqs or pre_reqs key
 //
 // The Anti Reqs key, Co Reqs key and the pre reqs key are in the same function because
 // Sometimes the university of waterloo website will have Pre Requisites,
