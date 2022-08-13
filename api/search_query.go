@@ -1,0 +1,59 @@
+package api
+
+import (
+	"strings"
+	"unicode"
+
+	"github.com/realTristan/The_University_of_Waterloo/global"
+)
+
+// The CleanQuery() function removes all spaces from the query
+// and also removes all
+func CleanQuery(query string) string {
+	var res string = ""
+	for i := 0; i < len(query); i++ {
+		// Check if the character at the index is a letter
+		if unicode.IsLetter(rune(query[i])) {
+			// Append the letter to the result string
+			res += string(query[i])
+		}
+	}
+	// Return the res string in lowercase
+	return strings.ToLower(res)
+}
+
+// The SearchQuery() function...
+func SearchQuery(query string) string {
+	// Clean the query
+	query = CleanQuery(query)
+
+	// Define Variables
+	// bestMatchValue: int -> Track the highest value for character matching
+	// bestMatch: string -> the best subject code for the query
+	var (
+		bestMatchValue int = -1
+		bestMatch      string
+	)
+
+	// Iterate over the subject names map
+	for subjectName, subjectCode := range global.SubjectNames {
+		// Add the subject code to the result map
+		var count int = 0
+
+		// Iterate over the query characters
+		for i := 0; i < len(query); i++ {
+			// Check length so we don't get an error
+			if i < len(subjectName) {
+				// Check if the characters at the indexes are the same
+				if subjectName[i] == query[i] {
+					count += 1
+				}
+			}
+		}
+		if count > bestMatchValue {
+			bestMatchValue = count
+			bestMatch = subjectCode
+		}
+	}
+	return bestMatch
+}
