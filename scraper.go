@@ -113,7 +113,7 @@ func ScrapeSubjectCodes(client *fasthttp.Client) ([]string, error) {
 // Course Scrape struct to help organize the data
 // The Course Scrape struct holds three keys
 // - Index: int -> used to select which Result key to use
-// - Data: []string -> the index data
+// - Row: []string -> the row with the data
 // - Result: map[string]string -> the course data result map
 type CourseScrape struct {
 	Index  int
