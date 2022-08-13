@@ -4,7 +4,7 @@ module github.com/realTristan/The_University_of_Waterloo
 // Go 1.19+
 go 1.19
 
-// Fasthttp module (hosting api/sending http requests)
+// Direct modules
 require github.com/valyala/fasthttp v1.38.0
 
 // Indirect modules
