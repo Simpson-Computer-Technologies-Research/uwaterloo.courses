@@ -36,14 +36,14 @@ instead of having to scrape them.
 // Example Response (Get Computer Science Data)
 // $ curl -X GET http://localhost:8000?course=CS
 {
-    "course id": {
+    "003352": {
         "title": "CS 476",
         "name": "Numeric Computation for Financial Modeling",
         "desc": "The interaction of financial models, numerical methods, and computing environments. Basic  computational aspects of option pricing and hedging. Numerical methods for stochastic differential equations, strong and weak convergence. Generating correlated random numbers. Time-stepping methods. Finite difference methods for the Black-Scholes equation. Discretization, stability, convergence. Methods for portfolio optimization, effect of data errors on portfolio weights. ",
         "note": "Lab is not scheduled and students are expected to find time in open hours to complete their work. Students who receive a good grade in CS 335 may contact the instructor of CS 476 to seek admission without the formal prerequisites. Offered: W]",
         "pre_reqs": "(AMATH 242/CS 371 or CS 370) and STAT 231/241",
-        "anti_reqs": "...",
-        "co_reqs": "...",
+        "anti_reqs": "None",
+        "co_reqs": "None",
         "unit":"0.50",
     }...
 }
