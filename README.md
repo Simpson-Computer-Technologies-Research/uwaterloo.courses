@@ -25,7 +25,6 @@ instead of having to scrape them.
 <h3>Usage</h3>
 
 ```go
-
 //////////////////////////////////////////////////////////////////////////////////////////
 //                                                                                      //
 // The University of Waterloo API doesn't provide much information about courses.       //
@@ -34,21 +33,19 @@ instead of having to scrape them.
 //                                                                                      //
 //////////////////////////////////////////////////////////////////////////////////////////
 
-// Example Response
+// Example Response (Get Computer Science Data)
+// $ curl -X GET http://localhost:8000/CS
 {
     "course id": {
         "title": "CS 476",
         "name": "Numeric Computation for Financial Modeling",
-        
         "desc": "The interaction of financial models, numerical methods, and computing environments. Basic  computational aspects of option pricing and hedging. Numerical methods for stochastic differential equations, strong and weak convergence. Generating correlated random numbers. Time-stepping methods. Finite difference methods for the Black-Scholes equation. Discretization, stability, convergence. Methods for portfolio optimization, effect of data errors on portfolio weights. ",
-        
         "note": "Lab is not scheduled and students are expected to find time in open hours to complete their work. Students who receive a good grade in CS 335 may contact the instructor of CS 476 to seek admission without the formal prerequisites. Offered: W]",
-
         "pre_reqs": "(AMATH 242/CS 371 or CS 370) and STAT 231/241",
         "anti_reqs": "...",
         "co_reqs": "...",
         "unit":"0.50",
-    }
+    }...
 }
 ```
 
