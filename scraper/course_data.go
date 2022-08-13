@@ -1,175 +1,13 @@
-package main
+package scraper
 
 // Import packages
 import (
 	"fmt"
 	"strings"
 
+	http "github.com/realTristan/The_University_of_Waterloo/http"
 	"github.com/valyala/fasthttp"
 )
-
-////////////////////////////////////////////////////////////
-//							  //
-//							  //
-//							  //
-// 		     Subject Code Scraping 	 	  //
-//						          //
-//							  //
-//							  //
-////////////////////////////////////////////////////////////
-
-/*
-
-// The _ScrapSubjectCodes() function will return a slice containing all
-// the course codes from the provided html
-// The html is from: https://classes.uwaterloo.ca/uwpcshtm.html
-//
-// The function takes the html string pointer which is the websites
-// string response body
-//
-// The function returns the string slice of scraped subject codes
-func _ScrapeSubjectCodes(html *string) []string {
-	// Declare Variables
-	// res: []string -> result slice holding the subject codes
-	// tableIndex: int -> used to only append the subject codes to res
-	var (
-		res        []string = []string{}
-		tableIndex int      = 1
-	)
-	// Set the html to past the </table>
-	html = &strings.Split(*html, "</table>")[1]
-
-	// Iterate over the split strings
-	for i, p := range strings.Split(*html, "<td>") {
-		// Get every 7th table value (the Subject table)
-		if i == tableIndex {
-			// Increase tableIndex by 7
-			tableIndex += 7
-			// Split by closing tag
-			var s []string = strings.Split(p, "</td>")
-			// If the result slice doesn't contains the subject
-			if !SliceContains(&res, s[0]) {
-				// Append the subject to the result slice
-				res = append(res, s[0])
-			}
-		}
-	}
-	// Return the result slice
-	return res
-}
-
-// The ScrapSubjectCodes() function utilizes the _ScrapeSubjectCodes()
-// function to webscrape all the subject codes on the
-// "https://classes.uwaterloo.ca/uwpcshtm.html" website
-//
-// The Subject Codes will be used to get information about the courses
-// from the "https://ucalendar.uwaterloo.ca/2021/COURSE/course-CS.html"
-// website.
-//
-// The function takes the client: *fasthttp.Client parameter to send
-// http requests
-//
-// The function returns the scraped subject codes string slice
-// and the http request error
-func ScrapeSubjectCodes(client *fasthttp.Client) ([]string, error) {
-	// Utilize the _Request struct to easily send an http request
-	var _Req *HttpRequest = &HttpRequest{
-		Client: client,
-		Url:    "https://classes.uwaterloo.ca/uwpcshtm.html",
-		Method: "GET",
-		Headers: map[string]string{
-			"User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/15.2 Safari/605.1.15",
-		},
-	}
-	// Send Http Request
-	var resp, err = _Req.Send()
-
-	// Handle any request errors
-	if err != nil {
-		return []string{}, err
-	}
-
-	// Define response body variable
-	var body string = string(resp.Body())
-
-	// Scrape the subject codes using the response.body()
-	// Then return the codes alongside no error
-	return _ScrapeSubjectCodes(&body), nil
-}
-
-*/
-
-/*
-
-////////////////////////////////////////////////////////////
-//							  //
-//							  //
-//							  //
-// 		     Course Title Scraping 	 	  //
-//						          //
-//							  //
-//							  //
-////////////////////////////////////////////////////////////
-
-// The CleaCourseTitle() function will remove all spaces and
-// new lines from the h2 header
-//
-// The function returns the cleaned title string
-func CleanCourseTitle(title string) string {
-	var res string = ""
-	for i := 0; i < len(title); i++ {
-		// If the value == "&" increase by four to avoid
-		// the &nmbp string
-		if title[i] == '&' {
-			i += 4
-		} else if unicode.IsLetter(rune(title[i])) {
-			// Append the letter to the result string
-			res += string(title[i])
-		}
-	}
-	// Return the res string in lowercase
-	return strings.ToLower(res)
-}
-
-// The ScrapeCourseTitle() function will return the title of the course at
-// the top of the "https://classes.uwaterloo.ca/uwpcshtm.html" website
-//
-// This title will be used for search indexing thus it needs to be cleaned using
-// the CleanCourseTitle() function
-//
-// The function uses the scraped title to return the cleaned course title string
-func ScrapeCourseTitle(body *string) string {
-	// First split
-	var temp []string = strings.Split(*body, "<h2 class=\"subject\">")
-	// Check length of first split
-	if len(temp) > 1 {
-		// First split
-		var (
-			_title string   = temp[1]
-			_temp  []string = strings.Split(_title, "</h2>")
-		)
-		// Check the length of the secind split
-		if len(_temp) > 0 {
-			// Clean the course title and return it
-			// Example: C O M P U T E R -> computer
-			return CleanCourseTitle(_temp[0])
-		}
-	}
-	// Return an empty string
-	return ""
-}
-
-*/
-
-////////////////////////////////////////////////////////////
-//							  //
-//							  //
-//							  //
-// 		     Course Data Scraping 	 	  //
-//						          //
-//							  //
-//							  //
-////////////////////////////////////////////////////////////
 
 // Course Scrape struct to help organize the data
 // The Course Scrape struct holds three keys
@@ -378,7 +216,7 @@ func _ScrapeCourseData(table *string) (string, map[string]string) {
 // and the http request error
 func ScrapeCourseData(client *fasthttp.Client, course string) (*map[string]map[string]string, error) {
 	// Utilize the HttpRequest struct to easily send an http request
-	var _Req *HttpRequest = &HttpRequest{
+	var _Req *http.HttpRequest = &http.HttpRequest{
 		Client: client,
 		Url:    fmt.Sprintf("https://ucalendar.uwaterloo.ca/2021/COURSE/course-%s.html", course),
 		Method: "GET",
@@ -395,7 +233,7 @@ func ScrapeCourseData(client *fasthttp.Client, course string) (*map[string]map[s
 	)
 
 	// Handle response error
-	if err != nil {
+	if err != nil || resp.StatusCode() != 200 {
 		return &result, err
 	}
 

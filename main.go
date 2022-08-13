@@ -5,6 +5,8 @@ import (
 	"encoding/json"
 	"fmt"
 
+	"github.com/realTristan/The_University_of_Waterloo/global"
+	scraper "github.com/realTristan/The_University_of_Waterloo/scraper"
 	"github.com/valyala/fasthttp"
 )
 
@@ -12,14 +14,15 @@ import (
 var RequestClient *fasthttp.Client = &fasthttp.Client{}
 
 // Function to handle incoming http requests
-func ResponseHandler(ctx *fasthttp.RequestCtx) {
+func CourseDataHandler(ctx *fasthttp.RequestCtx) {
 	// Scrape the course data
 	var (
 		course      []byte = ctx.QueryArgs().Peek("course")
-		result, err        = ScrapeCourseData(RequestClient, string(course))
+		result, err        = scraper.ScrapeCourseData(RequestClient, string(course))
 	)
 	// Handle the error
 	if err != nil {
+		ctx.SetStatusCode(500)
 		fmt.Fprintf(ctx, "{\"error\": \"%v\"}", err)
 	} else {
 		// Marshal the data result
@@ -30,21 +33,31 @@ func ResponseHandler(ctx *fasthttp.RequestCtx) {
 	}
 }
 
-/*
-func main() {
-	for _, k := range SubjectCodes {
-		var _req *HttpRequest = &HttpRequest{
-			Url:    fmt.Sprintf("https://ucalendar.uwaterloo.ca/2021/COURSE/course-%s.html", k),
-			Method: "GET",
-			Client: RequestClient,
-		}
-		var resp, _ = _req.Send()
-		if resp.StatusCode() != 200 {
-			fmt.Println(k)
-		}
-	}
+// The SubjectCodesHandler() function handles the incoming
+// requests with the /subjects path
+//
+// The function returns the global SubjectCodes array
+func SubjectCodesHandler(ctx *fasthttp.RequestCtx) {
+	// Marshal the subject codes map
+	_json, _ := json.Marshal(map[string][]string{
+		"subjects": global.SubjectCodes,
+	})
+
+	// Set the response body
+	fmt.Fprint(ctx, string(_json))
 }
-*/
+
+// The SubjectCodesWithNamesHandler() function handles the incoming
+// requests with the /subjects/names path
+//
+// The function returns the global SubjectNames
+func SubjectCodesWithNamesHandler(ctx *fasthttp.RequestCtx) {
+	// Marshal the codes and names map
+	_json, _ := json.Marshal(global.SubjectNames)
+
+	// Set the response body
+	fmt.Fprint(ctx, string(_json))
+}
 
 // Main function
 func main() {
@@ -55,7 +68,25 @@ func main() {
 	fmt.Printf("Listening on: http://localhost%s", port)
 
 	// Listen and Server the port
-	fasthttp.ListenAndServe(port, ResponseHandler)
+	fasthttp.ListenAndServe(port, func(ctx *fasthttp.RequestCtx) {
+		switch string(ctx.Path()) {
+		// Show course data with the paramter ?course={course_code}
+		case "/courses":
+			CourseDataHandler(ctx)
+
+		// Show the list of subjects at the university of waterloo
+		case "/subjects":
+			SubjectCodesHandler(ctx)
+
+		// Show the list of subjects with their corresponding names
+		// at the university of waterloo
+		case "/subjects/names":
+
+		// Invalid path error
+		default:
+			ctx.Error("not found", fasthttp.StatusNotFound)
+		}
+	})
 }
 
 /*

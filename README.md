@@ -34,7 +34,7 @@ instead of having to scrape them.
 //////////////////////////////////////////////////////////////////////////////////////////
 
 // Example Response (Get Computer Science Data)
-// $ curl -X GET http://localhost:8000?course=CS
+// $ curl -X GET http://localhost:8000/courses?course=CS
 {
     "003352": {
         "title": "CS 476",
@@ -47,6 +47,30 @@ instead of having to scrape them.
         "unit":"0.50",
     }...
 }
+
+// Example Response (Get Subjects)
+// $ curl -X GET http://localhost:8000/subjects
+{
+    "subjects": [
+        "CS", "PHYS", "CHEM", "ART", "HLTH", ...
+    ]
+}
+
+// Example Response (Get Subjects and Names)
+// $ curl -X GET http://localhost:8000/subjects/names
+{
+    "actuarialscience":                       "ACTSC",
+	"architecturalengineering":               "AE",
+	"accountingfinancialmanagement":          "AFM",
+	"appliedmathematics":                     "AMATH",
+	"anthropology":                           "ANTH",
+	"appliedlanguagestudies":                 "APPLS",
+	"arabic":                                 "ARABIC",
+	"artsandbusiness":                        "ARBUS",
+	"headbodyarchitecture":                   "ARCH",
+	"arts":                                   "ARTS",
+}
+
 ```
 
 # License

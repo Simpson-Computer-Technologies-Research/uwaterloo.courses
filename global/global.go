@@ -1,4 +1,4 @@
-package main
+package global
 
 // The slice that contains all the university of waterloo's subject codes
 // I'm going to set them manually for now, but there is a webscrape section
@@ -40,13 +40,11 @@ var SubjectCodes []string = []string{
 	"NE", "OPTOM",
 	// Alpha: P
 	"PACS", "PD", "PDARCH", "PHARM", "PHIL", "PHYS", "PLAN",
-
-	// Left off here
 	"PMATH", "PSCI", "PSYCH",
 	// Alpha: R
-	"REC", "RS", "RSCH", "RUSS",
+	"REC", "RS", "RUSS",
 	// Alpha: S
-	"SCBUS", "SCI", "SDS", "SE", "SFM", "SI", "SMF", "SOC",
+	"SCBUS", "SCI", "SDS", "SE", "SI", "SMF", "SOC",
 	"SOCWK", "SPAN", "SPCOM", "STAT", "STV", "SYDE",
 	// Alpha: T, U, V, W
 	"THPERF", "UNIV", "VCULT", "WKRPT",
@@ -98,7 +96,7 @@ var SubjectNames map[string]string = map[string]string{
 	"environmentalstudies":                   "ENVS",
 	"environmentresourcesandsustainability":  "ERS",
 	"finearts":                               "FINE",
-	"frenchstudiesétudesfrançaises":          "FR",
+	"frenchstudies":                          "FR",
 	"globalbusinessanddigitalarts":           "GBDA",
 	"generalengineering":                     "GENE",
 	"geologicalengineering":                  "GEOE",
@@ -124,7 +122,7 @@ var SubjectNames map[string]string = map[string]string{
 	"korean":                                 "KOREA",
 	"latin":                                  "LAT",
 	"legalstudies":                           "LS",
-	"mathematicalbusinessbr":                 "MATBUS",
+	"mathematicalbusiness":                   "MATBUS",
 	"mathematics":                            "MATH",
 	"mechanicalengineering":                  "ME",
 	"medievalstudies":                        "MEDVL",
@@ -144,6 +142,29 @@ var SubjectNames map[string]string = map[string]string{
 	"philosophy":                             "PHIL",
 	"physics":                                "PHYS",
 	"planning":                               "PLAN",
+	"puremath":                               "PMATH",
+	"politicalscience":                       "PSCI",
+	"psychology":                             "PSYCH",
+	"recreationandleisurestudies":            "REC",
+	"religiousstudies":                       "RS",
+	"russian":                                "RUSS",
+	"scienceandbusiness":                     "SCBUS",
+	"science":                                "SCI",
+	"socialdevelopmentstudies":               "SDS",
+	"softwareengineering":                    "SE",
+	"studiesinislam":                         "SI",
+	"sexualitymarriageandfamilystudies":      "SMF",
+	"sociology":                              "SOC",
+	"socialworkbrsocialdevelopmentstudies":   "SOCWK",
+	"spanish":                                "SPAN",
+	"speechcommunication":                    "SPCOM",
+	"statistics":                             "STAT",
+	"societytechnologyandvalues":             "STV",
+	"systemsdesignengineering":               "SYDE",
+	"theatreandperformance":                  "THPERF",
+	"university":                             "UNIV",
+	"visualculture":                          "VCULT",
+	"worktermreport":                         "WKRPT",
 }
 
 // The SliceContains() function returns whether or not the provided
