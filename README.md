@@ -1,5 +1,5 @@
 # The University of Waterloo Course Catalog
-This was made by Tristan Simpson, do not steal lmao
+This was made by Tristan Simpson
 <br>
 This project is unfinished but I wanted to put it on github for any suggestions on what I should add or any improvements to my code
 <br>
@@ -7,15 +7,15 @@ The license will be converted to an Official MIT Copyright License once an offic
 
 
 # Challenge
-My challenge for this project is to use solely native golang modules
-other than fasthttp which is used to host the api and send http requests.
-- God help my soul for webscraping..
+My challenge for this project is to use solely native golang modules such as
+strings, net/http, html/template, etc. This also includes natively webscraping
+data from websites. God help my soul for webscraping..
 
 <h3> Challenge Exceptions </h3>
 
 - mux module -> Used for api routing
 - fasthttp module -> Used for low memory http requests
-- redis -> Used for Caching data
+- redis module > Used for Caching data
 - External Services -> Ex: Svelte, Redis, Fly.io, etc.
 
 # Notes
