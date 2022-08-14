@@ -12,6 +12,7 @@ other than fasthttp which is used to host the api and send http requests.
 - God help my soul for webscraping..
 
 <h3> Challenge Exceptions </h3>
+
 - mux module -> Used for api routing
 - fasthttp module -> Used for low memory http requests
 - redis -> Used for Caching data
