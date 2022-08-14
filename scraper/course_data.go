@@ -17,6 +17,7 @@ type CourseScrape struct {
 	Index  int
 	Row    []string
 	Result map[string]string
+	HTML   string
 }
 
 // Convert the course course info into categories
@@ -47,9 +48,18 @@ func IndexCourseInfo(title string) (string, string, string) {
 // The function takes the cs: *CourseScrape parameter
 func SetCourseInfo(cs *CourseScrape) {
 	if len(cs.Row) > 0 {
-		cs.Result["title"],
-			cs.Result["components"],
-			cs.Result["unit"] = IndexCourseInfo(cs.Row[0])
+		// Index the course info
+		var title, comps, unit = IndexCourseInfo(cs.Row[0])
+
+		// Append values to the result map
+		cs.Result["title"] = title
+		cs.Result["components"] = comps
+		cs.Result["unit"] = unit
+
+		// Append values to the html
+		cs.AppendHTML(title, "")
+		cs.AppendHTML("Components", comps)
+		cs.AppendHTML("Unit", unit)
 	}
 }
 
@@ -67,6 +77,7 @@ func SetCourseId(cs *CourseScrape) {
 		if len(split) > 1 {
 			// Set the result map value
 			cs.Result["id"] = split[1]
+			cs.AppendHTML("ID", split[1])
 		}
 	}
 }
@@ -78,6 +89,7 @@ func SetCourseId(cs *CourseScrape) {
 func SetCourseName(cs *CourseScrape) {
 	if len(cs.Row) > 2 {
 		cs.Result["name"] = cs.Row[2]
+		cs.AppendHTML("Name", cs.Row[2])
 	}
 }
 
@@ -88,6 +100,7 @@ func SetCourseName(cs *CourseScrape) {
 func SetCourseDescription(cs *CourseScrape) {
 	if len(cs.Row) > 1 {
 		cs.Result["desc"] = cs.Row[1]
+		cs.AppendHTML("Description", cs.Row[1])
 	}
 }
 
@@ -102,6 +115,7 @@ func SetCourseNote(cs *CourseScrape, data string) {
 	if len(split) > 1 {
 		// Set the note in the result map
 		cs.Result["note"] = split[1]
+		cs.AppendHTML("Note", split[1])
 	}
 }
 
@@ -116,21 +130,22 @@ func SetCourseNote(cs *CourseScrape, data string) {
 func SetCourseAnti_Co_PreReqs(cs *CourseScrape) {
 	if len(cs.Row) > 2 {
 		// Start with anti reqs
-		var splitBy, key string = "Antireq: ", "anti_reqs"
+		var splitBy, key, name string = "Antireq: ", "anti_reqs", "Anti Requisites"
 
 		// If it shows coreqs instead of antireqs, change the names
 		if strings.Contains(cs.Row[2], "Coeq: ") {
-			splitBy, key = "Coreq: ", "co_reqs"
+			splitBy, key, name = "Coreq: ", "co_reqs", "Co Requisites"
 
 			// If it shows prereqs instead of antireqs, change the names
 		} else if strings.Contains(cs.Row[2], "Prereq: ") {
-			splitBy, key = "Prereq: ", "pre_reqs"
+			splitBy, key, name = "Prereq: ", "pre_reqs", "Pre Requisites"
 		}
 
 		// Split the string
 		var split []string = strings.Split(cs.Row[2], splitBy)
 		if len(split) > 1 {
 			cs.Result[key] = split[1]
+			cs.AppendHTML(name, split[1])
 		}
 	}
 }
@@ -167,14 +182,15 @@ func (cs *CourseScrape) IndexScrapeResult() {
 //
 // The function takes the table: *string parameter
 //
-// The function returns the course id string and the result map[string]string
-func _ScrapeCourseData(table *string) (string, map[string]string) {
+// The function returns the result map[string]string
+func _ScrapeCourseData(table *string) (map[string]string, string) {
 	// Define Variables
 	var (
 		// Create a CourseScrap object
 		cs *CourseScrape = &CourseScrape{
 			Result: make(map[string]string),
 			Index:  0,
+			HTML:   "",
 		}
 		// Split the table into the segments that contain the course info
 		splitTable []string = strings.Split(*table, "</")[1:]
@@ -202,7 +218,7 @@ func _ScrapeCourseData(table *string) (string, map[string]string) {
 		}
 	}
 	// Return the course id and the course info map (result)
-	return cs.Result["id"], cs.Result
+	return cs.Result, cs.WrapHTML()
 }
 
 // The ScrapeCourseData() function is the main course scraper function
@@ -212,8 +228,8 @@ func _ScrapeCourseData(table *string) (string, map[string]string) {
 // The function takes the client: *fasthttp.Client parameter to send http requests
 //
 // The function returns the course title string, the course data result map
-// and the http request error
-func ScrapeCourseData(client *fasthttp.Client, course string) (*map[string]map[string]string, error) {
+// the result html and the http request error
+func ScrapeCourseData(client *fasthttp.Client, course string) (*[]map[string]string, string, error) {
 	// Utilize the HttpRequest struct to easily send an http request
 	var _Req *http.HttpRequest = &http.HttpRequest{
 		Client: client,
@@ -227,13 +243,13 @@ func ScrapeCourseData(client *fasthttp.Client, course string) (*map[string]map[s
 	// resp, err -> request response and error
 	// result: map[string]map[string]string -> The result map that holds all the course data
 	var (
-		resp, err = _Req.Send()
-		result    = make(map[string]map[string]string)
+		resp, err                     = _Req.Send()
+		result    []map[string]string = []map[string]string{}
 	)
 
 	// Handle response error
 	if err != nil || resp.StatusCode() != 200 {
-		return &result, err
+		return &result, "", err
 	}
 
 	// Define Variables
@@ -243,17 +259,20 @@ func ScrapeCourseData(client *fasthttp.Client, course string) (*map[string]map[s
 	var (
 		body         string   = string(resp.Body())
 		courseTables []string = strings.Split(body, "<div class=\"divTable\">")[1:]
+		htmlResult   string
 	)
 
 	// Iterate over the html tables
 	for _, table := range courseTables {
 		// Scrape course data
-		var courseID, courseData = _ScrapeCourseData(&table)
+		var courseData, htmlData = _ScrapeCourseData(&table)
 
 		// Append the course data to the result map
-		result[courseID] = courseData
+		result = append(result, courseData)
+		htmlResult += fmt.Sprintf("<br><br>%s", htmlData)
 	}
-	// Return the course title and it's result map containing
-	// all the courses information
-	return &result, nil
+	// Return the result map containing all the
+	// course information, the html result data and the
+	// http request error
+	return &result, htmlResult, nil
 }

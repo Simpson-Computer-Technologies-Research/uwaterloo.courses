@@ -31,8 +31,8 @@ func CourseDataHandler() http.HandlerFunc {
 		// course: string -> Get the course to search for
 		// result, err -> Scrape the course data
 		var (
-			course      string = QueryHandler(r)
-			result, err        = scraper.ScrapeCourseData(RequestClient, strings.ToUpper(course))
+			course         string = QueryHandler(r)
+			result, _, err        = scraper.ScrapeCourseData(RequestClient, strings.ToUpper(course))
 		)
 
 		// Handle the error
@@ -98,8 +98,23 @@ func HomePageHandler() http.HandlerFunc {
 		//
 		// Set the content type
 		w.Header().Add("Content-Type", "text/html")
-		// Execute the html template
-		Template.Execute(w, nil)
+
+		// If there's a query arg, return the scraped data
+		// in html format
+		//
+		// Else, return the home page with the search bar
+		if len(r.URL.Query().Get("q")) > 0 {
+			var (
+				course     string = QueryHandler(r)
+				_, html, _        = scraper.ScrapeCourseData(RequestClient, strings.ToUpper(course))
+			)
+
+			// Execute the scraped data html template
+			Template.Execute(w, html)
+		} else {
+			// Execute the home page html template
+			Template.Execute(w, nil)
+		}
 	}
 }
 

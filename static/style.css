@@ -22,11 +22,26 @@ body {
     background-color: #AB263A;
 }
 
-/* NAME INPUT */
+.search_barrier {
+    margin-top: 2%;
+}
+
+/* Course Info */
+.course_div {
+    background-color: #fff;
+    border-radius: 10px;
+    margin-left: 5%;
+    margin-right: 5%;
+    margin-top: 0.5%;
+    margin-bottom: 0.5%;
+    padding: 3%;
+}
+
+/* COURSE INPUT */
 .container {
-  margin: auto;
-  width: 30%;
-  padding: 10px;
+    margin: auto;
+    width: 35%;
+    padding: 10px;
 }
 
 .input-field {
