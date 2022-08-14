@@ -24,6 +24,7 @@ other than fasthttp which is used to host the api and send http requests.
 <h3>Usage</h3>
 Example Response (Get Computer Science Data)
 <br>
+
 ```
 $ curl -X GET http://localhost:8000/courses?course=CS
 or
