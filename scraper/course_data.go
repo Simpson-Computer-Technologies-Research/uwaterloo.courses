@@ -304,7 +304,7 @@ func ScrapeCourseData(client *fasthttp.Client, course string) (*[]map[string]str
 		scrapeStartTime time.Time = time.Now()
 		// The response body string
 		body string = string(resp.Body())
-		// The courseTables slice
+		// The course tables slice
 		courseTables []string = strings.Split(body, "<div class=\"divTable\">")[1:]
 	)
 
