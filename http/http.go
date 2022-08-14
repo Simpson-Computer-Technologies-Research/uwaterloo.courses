@@ -84,10 +84,15 @@ func (_req *HttpRequest) Send() (*fasthttp.Response, error) {
 		// Set the respone object
 		resp *fasthttp.Response = _req.SetResponse()
 		// Send the request and store any errors
-		err error = _req.Client.DoTimeout(req, resp, 10)
+		err error = _req.Client.Do(req, resp)
 	)
+
 	// Http Request Logs
-	fmt.Printf(" [LOG] Http Request Sent [%v]\n", time.Since(sendStartTime))
+	if err != nil {
+		fmt.Printf(" [LOG] Http Request Error [%v]\n", err)
+	} else {
+		fmt.Printf(" [LOG] Http Request Sent [%v]\n", time.Since(sendStartTime))
+	}
 
 	// Release the request once no longer needed
 	defer fasthttp.ReleaseRequest(req)
