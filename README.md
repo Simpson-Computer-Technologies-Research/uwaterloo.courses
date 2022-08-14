@@ -5,7 +5,6 @@ This project is unfinished but I wanted to put it on github for any suggestions 
 <br>
 The license will be converted to an Official MIT Copyright License once an official Github Release of this repository has been created :)
 
-
 # Challenge
 My challenge for this project is to use solely native golang modules such as
 strings, net/http, html/template, etc. This also includes natively webscraping
@@ -22,12 +21,24 @@ data from websites. God help my soul for webscraping..
 - I'm not the best at frontend developement, so go easy on me
 
 # API
+<h3>Why make an API?</h3>
+I decided to make an api because it will be used for refreshing
+the redis database whenever somebody calls the /course endpoint.
+I also chose to make an api because the university of waterloo
+api only allows 5000 requests per month and the data is quite limited.
+<br>
+Although my api is not as fast and big as the university of waterloo's,
+I just thought it'd be a good addition to the project
+
 <h3>Usage</h3>
 Example Response (Get Computer Science Data)
 <br>
+
 ```
 $ curl -X GET http://localhost:8000/courses?course=CS
-or
+
+or query with:
+
 $ curl -X GET http://localhost:8000/courses?q=computer+science
 ```
 
@@ -42,12 +53,13 @@ $ curl -X GET http://localhost:8000/courses?q=computer+science
         "anti_reqs": "None",
         "co_reqs": "None",
         "unit":"0.50"
-    } ...
+    }
 }
 ```
 
 Example Response (Get Subjects List)
 <br>
+
 ```
 $ curl -X GET http://localhost:8000/subjects
 ```
@@ -55,13 +67,14 @@ $ curl -X GET http://localhost:8000/subjects
 ```json
 {
     "subjects": [
-        "CS", "PHYS", "CHEM", "ART", "HLTH" ...
+        "CS", "PHYS", "CHEM", "ART", "HLTH"
     ]
 }
 ```
 
 Example Response (Get Subjects and Names)
 <br>
+
 ```
 $ curl -X GET http://localhost:8000/subjects/names
 ```
@@ -77,7 +90,7 @@ $ curl -X GET http://localhost:8000/subjects/names
 	"arabic":                                 "ARABIC",
 	"artsandbusiness":                        "ARBUS",
 	"headbodyarchitecture":                   "ARCH",
-	"arts":                                   "ARTS" ...
+	"arts":                                   "ARTS"
 }
 
 ```

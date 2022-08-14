@@ -7,7 +7,7 @@ import (
 	"sync"
 	"time"
 
-	http "github.com/realTristan/The_University_of_Waterloo/http"
+	"github.com/realTristan/The_University_of_Waterloo/http"
 	"github.com/valyala/fasthttp"
 )
 

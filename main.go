@@ -13,10 +13,9 @@ func main() {
 # UNIVERSITY OF WATERLOO COURSE FINDER
 
 WHAT TO DO NEXT:
-- Learn Redis
-- Learn Docker
+- Learn Redis -> Improves Searching and Query Speed
 - Make Frontend look better
-- Improve searching
+- Learn Docker
 
 
 PROJECT NOTES:
@@ -31,7 +30,6 @@ PROJECT NOTES:
 // SEARCHING
 // Use redis for searching which will make it much
 // faster
-
 
 // HOSTING
 // host with fly.io

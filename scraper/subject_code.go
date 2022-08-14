@@ -3,8 +3,8 @@ package scraper
 import (
 	"strings"
 
-	global "github.com/realTristan/The_University_of_Waterloo/global"
-	http "github.com/realTristan/The_University_of_Waterloo/http"
+	"github.com/realTristan/The_University_of_Waterloo/global"
+	"github.com/realTristan/The_University_of_Waterloo/http"
 	"github.com/valyala/fasthttp"
 )
 

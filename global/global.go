@@ -1,5 +1,28 @@
 package global
 
+// Import packages
+import (
+	"fmt"
+	"time"
+)
+
+// The SearchTime variables will be used to show
+// How long it took to query the course data
+var SearchTime time.Time
+
+// The StartQueryTimer() function is used to set the
+// SearchTime variable to the current time which will
+// be used at the end of the query to determine query speed
+func StartQueryTimer() { SearchTime = time.Now() }
+
+// The EndQueryTimer() function is used to return the
+// query speed in an html div
+func EndQueryTimer() string {
+	return fmt.Sprintf(
+		`<div class="query_time"><strong>Speed </strong>%v</div>`,
+		time.Since(SearchTime))
+}
+
 // The slice that contains all the university of waterloo's subject codes
 // I'm going to set them manually for now, but there is a webscrape section
 // for getting them from https://classes.uwaterloo.ca/uwpcshtm.html

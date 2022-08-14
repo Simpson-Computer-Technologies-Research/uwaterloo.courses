@@ -9,7 +9,7 @@ import (
 	"text/template"
 
 	"github.com/realTristan/The_University_of_Waterloo/global"
-	scraper "github.com/realTristan/The_University_of_Waterloo/scraper"
+	"github.com/realTristan/The_University_of_Waterloo/scraper"
 	"github.com/valyala/fasthttp"
 )
 
@@ -87,6 +87,7 @@ func SubjectCodesWithNamesHandler() http.HandlerFunc {
 // The function renders the index.html file
 func HomePageHandler() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
+		global.StartQueryTimer()
 		// Find out how to create a list with all the data
 		// This is the page that handles the query search
 		//
@@ -105,11 +106,14 @@ func HomePageHandler() http.HandlerFunc {
 		// Else, return the home page with the search bar
 		if len(r.URL.Query().Get("q")) > 0 {
 			var (
-				course     string = QueryHandler(r)
-				_, html, _        = scraper.ScrapeCourseData(RequestClient, strings.ToUpper(course))
+				// The course to search for
+				course string = QueryHandler(r)
+				// The html list that contains all the course data
+				_, html, _ = scraper.ScrapeCourseData(RequestClient, strings.ToUpper(course))
 			)
 			// Execute the scraped data page html template
-			Template.Execute(w, html)
+			Template.Execute(w,
+				fmt.Sprintf("%s%s", global.EndQueryTimer(), html))
 		} else {
 			// Execute the home page html template
 			Template.Execute(w, nil)
