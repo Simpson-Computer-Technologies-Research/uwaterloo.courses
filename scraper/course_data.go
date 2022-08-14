@@ -17,6 +17,7 @@ import (
 /* - Result: map[string]string -> the course data result map	*/
 type CourseScrape struct {
 	Row    []string
+	Table  *string
 	Result map[string]string
 	HTML   string
 }
@@ -198,19 +199,13 @@ func (cs *CourseScrape) IndexScrapeResult(index int) {
 // The function takes the table: *string parameter
 //
 // The function returns the result map[string]string
-func _ScrapeCourseData_(table *string) (map[string]string, string) {
+func _ScrapeCourseData_(cs *CourseScrape) (map[string]string, string) {
 	// Define Variables
+	// splitTable: []string -> The table into the segments that contain the course info
+	// tableIndex: int -> Track table index
 	var (
-		// Create a CourseScrap object
-		cs *CourseScrape = &CourseScrape{
-			Result: make(map[string]string),
-			HTML:   "",
-		}
-		// Split the table into the segments that contain the course info
-		splitTable []string = strings.Split(*table, "</")[1:]
-
-		// Track table index
-		index int = 0
+		splitTable []string = strings.Split(*cs.Table, "</")[1:]
+		tableIndex int      = 0
 	)
 
 	// Iterate through the split table
@@ -224,13 +219,13 @@ func _ScrapeCourseData_(table *string) (map[string]string, string) {
 			if strings.Contains(splitTable[i], "[Note: ") {
 				cs.SetCourseNote(splitTable[i])
 			} else {
-				index++
+				tableIndex++
 				// Break the loop if the index is greater than 8
-				if index > 8 {
+				if tableIndex > 8 {
 					break
 				}
 				// Index the scrape result
-				cs.IndexScrapeResult(index)
+				cs.IndexScrapeResult(tableIndex)
 			}
 		}
 	}
@@ -249,13 +244,16 @@ func (sr *ScrapeResult) _ScrapeCourseData(t string) {
 	defer sr.WaitGroup.Done()
 
 	// Lock the Mutex
+	// Then Unlock it once the function returns
 	sr.Mutex.Lock()
-
-	// Unlock the mutex once the function returns
 	defer sr.Mutex.Unlock()
 
-	// Scrape course data
-	var courseData, htmlData = _ScrapeCourseData_(&t)
+	// Scrape course data, pass the CourseScrape object
+	var courseData, htmlData = _ScrapeCourseData_(&CourseScrape{
+		Result: make(map[string]string),
+		HTML:   "",
+		Table:  &t,
+	})
 
 	// Append the course data to the result map
 	sr.ResultSlice = append(sr.ResultSlice, courseData)
