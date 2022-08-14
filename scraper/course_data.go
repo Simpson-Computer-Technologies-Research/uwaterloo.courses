@@ -114,8 +114,8 @@ func SetCourseNote(cs *CourseScrape, data string) {
 	var split []string = strings.Split(data, "[Note: ")
 	if len(split) > 1 {
 		// Set the note in the result map
-		cs.Result["note"] = split[1]
-		cs.AppendHTML("Note", split[1])
+		cs.Result["note"] = "[" + split[1]
+		cs.AppendHTML("Note", "["+split[1])
 	}
 }
 

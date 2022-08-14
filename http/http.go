@@ -2,6 +2,9 @@ package global
 
 // Import packages
 import (
+	"fmt"
+	"time"
+
 	"github.com/valyala/fasthttp"
 )
 
@@ -74,13 +77,18 @@ func (req *HttpRequest) SetRequest() *fasthttp.Request {
 // the request errors
 func (_req *HttpRequest) Send() (*fasthttp.Response, error) {
 	var (
+		// Track how long it takes to send http request
+		sendStartTime time.Time = time.Now()
 		// Set the request object
 		req *fasthttp.Request = _req.SetRequest()
 		// Set the respone object
 		resp *fasthttp.Response = _req.SetResponse()
 		// Send the request and store any errors
-		err error = _req.Client.Do(req, resp)
+		err error = _req.Client.DoTimeout(req, resp, 10)
 	)
+	// Http Request Logs
+	fmt.Printf(" [LOG] Http Request Sent [%v]\n", time.Since(sendStartTime))
+
 	// Release the request once no longer needed
 	defer fasthttp.ReleaseRequest(req)
 
