@@ -9,7 +9,7 @@ import (
 )
 
 // The CleanQuery() function removes all spaces from the query
-// and also removes all
+// and removes all non alphabetic characters
 func CleanQuery(query string) string {
 	var res string = ""
 	for i := 0; i < len(query); i++ {
@@ -23,7 +23,9 @@ func CleanQuery(query string) string {
 	return strings.ToLower(res)
 }
 
-// The SearchQuery() function...
+// The SearchQuery() function uses the cleaned query (ex: computerscience)
+// and find the best match using it against the global.SubjectNames map
+// It returns the best subject code match (ex: CS)
 func SearchQuery(query string) string {
 	// Clean the query
 	query = CleanQuery(query)

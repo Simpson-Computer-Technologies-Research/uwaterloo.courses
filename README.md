@@ -9,23 +9,26 @@ The license will be converted to an Official MIT Copyright License once an offic
 # Challenge
 My challenge for this project is to use solely native golang modules
 other than fasthttp which is used to host the api and send http requests.
-- This challenge does not include hosting services, database services, etc.
 - God help my soul for webscraping..
+
+<h3> Challenge Exceptions </h3>
+- mux module -> Used for api routing
+- fasthttp module -> Used for low memory http requests
+- redis -> Used for Caching data
+- External Services -> Ex: Svelte, Redis, Fly.io, etc.
 
 # Notes
 - I'm not the best at frontend developement, so go easy on me
 
-
 # API
 <h3>Usage</h3>
-
-⭐ Example Response (Get Computer Science Data)
+Example Response (Get Computer Science Data)
 <br>
-⭐ $ curl -X GET http://localhost:8000/courses?course=CS
-<br>
+```
+$ curl -X GET http://localhost:8000/courses?course=CS
 or
-<br>
-⭐ $ curl -X GET http://localhost:8000/courses?q=computer+science
+$ curl -X GET http://localhost:8000/courses?q=computer+science
+```
 
 ```json
 {
@@ -42,9 +45,11 @@ or
 }
 ```
 
-⭐ Example Response (Get Subjects)
+Example Response (Get Subjects List)
 <br>
-⭐ $ curl -X GET http://localhost:8000/subjects
+```
+$ curl -X GET http://localhost:8000/subjects
+```
 
 ```json
 {
@@ -53,9 +58,12 @@ or
     ]
 }
 ```
-⭐ Example Response (Get Subjects and Names)
+
+Example Response (Get Subjects and Names)
 <br>
-⭐ $ curl -X GET http://localhost:8000/subjects/names
+```
+$ curl -X GET http://localhost:8000/subjects/names
+```
 
 ```json
 {

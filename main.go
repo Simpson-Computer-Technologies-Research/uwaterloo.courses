@@ -15,6 +15,7 @@ func main() {
 
 WHAT TO DO NEXT:
 - Learn Redis
+- Learn Docker
 - Make Frontend look better
 - Improve searching
 

@@ -4,6 +4,7 @@ package scraper
 import (
 	"fmt"
 	"strings"
+	"time"
 
 	http "github.com/realTristan/The_University_of_Waterloo/http"
 	"github.com/valyala/fasthttp"
@@ -257,9 +258,10 @@ func ScrapeCourseData(client *fasthttp.Client, course string) (*[]map[string]str
 	// courseTables: []string -> The tables with each course program data
 	// courseTitle: string -> The courses title (ex: CS -> computerscience)
 	var (
-		body         string   = string(resp.Body())
-		courseTables []string = strings.Split(body, "<div class=\"divTable\">")[1:]
-		htmlResult   string
+		scrapeStartTime time.Time = time.Now()
+		body            string    = string(resp.Body())
+		courseTables    []string  = strings.Split(body, "<div class=\"divTable\">")[1:]
+		htmlResult      string
 	)
 
 	// Iterate over the html tables
@@ -271,6 +273,10 @@ func ScrapeCourseData(client *fasthttp.Client, course string) (*[]map[string]str
 		result = append(result, courseData)
 		htmlResult += fmt.Sprintf("<br><br>%s", htmlData)
 	}
+	// Log the time it took to scrape the course data
+	// It usually takes around 1-20ms
+	fmt.Printf(" [LOG] Scraped Course Data [%v]", time.Since(scrapeStartTime))
+
 	// Return the result map containing all the
 	// course information, the html result data and the
 	// http request error
