@@ -20,9 +20,11 @@ func StartQueryTimer() { SearchTime = time.Now() }
 // query speed in an html div
 func EndQueryTimer(resultCount int) string {
 	return fmt.Sprintf(
-		`<div class="query_time">
-			<strong>%d</strong> results in <strong>%vs</strong>
-		</div>`, resultCount,
+		`<div style="margin-bottom:1%s;">
+			<strong>%d</strong> 
+				results in 
+			<strong style="color: #FEDD00">%vs</strong>
+		</div>`, "%", resultCount,
 		math.Round(time.Since(SearchTime).Seconds()*100)/100)
 }
 
