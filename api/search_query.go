@@ -81,8 +81,8 @@ func QueryHandler(r *http.Request) string {
 	// Check if the query contains a special search
 	if len(course) == 0 && len(query) > 0 {
 		// Check if the user is searching for a specific subject code
-		if strings.Contains(query, "@code:") {
-			return CleanQuery(strings.Split(query, "@code:")[1])
+		if strings.Contains(query, "@code") {
+			return CleanQuery(strings.Split(query, "@code")[1])
 		}
 		// If using a search query (ex: computerscience) then match the query
 		// to a subject code
