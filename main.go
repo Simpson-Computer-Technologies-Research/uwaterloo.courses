@@ -22,9 +22,17 @@ WHAT TO DO NEXT:
 
 PROJECT NOTES:
 
-// DATA API
-// Create an api that will return data from the redis database
-// for anyone to use
+// DOCKER
+// Learn docker and try to use svelte with it
+
+// SVELTE / FRONTEND
+// Learn svelte and try to use svelte for the frontend
+// Use svelte to make frontend look better
+
+// SEARCHING
+// Use redis for searching which will make it much
+// faster
+
 
 // HOSTING
 // host with fly.io
