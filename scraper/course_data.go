@@ -4,6 +4,7 @@ package scraper
 import (
 	"fmt"
 	"strings"
+	"sync"
 	"time"
 
 	http "github.com/realTristan/The_University_of_Waterloo/http"
@@ -15,7 +16,6 @@ import (
 /* - Row: []string -> the row with data							*/
 /* - Result: map[string]string -> the course data result map	*/
 type CourseScrape struct {
-	Index  int
 	Row    []string
 	Result map[string]string
 	HTML   string
@@ -32,14 +32,16 @@ type CourseScrape struct {
 func IndexCourseInfo(title string) (string, string, string) {
 	// splitTitle: []string -> splits the given title by spaces
 	// courseTitle: string -> the course name and catalog number (MATH 232)
-	var (
-		splitTitle  []string = strings.Split(title, " ")
-		courseTitle string   = fmt.Sprintf("%s %s", splitTitle[0], splitTitle[1])
-	)
-	// Return the Course Title ex: CS 201
-	// Return the Components (splitTitle[2]) ex: LAB,LEC,TST
-	// Return the Unit (splitTitle[3]) ex: 0.50
-	return courseTitle, splitTitle[2], splitTitle[3]
+	var splitTitle []string = strings.Split(title, " ")
+	if len(splitTitle) > 1 {
+		var courseTitle string = fmt.Sprintf("%s %s", splitTitle[0], splitTitle[1])
+		// Return the Course Title ex: CS 201
+		// Return the Components (splitTitle[2]) ex: LAB,LEC,TST
+		// Return the Unit (splitTitle[3]) ex: 0.50
+		return courseTitle, splitTitle[2], splitTitle[3]
+	}
+	// Return Empty
+	return "", "", ""
 }
 
 // The SetCourseInfo() function takes in the original course info
@@ -47,7 +49,7 @@ func IndexCourseInfo(title string) (string, string, string) {
 // function. This makes it much easier to read on the front end
 //
 // The function takes the cs: *CourseScrape parameter
-func SetCourseInfo(cs *CourseScrape) {
+func (cs *CourseScrape) SetCourseInfo() {
 	if len(cs.Row) > 0 {
 		// Index the course info
 		var title, comps, unit = IndexCourseInfo(cs.Row[0])
@@ -69,7 +71,7 @@ func SetCourseInfo(cs *CourseScrape) {
 // from each course. Example: id: {data: values}
 //
 // The function takes the cs: *CourseScrape parameter
-func SetCourseId(cs *CourseScrape) {
+func (cs *CourseScrape) SetCourseId() {
 	// Data Length is greater than one
 	if len(cs.Row) > 1 {
 		// Split the string by "Course ID: " to get the exact id
@@ -87,7 +89,7 @@ func SetCourseId(cs *CourseScrape) {
 // Result map name -> Example result["name"] = "Intro to Computer Science"
 //
 // The function takes the cs: *CourseScrape parameter
-func SetCourseName(cs *CourseScrape) {
+func (cs *CourseScrape) SetCourseName() {
 	if len(cs.Row) > 2 {
 		cs.Result["name"] = cs.Row[2]
 		cs.AppendHTML("Name", cs.Row[2])
@@ -98,7 +100,7 @@ func SetCourseName(cs *CourseScrape) {
 // Result map description -> Example result["desc"] = "Learn about..."
 //
 // The function takes the cs: *CourseScrape parameter
-func SetCourseDescription(cs *CourseScrape) {
+func (cs *CourseScrape) SetCourseDescription() {
 	if len(cs.Row) > 1 {
 		cs.Result["desc"] = cs.Row[1]
 		cs.AppendHTML("Description", cs.Row[1])
@@ -110,7 +112,7 @@ func SetCourseDescription(cs *CourseScrape) {
 //
 // The function takes the cs: *CourseScrape parameter
 // and the data string parameter which is the html row of the note
-func SetCourseNote(cs *CourseScrape, data string) {
+func (cs *CourseScrape) SetCourseNote(data string) {
 	// Split the string to get note content
 	var split []string = strings.Split(data, "[Note: ")
 	if len(split) > 1 {
@@ -128,7 +130,7 @@ func SetCourseNote(cs *CourseScrape, data string) {
 // or Co Requisites instead of Anti-Requisites, vice versa
 //
 // The function takes the cs: *CourseScrape parameter
-func SetCourseAnti_Co_PreReqs(cs *CourseScrape) {
+func (cs *CourseScrape) SetCourseAnti_Co_PreReqs() {
 	if len(cs.Row) > 2 {
 		// Start with anti reqs
 		var splitBy, key, name string = "Antireq: ", "anti_reqs", "Anti Requisites"
@@ -161,20 +163,20 @@ func SetCourseAnti_Co_PreReqs(cs *CourseScrape) {
 // of having to call if strings.Contains() a bunch of times
 //
 // The function takes the cs: *CourseScrape parameter
-func (cs *CourseScrape) IndexScrapeResult() {
+func (cs *CourseScrape) IndexScrapeResult(index int) {
 	// The map for the CourseScrape.Index
-	var indexMap map[int]func(cs *CourseScrape) = map[int]func(cs *CourseScrape){
-		1: SetCourseInfo,            // title, components, unit
-		2: SetCourseId,              // id
-		3: SetCourseName,            // name
-		4: SetCourseDescription,     // desc
-		5: func(_ *CourseScrape) {}, // [empty]
-		6: SetCourseAnti_Co_PreReqs, // anti_reqs or co_reqs or pre_reqs
-		7: SetCourseAnti_Co_PreReqs, // anti_reqs or co_reqs or pre_reqs
-		8: SetCourseAnti_Co_PreReqs, // anti_reqs or co_reqs or pre_reqs
+	var indexMap map[int]func() = map[int]func(){
+		1: cs.SetCourseInfo,            // title, components, unit
+		2: cs.SetCourseId,              // id
+		3: cs.SetCourseName,            // name
+		4: cs.SetCourseDescription,     // desc
+		5: func() {},                   // [empty]
+		6: cs.SetCourseAnti_Co_PreReqs, // anti_reqs or co_reqs or pre_reqs
+		7: cs.SetCourseAnti_Co_PreReqs, // anti_reqs or co_reqs or pre_reqs
+		8: cs.SetCourseAnti_Co_PreReqs, // anti_reqs or co_reqs or pre_reqs
 	}
 	// Call the function
-	indexMap[cs.Index](cs)
+	indexMap[index]()
 }
 
 // The _ScrapeCourseData() function will create a result map
@@ -190,11 +192,13 @@ func _ScrapeCourseData(table *string) (map[string]string, string) {
 		// Create a CourseScrap object
 		cs *CourseScrape = &CourseScrape{
 			Result: make(map[string]string),
-			Index:  0,
 			HTML:   "",
 		}
 		// Split the table into the segments that contain the course info
 		splitTable []string = strings.Split(*table, "</")[1:]
+
+		// Track table index
+		index int = 0
 	)
 
 	// Iterate through the split table
@@ -206,15 +210,15 @@ func _ScrapeCourseData(table *string) (map[string]string, string) {
 		if len(cs.Row[0]) > 1 {
 			// Check if the splitTable contains a note about the course
 			if strings.Contains(splitTable[i], "[Note: ") {
-				SetCourseNote(cs, splitTable[i])
+				cs.SetCourseNote(splitTable[i])
 			} else {
-				cs.Index++
+				index++
 				// Break the loop if the index is greater than 8
-				if cs.Index > 8 {
+				if index > 8 {
 					break
 				}
 				// Index the scrape result
-				cs.IndexScrapeResult()
+				cs.IndexScrapeResult(index)
 			}
 		}
 	}
@@ -262,17 +266,23 @@ func ScrapeCourseData(client *fasthttp.Client, course string) (*[]map[string]str
 		body            string    = string(resp.Body())
 		courseTables    []string  = strings.Split(body, "<div class=\"divTable\">")[1:]
 		htmlResult      string
+		waitGroup       sync.WaitGroup = sync.WaitGroup{}
 	)
 
 	// Iterate over the html tables
 	for _, table := range courseTables {
-		// Scrape course data
-		var courseData, htmlData = _ScrapeCourseData(&table)
+		waitGroup.Add(1)
+		go func(table string) {
+			defer waitGroup.Done()
+			// Scrape course data
+			var courseData, htmlData = _ScrapeCourseData(&table)
 
-		// Append the course data to the result map
-		result = append(result, courseData)
-		htmlResult += fmt.Sprintf("<br><br>%s", htmlData)
+			// Append the course data to the result map
+			result = append(result, courseData)
+			htmlResult += fmt.Sprintf("<br><br>%s", htmlData)
+		}(table)
 	}
+	waitGroup.Wait()
 	// Log the time it took to scrape the course data
 	// It usually takes around 1-20ms
 	fmt.Printf(" [LOG] Scraped Course Data [%v]", time.Since(scrapeStartTime))

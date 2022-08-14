@@ -25,7 +25,6 @@ data from websites. God help my soul for webscraping..
 <h3>Usage</h3>
 Example Response (Get Computer Science Data)
 <br>
-
 ```
 $ curl -X GET http://localhost:8000/courses?course=CS
 or
