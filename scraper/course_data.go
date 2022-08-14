@@ -91,7 +91,8 @@ func (cs *CourseScrape) SetCourseId() {
 		var split []string = strings.Split(cs.Row[1], "Course ID: ")
 		// Make sure the split length is greater than one
 		if len(split) > 1 {
-			// Set the result map value
+			// Set the id key in the result map
+			// Append the id to the html result
 			cs.Result["id"] = split[1]
 			cs.AppendHTML("ID", split[1])
 		}
@@ -104,6 +105,8 @@ func (cs *CourseScrape) SetCourseId() {
 // The function takes the cs: *CourseScrape parameter
 func (cs *CourseScrape) SetCourseName() {
 	if len(cs.Row) > 2 {
+		// Set the name key in the result map
+		// Append the name to the html result
 		cs.Result["name"] = cs.Row[2]
 		cs.AppendHTML("Name", cs.Row[2])
 	}
@@ -115,6 +118,8 @@ func (cs *CourseScrape) SetCourseName() {
 // The function takes the cs: *CourseScrape parameter
 func (cs *CourseScrape) SetCourseDescription() {
 	if len(cs.Row) > 1 {
+		// Set the description in the result map
+		// Append the description to the html result
 		cs.Result["desc"] = cs.Row[1]
 		cs.AppendHTML("Description", cs.Row[1])
 	}
@@ -130,6 +135,7 @@ func (cs *CourseScrape) SetCourseNote(data string) {
 	var split []string = strings.Split(data, "[Note: ")
 	if len(split) > 1 {
 		// Set the note in the result map
+		// Append the note to the result html
 		cs.Result["note"] = "[" + split[1]
 		cs.AppendHTML("Note", "["+split[1])
 	}
@@ -160,6 +166,8 @@ func (cs *CourseScrape) SetCourseAnti_Co_PreReqs() {
 		// Split the string
 		var split []string = strings.Split(cs.Row[2], splitBy)
 		if len(split) > 1 {
+			// Set the key in the result map
+			// Append the key to the html result
 			cs.Result[key] = split[1]
 			cs.AppendHTML(name, split[1])
 		}
@@ -292,7 +300,6 @@ func ScrapeCourseData(client *fasthttp.Client, course string) (*[]map[string]str
 			ResultHTML:  "",
 		}
 	)
-
 	// Handle response error
 	if err != nil || resp.StatusCode() != 200 {
 		return &scrapeResult.ResultSlice, "", err
