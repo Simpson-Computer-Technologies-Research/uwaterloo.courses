@@ -285,7 +285,7 @@ func ScrapeCourseData(client *fasthttp.Client, course string) (*[]map[string]str
 	waitGroup.Wait()
 	// Log the time it took to scrape the course data
 	// It usually takes around 1-20ms
-	fmt.Printf(" [LOG] Scraped Course Data [%v]", time.Since(scrapeStartTime))
+	fmt.Printf(" [LOG] Scraped Course Data [%v]\n", time.Since(scrapeStartTime))
 
 	// Return the result map containing all the
 	// course information, the html result data and the

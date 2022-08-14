@@ -108,8 +108,7 @@ func HomePageHandler() http.HandlerFunc {
 				course     string = QueryHandler(r)
 				_, html, _        = scraper.ScrapeCourseData(RequestClient, strings.ToUpper(course))
 			)
-
-			// Execute the scraped data html template
+			// Execute the scraped data page html template
 			Template.Execute(w, html)
 		} else {
 			// Execute the home page html template
