@@ -3,6 +3,7 @@ package global
 // Import packages
 import (
 	"fmt"
+	"math"
 	"time"
 )
 
@@ -17,10 +18,12 @@ func StartQueryTimer() { SearchTime = time.Now() }
 
 // The EndQueryTimer() function is used to return the
 // query speed in an html div
-func EndQueryTimer() string {
+func EndQueryTimer(resultCount int) string {
 	return fmt.Sprintf(
-		`<div class="query_time"><strong>Speed </strong>%v</div>`,
-		time.Since(SearchTime))
+		`<div class="query_time">
+			<strong>%d</strong> results in <strong>%vs</strong>
+		</div>`, resultCount,
+		math.Round(time.Since(SearchTime).Seconds()*100)/100)
 }
 
 // The slice that contains all the university of waterloo's subject codes

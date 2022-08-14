@@ -109,11 +109,11 @@ func HomePageHandler() http.HandlerFunc {
 				// The course to search for
 				course string = QueryHandler(r)
 				// The html list that contains all the course data
-				_, html, _ = scraper.ScrapeCourseData(RequestClient, strings.ToUpper(course))
+				result, html, _ = scraper.ScrapeCourseData(RequestClient, strings.ToUpper(course))
 			)
 			// Execute the scraped data page html template
 			Template.Execute(w,
-				fmt.Sprintf("%s%s", global.EndQueryTimer(), html))
+				fmt.Sprintf("%s%s", global.EndQueryTimer(len(*result)), html))
 		} else {
 			// Execute the home page html template
 			Template.Execute(w, nil)
