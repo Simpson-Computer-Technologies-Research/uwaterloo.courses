@@ -1,5 +1,6 @@
 package scraper
 
+// Import packages
 import "fmt"
 
 // The AppendHTML() function takes the course key and the
