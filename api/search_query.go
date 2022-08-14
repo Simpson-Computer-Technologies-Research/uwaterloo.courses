@@ -1,11 +1,11 @@
 package api
 
 import (
+	"net/http"
 	"strings"
 	"unicode"
 
 	"github.com/realTristan/The_University_of_Waterloo/global"
-	"github.com/valyala/fasthttp"
 )
 
 // The CleanQuery() function removes all spaces from the query
@@ -67,13 +67,13 @@ func SearchQuery(query string) string {
 // It'll also check for special searches for example: @code:
 // will search for a specific subject code instead of for example:
 // searching "computer science"
-func QueryHandler(ctx *fasthttp.RequestCtx) string {
+func QueryHandler(r *http.Request) string {
 	// Define Variables
 	// course: string -> the course code arg
 	// query: string -> the course search query arg
 	var (
-		course string = string(ctx.QueryArgs().Peek("course"))
-		query  string = string(ctx.QueryArgs().Peek("q"))
+		course string = string(r.URL.Query().Get("course"))
+		query  string = string(r.URL.Query().Get("q"))
 	)
 
 	// Check if the query contains a special search

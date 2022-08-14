@@ -4,7 +4,6 @@ package scraper
 import (
 	"fmt"
 	"strings"
-	"sync"
 
 	http "github.com/realTristan/The_University_of_Waterloo/http"
 	"github.com/valyala/fasthttp"
@@ -241,30 +240,19 @@ func ScrapeCourseData(client *fasthttp.Client, course string) (*map[string]map[s
 	// body: string -> The http response body
 	// courseTables: []string -> The tables with each course program data
 	// courseTitle: string -> The courses title (ex: CS -> computerscience)
-	// waitGroup: sync.WaitGroup -> waitgroup for the scraping goroutines
 	var (
-		body         string          = string(resp.Body())
-		courseTables []string        = strings.Split(body, "<div class=\"divTable\">")[1:]
-		waitGroup    *sync.WaitGroup = &sync.WaitGroup{}
+		body         string   = string(resp.Body())
+		courseTables []string = strings.Split(body, "<div class=\"divTable\">")[1:]
 	)
 
 	// Iterate over the html tables
 	for _, table := range courseTables {
-		waitGroup.Add(1)
-		// Goroutine to scrape data
-		go func(table *string) {
-			defer waitGroup.Done()
+		// Scrape course data
+		var courseID, courseData = _ScrapeCourseData(&table)
 
-			// Scrape the course data
-			var courseID, courseData = _ScrapeCourseData(table)
-
-			// Append the course data to the result map
-			result[courseID] = courseData
-		}(&table)
+		// Append the course data to the result map
+		result[courseID] = courseData
 	}
-	// Wait for all scraping goroutines to finish
-	waitGroup.Wait()
-
 	// Return the course title and it's result map containing
 	// all the courses information
 	return &result, nil

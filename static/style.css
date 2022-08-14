@@ -1,15 +1,8 @@
-#main {
-    font-family: 'Poppins', sans-serif;
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    top: 100%;
-    color: #5858ff;
-}
 
 * {
     box-sizing: border-box;
     font-family: 'Poppins', sans-serif;
+    font-style: oblique;
     margin: 0;
     padding: 0;
     box-sizing: border-box;
@@ -26,15 +19,14 @@ body {
     align-items: center;
     min-height: 100vh;
     font-size: 1.5rem;
-    background-color: #222;
+    background-color: #AB263A;
 }
 
 /* NAME INPUT */
 .container {
-    top: 38%;
-    position: absolute;
-    width: 500px;
-    padding: 40px;
+  margin: auto;
+  width: 30%;
+  padding: 10px;
 }
 
 .input-field {
@@ -66,7 +58,7 @@ body {
 .input-field input[type="text"]:valid + label {
     transform: translateY(-35px);
     font-size: 20px;
-    color: #5858ff;
+    color: #FEDD00;
 }
 
 .input-field span {
@@ -76,7 +68,7 @@ body {
     display: block;
     background: #fff;
     width: 100%;
-    height: 2px;
+    height: 3.5px;
 }
 
 .input-field span:before {
@@ -86,7 +78,7 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    background: #5858ff;
+    background: #FEDD00;
     transform: scaleX(0);
     transform-origin: right;
     transition: transform 0.5s ease-in-out;
