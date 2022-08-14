@@ -15,7 +15,7 @@ import (
 /* - Index: int -> used to select which Result key to use 		*/
 /* - Row: []string -> the row with data							*/
 /* - Result: map[string]string -> the course data result map	*/
-type CourseScrape struct {
+type ScrapeTable struct {
 	Row    []string
 	Table  *string
 	Result map[string]string
@@ -61,120 +61,120 @@ func IndexCourseInfo(title string) (string, string, string) {
 // and sets the title, components and unit using the IndexCourseInfo
 // function. This makes it much easier to read on the front end
 //
-// The function takes the cs: *CourseScrape parameter
-func (cs *CourseScrape) SetCourseInfo() {
-	if len(cs.Row) > 0 {
+// The function takes the cs: *ScrapeTable parameter
+func (st *ScrapeTable) SetCourseInfo() {
+	if len(st.Row) > 0 {
 		// Index the course info
-		var title, comps, unit = IndexCourseInfo(cs.Row[0])
+		var title, comps, unit = IndexCourseInfo(st.Row[0])
 
 		// Append values to the result map
-		cs.Result["title"] = title
-		cs.Result["components"] = comps
-		cs.Result["unit"] = unit
+		st.Result["title"] = title
+		st.Result["components"] = comps
+		st.Result["unit"] = unit
 
 		// Append values to the html
-		cs.AppendHTML(title, "")
-		cs.AppendHTML("Components", comps)
-		cs.AppendHTML("Unit", unit)
+		st.AppendHTML(title, "")
+		st.AppendHTML("Components", comps)
+		st.AppendHTML("Unit", unit)
 	}
 }
 
-// The SetCourseId() function will set the CourseScrape
+// The SetCourseId() function will set the ScrapeTable
 // Result map id. The Course id is the key used to categorize all the data
 // from each course. Example: id: {data: values}
 //
-// The function takes the cs: *CourseScrape parameter
-func (cs *CourseScrape) SetCourseId() {
+// The function takes the cs: *ScrapeTable parameter
+func (st *ScrapeTable) SetCourseId() {
 	// Data Length is greater than one
-	if len(cs.Row) > 1 {
+	if len(st.Row) > 1 {
 		// Split the string by "Course ID: " to get the exact id
-		var split []string = strings.Split(cs.Row[1], "Course ID: ")
+		var split []string = strings.Split(st.Row[1], "Course ID: ")
 		// Make sure the split length is greater than one
 		if len(split) > 1 {
 			// Set the id key in the result map
 			// Append the id to the html result
-			cs.Result["id"] = split[1]
-			cs.AppendHTML("ID", split[1])
+			st.Result["id"] = split[1]
+			st.AppendHTML("ID", split[1])
 		}
 	}
 }
 
-// The SetCourseName() function will set the CourseScrape
+// The SetCourseName() function will set the ScrapeTable
 // Result map name -> Example result["name"] = "Intro to Computer Science"
 //
-// The function takes the cs: *CourseScrape parameter
-func (cs *CourseScrape) SetCourseName() {
-	if len(cs.Row) > 2 {
+// The function takes the cs: *ScrapeTable parameter
+func (st *ScrapeTable) SetCourseName() {
+	if len(st.Row) > 2 {
 		// Set the name key in the result map
 		// Append the name to the html result
-		cs.Result["name"] = cs.Row[2]
-		cs.AppendHTML("Name", cs.Row[2])
+		st.Result["name"] = st.Row[2]
+		st.AppendHTML("Name", st.Row[2])
 	}
 }
 
-// The SetCourseDescription() function will set the CourseScrape
+// The SetCourseDescription() function will set the ScrapeTable
 // Result map description -> Example result["desc"] = "Learn about..."
 //
-// The function takes the cs: *CourseScrape parameter
-func (cs *CourseScrape) SetCourseDescription() {
-	if len(cs.Row) > 1 {
+// The function takes the cs: *ScrapeTable parameter
+func (st *ScrapeTable) SetCourseDescription() {
+	if len(st.Row) > 1 {
 		// Set the description in the result map
 		// Append the description to the html result
-		cs.Result["desc"] = cs.Row[1]
-		cs.AppendHTML("Description", cs.Row[1])
+		st.Result["desc"] = st.Row[1]
+		st.AppendHTML("Description", st.Row[1])
 	}
 }
 
-// The SetCourseNote() function will set the CourseScrape
+// The SetCourseNote() function will set the ScrapeTable
 // Result map note -> Example result["note"] = "Only available for..."
 //
-// The function takes the cs: *CourseScrape parameter
+// The function takes the cs: *ScrapeTable parameter
 // and the data string parameter which is the html row of the note
-func (cs *CourseScrape) SetCourseNote(data string) {
+func (st *ScrapeTable) SetCourseNote(data string) {
 	// Split the string to get note content
 	var split []string = strings.Split(data, "[Note: ")
 	if len(split) > 1 {
 		// Set the note in the result map
 		// Append the note to the result html
-		cs.Result["note"] = "[" + split[1]
-		cs.AppendHTML("Note", "["+split[1])
+		st.Result["note"] = "[" + split[1]
+		st.AppendHTML("Note", "["+split[1])
 	}
 }
 
-// The SetCourseAnti_Co_PreReqs() function will set the CourseScrape
+// The SetCourseAnti_Co_PreReqs() function will set the ScrapeTable
 // Result map anti_reqs, co_reqs or pre_reqs key
 //
 // The Anti Reqs key, Co Reqs key and the pre reqs key are in the same function because
 // Sometimes the university of waterloo website will have Pre Requisites,
 // or Co Requisites instead of Anti-Requisites, vice versa
 //
-// The function takes the cs: *CourseScrape parameter
-func (cs *CourseScrape) SetCourseAnti_Co_PreReqs() {
-	if len(cs.Row) > 2 {
+// The function takes the cs: *ScrapeTable parameter
+func (st *ScrapeTable) SetCourseAnti_Co_PreReqs() {
+	if len(st.Row) > 2 {
 		// Start with anti reqs
 		var splitBy, key, name string = "Antireq: ", "anti_reqs", "Anti Requisites"
 
 		// If it shows coreqs instead of antireqs, change the names
-		if strings.Contains(cs.Row[2], "Coeq: ") {
+		if strings.Contains(st.Row[2], "Coeq: ") {
 			splitBy, key, name = "Coreq: ", "co_reqs", "Co Requisites"
 
 			// If it shows prereqs instead of antireqs, change the names
-		} else if strings.Contains(cs.Row[2], "Prereq: ") {
+		} else if strings.Contains(st.Row[2], "Prereq: ") {
 			splitBy, key, name = "Prereq: ", "pre_reqs", "Pre Requisites"
 		}
 
 		// Split the string
-		var split []string = strings.Split(cs.Row[2], splitBy)
+		var split []string = strings.Split(st.Row[2], splitBy)
 		if len(split) > 1 {
 			// Set the key in the result map
 			// Append the key to the html result
-			cs.Result[key] = split[1]
-			cs.AppendHTML(name, split[1])
+			st.Result[key] = split[1]
+			st.AppendHTML(name, split[1])
 		}
 	}
 }
 
-// The IndexCourseScrapeResult() uses a map to categorize all the functions
+// The IndexScrapeResult() uses a map to categorize all the functions
 // that will be used for indexing the scrap result
 //
 // I decided to go with this way because it was cleaner than having
@@ -183,18 +183,18 @@ func (cs *CourseScrape) SetCourseAnti_Co_PreReqs() {
 // I also decided to use an int index for categorizing everything instead
 // of having to call if strings.Contains() a bunch of times
 //
-// The function takes the cs: *CourseScrape parameter
-func (cs *CourseScrape) IndexScrapeResult(index int) {
-	// The map for the CourseScrape.Index
+// The function takes the cs: *ScrapeTable parameter
+func (st *ScrapeTable) IndexScrapeResult(index int) {
+	// The map for the table scrape index
 	var indexMap map[int]func() = map[int]func(){
-		1: cs.SetCourseInfo,            // title, components, unit
-		2: cs.SetCourseId,              // id
-		3: cs.SetCourseName,            // name
-		4: cs.SetCourseDescription,     // desc
+		1: st.SetCourseInfo,            // title, components, unit
+		2: st.SetCourseId,              // id
+		3: st.SetCourseName,            // name
+		4: st.SetCourseDescription,     // desc
 		5: func() {},                   // [empty]
-		6: cs.SetCourseAnti_Co_PreReqs, // anti_reqs or co_reqs or pre_reqs
-		7: cs.SetCourseAnti_Co_PreReqs, // anti_reqs or co_reqs or pre_reqs
-		8: cs.SetCourseAnti_Co_PreReqs, // anti_reqs or co_reqs or pre_reqs
+		6: st.SetCourseAnti_Co_PreReqs, // anti_reqs or co_reqs or pre_reqs
+		7: st.SetCourseAnti_Co_PreReqs, // anti_reqs or co_reqs or pre_reqs
+		8: st.SetCourseAnti_Co_PreReqs, // anti_reqs or co_reqs or pre_reqs
 	}
 	// Call the function
 	indexMap[index]()
@@ -207,25 +207,25 @@ func (cs *CourseScrape) IndexScrapeResult(index int) {
 // The function takes the table: *string parameter
 //
 // The function returns the result map[string]string
-func _ScrapeCourseData_(cs *CourseScrape) (map[string]string, string) {
+func _ScrapeCourseData_(st *ScrapeTable) (map[string]string, string) {
 	// Define Variables
 	// splitTable: []string -> The table into the segments that contain the course info
 	// tableIndex: int -> Track table index
 	var (
-		splitTable []string = strings.Split(*cs.Table, "</")[1:]
+		splitTable []string = strings.Split(*st.Table, "</")[1:]
 		tableIndex int      = 0
 	)
 
 	// Iterate through the split table
 	for i := 0; i < len(splitTable); i++ {
 		// Split the splitted table by >
-		cs.Row = strings.Split(splitTable[i], ">")[1:]
+		st.Row = strings.Split(splitTable[i], ">")[1:]
 
 		// Check Data length
-		if len(cs.Row[0]) > 1 {
+		if len(st.Row[0]) > 1 {
 			// Check if the splitTable contains a note about the course
 			if strings.Contains(splitTable[i], "[Note: ") {
-				cs.SetCourseNote(splitTable[i])
+				st.SetCourseNote(splitTable[i])
 			} else {
 				tableIndex++
 				// Break the loop if the index is greater than 8
@@ -233,12 +233,12 @@ func _ScrapeCourseData_(cs *CourseScrape) (map[string]string, string) {
 					break
 				}
 				// Index the scrape result
-				cs.IndexScrapeResult(tableIndex)
+				st.IndexScrapeResult(tableIndex)
 			}
 		}
 	}
 	// Return the course id and the course info map (result)
-	return cs.Result, cs.WrapHTML()
+	return st.Result, st.WrapHTML()
 }
 
 // The _ScrapeCourseData_() function uses the ScrapeResult
@@ -256,8 +256,8 @@ func (sr *ScrapeResult) _ScrapeCourseData(t string) {
 	sr.Mutex.Lock()
 	defer sr.Mutex.Unlock()
 
-	// Scrape course data, pass the CourseScrape object
-	var courseData, htmlData = _ScrapeCourseData_(&CourseScrape{
+	// Scrape course data, pass the ScrapeTable object
+	var courseData, htmlData = _ScrapeCourseData_(&ScrapeTable{
 		Result: make(map[string]string),
 		HTML:   "",
 		Table:  &t,
