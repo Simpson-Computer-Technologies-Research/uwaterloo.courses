@@ -21,6 +21,18 @@ type CourseScrape struct {
 	HTML   string
 }
 
+// The Course Scrape struct holds four keys
+/* - ResultHTML: string -> The scraped data html result 				 */
+/* - ResultSlice: string -> The scraped data result slice 				 */
+/* - Mutex: *sync.RWMutex -> The Mutex Lock for prevent data overwrites  */
+/* - WaitGroup: *sync.WaitGroup -> The Wait Group for goroutines         */
+type ScrapeResult struct {
+	ResultHTML  string
+	ResultSlice []map[string]string
+	Mutex       *sync.RWMutex
+	WaitGroup   *sync.WaitGroup
+}
+
 // Convert the course course info into categories
 // For example it will convert MATH 235 LEC,IST,TUT 0.50 to
 // var courseTitle, components, unit = MATH 235, LEC,IST,TUT, 0.50
@@ -186,7 +198,7 @@ func (cs *CourseScrape) IndexScrapeResult(index int) {
 // The function takes the table: *string parameter
 //
 // The function returns the result map[string]string
-func _ScrapeCourseData(table *string) (map[string]string, string) {
+func _ScrapeCourseData_(table *string) (map[string]string, string) {
 	// Define Variables
 	var (
 		// Create a CourseScrap object
@@ -226,6 +238,32 @@ func _ScrapeCourseData(table *string) (map[string]string, string) {
 	return cs.Result, cs.WrapHTML()
 }
 
+// The _ScrapeCourseData_() function uses the ScrapeResult
+// object to prevent deadlocking, data overwriting and
+// uses the waitgroup for waiting until the goroutine finishes
+//
+// The function is called through a goroutine to maximize
+// scrape speed
+func (sr *ScrapeResult) _ScrapeCourseData(t string) {
+	// Finish goroutine wait once function returns
+	defer sr.WaitGroup.Done()
+
+	// Lock the Mutex
+	sr.Mutex.Lock()
+
+	// Unlock the mutex once the function returns
+	defer sr.Mutex.Unlock()
+
+	// Scrape course data
+	var courseData, htmlData = _ScrapeCourseData_(&t)
+
+	// Append the course data to the result map
+	sr.ResultSlice = append(sr.ResultSlice, courseData)
+
+	// Append the html data to the html result
+	sr.ResultHTML += fmt.Sprintf("<br><br>%s", htmlData)
+}
+
 // The ScrapeCourseData() function is the main course scraper function
 // This is because it scrapes all the course information and appends
 // it to a map
@@ -246,43 +284,41 @@ func ScrapeCourseData(client *fasthttp.Client, course string) (*[]map[string]str
 	}
 	// Define Variables
 	// resp, err -> request response and error
-	// result: map[string]map[string]string -> The result map that holds all the course data
+	// scrapeResult: *ScrapeResult -> Holds all the scrape data, the mutex lock and the waitgroup
 	var (
-		resp, err                     = _Req.Send()
-		result    []map[string]string = []map[string]string{}
+		resp, err                  = _Req.Send()
+		scrapeResult *ScrapeResult = &ScrapeResult{
+			ResultSlice: []map[string]string{},
+			Mutex:       &sync.RWMutex{},
+			WaitGroup:   &sync.WaitGroup{},
+			ResultHTML:  "",
+		}
 	)
 
 	// Handle response error
 	if err != nil || resp.StatusCode() != 200 {
-		return &result, "", err
+		return &scrapeResult.ResultSlice, "", err
 	}
 
 	// Define Variables
-	// body: string -> The http response body
-	// courseTables: []string -> The tables with each course program data
-	// courseTitle: string -> The courses title (ex: CS -> computerscience)
 	var (
+		// Track how long it takes to scrape data
 		scrapeStartTime time.Time = time.Now()
-		body            string    = string(resp.Body())
-		courseTables    []string  = strings.Split(body, "<div class=\"divTable\">")[1:]
-		htmlResult      string
-		waitGroup       sync.WaitGroup = sync.WaitGroup{}
+		// The response body string
+		body string = string(resp.Body())
+		// The courseTables slice
+		courseTables []string = strings.Split(body, "<div class=\"divTable\">")[1:]
 	)
 
 	// Iterate over the html tables
 	for _, table := range courseTables {
-		waitGroup.Add(1)
-		go func(table string) {
-			defer waitGroup.Done()
-			// Scrape course data
-			var courseData, htmlData = _ScrapeCourseData(&table)
-
-			// Append the course data to the result map
-			result = append(result, courseData)
-			htmlResult += fmt.Sprintf("<br><br>%s", htmlData)
-		}(table)
+		scrapeResult.WaitGroup.Add(1)
+		go scrapeResult._ScrapeCourseData(table)
 	}
-	waitGroup.Wait()
+
+	// Wait for scraping to finish
+	scrapeResult.WaitGroup.Wait()
+
 	// Log the time it took to scrape the course data
 	// It usually takes around 1-20ms
 	fmt.Printf(" [LOG] Scraped Course Data [%v]\n", time.Since(scrapeStartTime))
@@ -290,5 +326,5 @@ func ScrapeCourseData(client *fasthttp.Client, course string) (*[]map[string]str
 	// Return the result map containing all the
 	// course information, the html result data and the
 	// http request error
-	return &result, htmlResult, nil
+	return &scrapeResult.ResultSlice, scrapeResult.ResultHTML, nil
 }
