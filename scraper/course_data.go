@@ -8,6 +8,7 @@ import (
 	"sync"
 	"time"
 
+	"github.com/realTristan/The_University_of_Waterloo/global"
 	"github.com/realTristan/The_University_of_Waterloo/http"
 	"github.com/realTristan/The_University_of_Waterloo/redis"
 	"github.com/valyala/fasthttp"
@@ -34,6 +35,15 @@ type ScrapeResult struct {
 	ResultSlice []map[string]string
 	Mutex       *sync.RWMutex
 	WaitGroup   *sync.WaitGroup
+}
+
+// The RefreshCache() function re-scrapes and re-sets all
+// the keys in the redis cache database to the scrape result
+func RefreshCache() {
+	var RequestClient *fasthttp.Client = &fasthttp.Client{}
+	for _, k := range global.SubjectCodes {
+		ScrapeCourseData(RequestClient, k)
+	}
 }
 
 // Convert the course course info into categories

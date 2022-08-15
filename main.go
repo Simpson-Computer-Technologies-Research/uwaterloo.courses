@@ -3,10 +3,12 @@ package main
 // Import packages
 import (
 	"github.com/realTristan/The_University_of_Waterloo/api"
+	"github.com/realTristan/The_University_of_Waterloo/scraper"
 )
 
 // Main function
 func main() {
+	scraper.RefreshCache()
 	api.ListenAndServe(":8000")
 }
 
