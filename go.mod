@@ -1,6 +1,6 @@
 module github.com/realTristan/The_University_of_Waterloo
 
-go 1.19
+go 1.17
 
 require github.com/valyala/fasthttp v1.38.0
 
