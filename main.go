@@ -5,6 +5,12 @@ import (
 	"github.com/realTristan/The_University_of_Waterloo/api"
 )
 
+/*
+git add .
+git commit -m "c"
+git push heroku master
+*/
+
 // Main function
 func main() {
 	// scraper.RefreshCache()
