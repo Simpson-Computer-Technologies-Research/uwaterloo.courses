@@ -9,6 +9,7 @@ import (
 	"text/template"
 
 	"github.com/realTristan/The_University_of_Waterloo/global"
+	"github.com/realTristan/The_University_of_Waterloo/redis"
 	"github.com/realTristan/The_University_of_Waterloo/scraper"
 	"github.com/valyala/fasthttp"
 )
@@ -88,16 +89,6 @@ func SubjectCodesWithNamesHandler() http.HandlerFunc {
 func HomePageHandler() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		global.StartQueryTimer()
-		// Find out how to create a list with all the data
-		// This is the page that handles the query search
-		//
-		// Use the university waterloo text logo as the header for the main page
-		// Use the university of waterloo badge logo inside the course data list
-		//
-		// For the home page learn svelte with go and typescript
-		// and tailwind css
-		//
-		// Set the content type
 		w.Header().Add("Content-Type", "text/html")
 
 		// If there's a query arg, return the scraped data
@@ -106,14 +97,25 @@ func HomePageHandler() http.HandlerFunc {
 		// Else, return the home page with the search bar
 		if len(r.URL.Query().Get("q")) > 0 {
 			var (
-				// The course to search for
 				course string = QueryHandler(r)
-				// The html list that contains all the course data
-				result, html, _ = scraper.ScrapeCourseData(RequestClient, strings.ToUpper(course))
+				result []map[string]string
+				html   string
 			)
+			// If the course key is not in the redis database
+			// then run the scraper to get the course data
+			if !redis.Contains(course) {
+				result, html, _ = scraper.ScrapeCourseData(RequestClient, strings.ToUpper(course))
+			} else {
+				// Else, if the course key is in the redis
+				// database, then generate an html string
+				// and set the html variable to said string
+				json.Unmarshal([]byte(redis.Get(course)), &result)
+				html = redis.GenerateHTML(result)
+			}
+
 			// Execute the scraped data page html template
 			Template.Execute(w,
-				fmt.Sprintf("%s%s", global.EndQueryTimer(len(*result)), html))
+				fmt.Sprintf("%s%s", global.EndQueryTimer(len(result)), html))
 		} else {
 			// Execute the home page html template
 			Template.Execute(w, nil)

@@ -2,12 +2,14 @@ package scraper
 
 // Import packages
 import (
+	"encoding/json"
 	"fmt"
 	"strings"
 	"sync"
 	"time"
 
 	"github.com/realTristan/The_University_of_Waterloo/http"
+	"github.com/realTristan/The_University_of_Waterloo/redis"
 	"github.com/valyala/fasthttp"
 )
 
@@ -68,9 +70,9 @@ func (st *ScrapeTable) SetCourseInfo() {
 		var title, comps, unit = IndexCourseInfo(st.Row[0])
 
 		// Append values to the result map
-		st.Result["title"] = title
-		st.Result["components"] = comps
-		st.Result["unit"] = unit
+		st.Result["Title"] = title
+		st.Result["Components"] = comps
+		st.Result["Unit"] = unit
 
 		// Append values to the html
 		st.AppendHTML(title, "")
@@ -93,7 +95,7 @@ func (st *ScrapeTable) SetCourseId() {
 		if len(split) > 1 {
 			// Set the id key in the result map
 			// Append the id to the html result
-			st.Result["id"] = split[1]
+			st.Result["ID"] = split[1]
 			st.AppendHTML("ID", split[1])
 		}
 	}
@@ -107,7 +109,7 @@ func (st *ScrapeTable) SetCourseName() {
 	if len(st.Row) > 2 {
 		// Set the name key in the result map
 		// Append the name to the html result
-		st.Result["name"] = st.Row[2]
+		st.Result["Name"] = st.Row[2]
 		st.AppendHTML("Name", st.Row[2])
 	}
 }
@@ -120,7 +122,7 @@ func (st *ScrapeTable) SetCourseDescription() {
 	if len(st.Row) > 1 {
 		// Set the description in the result map
 		// Append the description to the html result
-		st.Result["desc"] = st.Row[1]
+		st.Result["Description"] = st.Row[1]
 		st.AppendHTML("Description", st.Row[1])
 	}
 }
@@ -136,7 +138,7 @@ func (st *ScrapeTable) SetCourseNote(data string) {
 	if len(split) > 1 {
 		// Set the note in the result map
 		// Append the note to the result html
-		st.Result["note"] = "[" + split[1]
+		st.Result["Note"] = "[" + split[1]
 		st.AppendHTML("Note", "["+split[1])
 	}
 }
@@ -152,15 +154,15 @@ func (st *ScrapeTable) SetCourseNote(data string) {
 func (st *ScrapeTable) SetCourseAnti_Co_PreReqs() {
 	if len(st.Row) > 2 {
 		// Start with anti reqs
-		var splitBy, key, name string = "Antireq: ", "anti_reqs", "Anti Requisites"
+		var splitBy, name string = "Antireq: ", "Anti Requisites"
 
 		// If it shows coreqs instead of antireqs, change the names
 		if strings.Contains(st.Row[2], "Coeq: ") {
-			splitBy, key, name = "Coreq: ", "co_reqs", "Co Requisites"
+			splitBy, name = "Coreq: ", "Co Requisites"
 
 			// If it shows prereqs instead of antireqs, change the names
 		} else if strings.Contains(st.Row[2], "Prereq: ") {
-			splitBy, key, name = "Prereq: ", "pre_reqs", "Pre Requisites"
+			splitBy, name = "Prereq: ", "Pre Requisites"
 		}
 
 		// Split the string
@@ -168,7 +170,7 @@ func (st *ScrapeTable) SetCourseAnti_Co_PreReqs() {
 		if len(split) > 1 {
 			// Set the key in the result map
 			// Append the key to the html result
-			st.Result[key] = split[1]
+			st.Result[name] = split[1]
 			st.AppendHTML(name, split[1])
 		}
 	}
@@ -278,7 +280,7 @@ func (sr *ScrapeResult) _ScrapeCourseData(t string) {
 //
 // The function returns the course title string, the course data result map
 // the result html and the http request error
-func ScrapeCourseData(client *fasthttp.Client, course string) (*[]map[string]string, string, error) {
+func ScrapeCourseData(client *fasthttp.Client, course string) ([]map[string]string, string, error) {
 	// Utilize the HttpRequest struct to easily send an http request
 	var _Req *http.HttpRequest = &http.HttpRequest{
 		Client: client,
@@ -302,7 +304,7 @@ func ScrapeCourseData(client *fasthttp.Client, course string) (*[]map[string]str
 	)
 	// Handle response error
 	if err != nil || resp.StatusCode() != 200 {
-		return &scrapeResult.ResultSlice, "", err
+		return []map[string]string{}, "", err
 	}
 
 	// Define Variables
@@ -328,8 +330,13 @@ func ScrapeCourseData(client *fasthttp.Client, course string) (*[]map[string]str
 	// It usually takes around 1-20ms
 	fmt.Printf(" [LOG] Scraped Course Data [%v]\n", time.Since(scrapeStartTime))
 
+	// Set the course key in the redis database
+	// to the scrape result data
+	resultJson, _ := json.Marshal(scrapeResult.ResultSlice)
+	redis.Set(course, string(resultJson))
+
 	// Return the result map containing all the
 	// course information, the html result data and the
 	// http request error
-	return &scrapeResult.ResultSlice, scrapeResult.ResultHTML, nil
+	return scrapeResult.ResultSlice, scrapeResult.ResultHTML, nil
 }
