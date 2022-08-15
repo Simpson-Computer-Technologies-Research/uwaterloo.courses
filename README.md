@@ -96,7 +96,8 @@ $ curl -X GET http://localhost:8000/subjects/names
 ```
 
 # Project Showcase
-<img width="1311" alt="Screen Shot 2022-08-14 at 4 56 40 PM" src="https://user-images.githubusercontent.com/75189508/184554649-373345f0-502d-4a16-8579-0f6f9bfa2b5d.png">
+<img width="1401" alt="Screen Shot 2022-08-15 at 4 07 23 PM" src="https://user-images.githubusercontent.com/75189508/184709727-a1835949-216a-4468-a3ca-fd342bf3fb95.png">
+
 
 
 
