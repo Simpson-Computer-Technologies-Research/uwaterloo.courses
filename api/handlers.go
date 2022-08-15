@@ -146,10 +146,3 @@ func HomePageHandler() http.HandlerFunc {
 		}
 	}
 }
-
-// The DevTestingHandler() function is used for developement testing
-func DevTestingHandler() http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		fmt.Fprint(w, "Developement Testing Endpoint")
-	}
-}

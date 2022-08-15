@@ -32,9 +32,6 @@ func ListenAndServe(port string) {
 	// at the university of waterloo
 	router.HandleFunc("/subjects/name", SubjectCodesWithNamesHandler()).Methods("GET")
 
-	// Developement Testing
-	router.HandleFunc("/dev", DevTestingHandler()).Methods("GET")
-
 	// Handle Router
 	http.Handle("/", router)
 
