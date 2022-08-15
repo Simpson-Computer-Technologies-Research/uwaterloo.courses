@@ -13,9 +13,14 @@ func main() {
 # UNIVERSITY OF WATERLOO COURSE FINDER
 
 WHAT TO DO NEXT:
-- Learn Redis -> Improves Searching and Query Speed
-- Make Frontend look better
+- Learn Redis-Search module for querying
+- Make Frontend look better (Svelte or React)
 - Learn Docker
+
+
+FOR SVELTE:
+https://www.sitepoint.com/svelte-fetch-data/
+- fetch data from localhost api (golang api)
 
 
 PROJECT NOTES:
