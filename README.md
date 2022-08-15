@@ -31,6 +31,7 @@ Although my api is not as fast and big as the university of waterloo's,
 I just thought it'd be a good addition to the project
 
 <h3>Usage</h3>
+
 Example Response (Get Computer Science Data)
 <br>
 
