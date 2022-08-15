@@ -17,7 +17,7 @@ func (st *ScrapeTable) AppendHTML(key string, value string) {
 // into a div that is then styled using the style.css static file
 func (st *ScrapeTable) WrapHTML() string {
 	return fmt.Sprintf(
-		`<div style="width: 100%s"> 
+		`<div style="width: 100%%"> 
 			<div class="course_div">%s</div>
-		</div>`, "%", st.HTML)
+		</div>`, st.HTML)
 }

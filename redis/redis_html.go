@@ -37,14 +37,14 @@ func GenerateCourseHTML(data map[string]string) string {
 	// If anyone has any suggestions for this part of the
 	// code, please tell me!
 	return fmt.Sprintf(`
-	<div style="width: 100%s; margin-top: 5%s; margin-bottom: -1.3%s">
+	<div style="width: 100%%; margin-top: 5%%; margin-bottom: -1.3%%">
 		<div class="course_div">
 			<div style="font-size:13px;">
 				<strong>%v</strong>
 			</div>
 			%s
 		</div>
-	</div>`, "%", "%", "%", data["Title"], result)
+	</div>`, data["Title"], result)
 }
 
 // Create html list from data
