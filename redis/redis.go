@@ -95,12 +95,6 @@ func GetSimilarCourses(html string, query string) (string, int) {
 
 						// Append to the html string
 						html += GenerateCourseHTML(data[v])
-
-						/* Append the course title
-						var title string = strings.Split(data[v]["title"], " ")[0]
-						if !global.SliceContains(&queryArgs, title) {
-							queryArgs = append(queryArgs, title)
-						}*/
 					}
 				}
 			}

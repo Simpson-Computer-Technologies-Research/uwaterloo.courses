@@ -288,7 +288,7 @@ func (sr *ScrapeResult) _ScrapeCourseData(t string) {
 //
 // The function takes the client: *fasthttp.Client parameter to send http requests
 //
-// The function returns the course title string, the course data result map
+// The function returns the course data result slice,
 // the result html and the http request error
 func ScrapeCourseData(client *fasthttp.Client, course string) ([]map[string]string, string, error) {
 	// Utilize the HttpRequest struct to easily send an http request
