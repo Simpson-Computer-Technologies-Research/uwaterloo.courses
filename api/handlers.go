@@ -116,20 +116,22 @@ func HomePageHandler() http.HandlerFunc {
 			)
 			// If the course key is not in the redis database
 			// then run the scraper to get the course data
-			if !redis.Exists(course) {
+			if !redis.Exists(course) && len(course) > 0 {
 				// Scrape the course data
 				result, html, _ = scraper.ScrapeCourseData(RequestClient, strings.ToUpper(course))
 			} else {
-				// Unmarshal the course data from the
-				// redis cache
-				json.Unmarshal([]byte(redis.Get(course)), &result)
+				// Check to make sure the course isn't empty
+				if len(course) > 0 {
+					// Unmarshal the course data from the
+					// redis cache
+					json.Unmarshal([]byte(redis.Get(course)), &result)
 
-				// Iterate over the result slice
-				for i := 0; i < len(result); i++ {
-					// Append to the result html, the generated html
-					html += redis.GenerateCourseHTML(result[i])
+					// Iterate over the result slice
+					for i := 0; i < len(result); i++ {
+						// Append to the result html, the generated html
+						html += redis.GenerateCourseHTML(result[i])
+					}
 				}
-
 				// Get the similar courses using query keywords
 				html, resultAmount = redis.GetSimilarCourses(html, query)
 			}

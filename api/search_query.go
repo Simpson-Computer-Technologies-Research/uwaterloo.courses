@@ -1,6 +1,7 @@
 package api
 
 import (
+	"fmt"
 	"net/http"
 	"strings"
 	"unicode"
@@ -60,7 +61,15 @@ func SearchQuery(query string) string {
 			bestMatch = subjectCode
 		}
 	}
-	return bestMatch
+	// Print the best match data for testing
+	fmt.Printf(
+		"Query BestMatchValue: %d\nQueryBestMatch %s\n", bestMatchValue, bestMatch)
+
+	// Check if the bestMatch is valid
+	if bestMatchValue > 4 {
+		return bestMatch
+	}
+	return ""
 }
 
 // The QueryHandler() function handles the search query and whether

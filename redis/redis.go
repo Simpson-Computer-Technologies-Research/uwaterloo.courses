@@ -82,13 +82,11 @@ func GetSimilarCourses(html string, query string) (string, int) {
 		// For every query arg check if the
 		// map contains the arg
 		for q := 0; q < len(queryArgs); q++ {
-			var arg string = fmt.Sprintf(" %s ", queryArgs[q])
-
 			// Iterate over the decoded map
 			for v := 0; v < len(data); v++ {
 
 				// Check if the data contains the queryArg
-				if strings.Contains(fmt.Sprint(data[v]), arg) {
+				if strings.Contains(fmt.Sprint(data[v]), queryArgs[q]) {
 
 					// Check if course is already present
 					if !strings.Contains(html, data[v]["ID"]) {
