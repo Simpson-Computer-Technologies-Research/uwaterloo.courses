@@ -48,7 +48,7 @@ func EndQueryTimer(resultCount int) string {
                     required="" 
                     id="name" 
                     formaction="/">
-                <label>Search</label>
+                <label style="font-size: 21px;">Search</label>
                 <span></span>
             </div>
         </form>
