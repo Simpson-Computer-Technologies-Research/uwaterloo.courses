@@ -153,7 +153,14 @@ func GenerateCourseHTML(data map[string]string) string {
 	// code, please tell me!
 	return fmt.Sprintf(`
 		<div style="width: 100%%; margin-top: 5%%; margin-bottom: -1.3%%">
-			<div class="course_div">
+			<div class="course_div" style="position: relative;">
+			<img 
+				src="static/images/waterloo_logo.png" 
+				alt="" 
+				width="80"
+				height="80"
+				style="position: absolute; top: 5%%; right: 1%%;"
+			>
 				<div style="font-size:13px;">
 					<strong>%v</strong>
 				</div>

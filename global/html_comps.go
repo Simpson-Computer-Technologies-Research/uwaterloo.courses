@@ -11,16 +11,21 @@ import (
 func HomePageSearchBar() string {
 	return `
 	<div class="container">
+	<img 
+		src="static/images/waterloo_title_logo.png" 
+		alt=""
+		style="margin-top: -30%; display: block; margin-left: -12.5%; margin-right: auto; width: 120%;"
+	>
         <form>
             <div class="input-field">
-                <input 
+                <input
 					minlength="5"
                     type="text" 
                     name="q" 
                     required="" 
                     id="name" 
                     formaction="/">
-                <label>Search</label>
+                <label style="font-size: 21px;">Search</label>
                 <span></span>
             </div>
         </form>
