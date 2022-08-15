@@ -140,11 +140,23 @@ func GenerateCourseHTML(data map[string]string) string {
 	// will be returned inside styled divs
 	for i := 0; i < len(keys); i++ {
 		if len(data[keys[i]]) > 0 {
+			// Add the div with the key and value
+			// to the html result
 			result += fmt.Sprintf(`
 			<div style="font-size:13px;">
 				<strong>%s</strong> %v
 			</div>
 			`, keys[i], data[keys[i]])
+
+			// Seperate the Title, Components, Unit and ID
+			// from the Name, Description, and so on
+			if i == 2 {
+				result += `
+					<div style="font-size:13px;">
+						<strong>‏‏‎ ‎</strong>
+					</div>
+				`
+			}
 		}
 	}
 
@@ -159,7 +171,7 @@ func GenerateCourseHTML(data map[string]string) string {
 				alt="" 
 				width="80"
 				height="80"
-				style="position: absolute; top: 5%%; right: 1%%;"
+				style="position: absolute; top: 8.3%%; right: 1.7%%;"
 			>
 				<div style="font-size:13px;">
 					<strong>%v</strong>
