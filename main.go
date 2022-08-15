@@ -16,7 +16,6 @@ func main() {
 # UNIVERSITY OF WATERLOO COURSE FINDER
 
 WHAT TO DO NEXT:
-- Learn Redis-Search module for querying
 - Make Frontend look better (Svelte or React)
 - Learn Docker
 

@@ -46,6 +46,25 @@ func RefreshCache() {
 	}
 }
 
+// The AppendCourseKeyHTML() function takes the course key and the
+// course info and puts it into an html div.
+// This html div is used as a value in the final html list
+func (st *ScrapeTable) AppendCourseKeyHTML(key string, value string) {
+	st.HTML += fmt.Sprintf(
+		`<div style="font-size:13px;">
+			<strong> %v</strong> %v
+		</div>`, key, value)
+}
+
+// The WrapHTML() function wraps the final course data list html
+// into a div that is then styled using the style.css static file
+func (st *ScrapeTable) WrapHTML() string {
+	return fmt.Sprintf(
+		`<div style="width: 100%%"> 
+			<div class="course_div">%s</div>
+		</div>`, st.HTML)
+}
+
 // Convert the course course info into categories
 // For example it will convert MATH 235 LEC,IST,TUT 0.50 to
 // var courseTitle, components, unit = MATH 235, LEC,IST,TUT, 0.50
@@ -85,9 +104,9 @@ func (st *ScrapeTable) SetCourseInfo() {
 		st.Result["Unit"] = unit
 
 		// Append values to the html
-		st.AppendHTML(title, "")
-		st.AppendHTML("Components", comps)
-		st.AppendHTML("Unit", unit)
+		st.AppendCourseKeyHTML(title, "")
+		st.AppendCourseKeyHTML("Components", comps)
+		st.AppendCourseKeyHTML("Unit", unit)
 	}
 }
 
@@ -106,7 +125,7 @@ func (st *ScrapeTable) SetCourseId() {
 			// Set the id key in the result map
 			// Append the id to the html result
 			st.Result["ID"] = split[1]
-			st.AppendHTML("ID", split[1])
+			st.AppendCourseKeyHTML("ID", split[1])
 		}
 	}
 }
@@ -120,7 +139,7 @@ func (st *ScrapeTable) SetCourseName() {
 		// Set the name key in the result map
 		// Append the name to the html result
 		st.Result["Name"] = st.Row[2]
-		st.AppendHTML("Name", st.Row[2])
+		st.AppendCourseKeyHTML("Name", st.Row[2])
 	}
 }
 
@@ -133,7 +152,7 @@ func (st *ScrapeTable) SetCourseDescription() {
 		// Set the description in the result map
 		// Append the description to the html result
 		st.Result["Description"] = st.Row[1]
-		st.AppendHTML("Description", st.Row[1])
+		st.AppendCourseKeyHTML("Description", st.Row[1])
 	}
 }
 
@@ -149,7 +168,7 @@ func (st *ScrapeTable) SetCourseNote(data string) {
 		// Set the note in the result map
 		// Append the note to the result html
 		st.Result["Note"] = "[" + split[1]
-		st.AppendHTML("Note", "["+split[1])
+		st.AppendCourseKeyHTML("Note", "["+split[1])
 	}
 }
 
@@ -181,7 +200,7 @@ func (st *ScrapeTable) SetCourseAnti_Co_PreReqs() {
 			// Set the key in the result map
 			// Append the key to the html result
 			st.Result[name] = split[1]
-			st.AppendHTML(name, split[1])
+			st.AppendCourseKeyHTML(name, split[1])
 		}
 	}
 }

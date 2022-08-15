@@ -2,32 +2,8 @@ package global
 
 // Import packages
 import (
-	"fmt"
-	"math"
 	"time"
 )
-
-// Course data in memory cache
-var CourseData map[string][]string = make(map[string][]string)
-
-// The AppendHTML() function takes the course key and the
-// course info and puts it into an html div.
-// This html div is used as a value in the final html list
-func AppendHTML(key string, value string) string {
-	return fmt.Sprintf(
-		`<div style="font-size:13px;">
-			<strong> %v</strong> %v
-		</div>`, key, value)
-}
-
-// The WrapHTML() function wraps the final course data list html
-// into a div that is then styled using the style.css static file
-func WrapHTML(html string) string {
-	return fmt.Sprintf(
-		`<div style="width: 100%s"> 
-			<div class="course_div">%s</div>
-		</div>`, "%", html)
-}
 
 // The SearchTime variables will be used to show
 // How long it took to query the course data
@@ -37,18 +13,6 @@ var SearchTime time.Time
 // SearchTime variable to the current time which will
 // be used at the end of the query to determine query speed
 func StartQueryTimer() { SearchTime = time.Now() }
-
-// The EndQueryTimer() function is used to return the
-// query speed in an html div
-func EndQueryTimer(resultCount int) string {
-	return fmt.Sprintf(
-		`<div style="margin-bottom:1%s;">
-			<strong>%d</strong> 
-				results in 
-			<strong style="color: #FEDD00">%vs</strong>
-		</div>`, "%", resultCount,
-		math.Round(time.Since(SearchTime).Seconds()*100)/100)
-}
 
 // The slice that contains all the university of waterloo's subject codes
 // I'm going to set them manually for now, but there is a webscrape section

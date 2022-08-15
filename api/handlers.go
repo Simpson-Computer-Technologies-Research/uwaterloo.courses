@@ -142,7 +142,7 @@ func HomePageHandler() http.HandlerFunc {
 					global.EndQueryTimer(len(result)+resultAmount), html))
 		} else {
 			// Execute the home page html template
-			Template.Execute(w, nil)
+			Template.Execute(w, global.HomePageSearchBar())
 		}
 	}
 }
