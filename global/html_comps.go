@@ -14,12 +14,12 @@ func HomePageSearchBar() string {
 	<img 
 		src="static/images/waterloo_title_logo.png" 
 		alt=""
-		style="margin-top: -30%; display: block; margin-left: -12.5%; margin-right: auto; width: 120%;"
+		style="margin-top: -30%; display: block; margin-left: -13%; margin-right: auto; width: 120%;"
 	>
         <form>
             <div class="input-field">
                 <input
-					minlength="5"
+					minlength="4"
                     type="text" 
                     name="q" 
                     required="" 
@@ -42,7 +42,7 @@ func EndQueryTimer(resultCount int) string {
         <form>
             <div class="input-field">
                 <input 
-					minlength="5"
+					minlength="4"
                     type="text" 
                     name="q" 
                     required="" 
@@ -64,7 +64,7 @@ func EndQueryTimer(resultCount int) string {
 			<div>
 				<strong>%d</strong> 
 					results in 
-				<strong style="color: #FEDD00">%vs</strong>
+				<strong style="color: #ffd54f">%vs</strong>
 			</div>
 		</div>
 		</div>

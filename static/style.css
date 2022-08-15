@@ -73,7 +73,7 @@ body {
 .input-field input[type="text"]:valid + label {
     transform: translateY(-35px);
     font-size: 20px;
-    color: #FEDD00;
+    color: #ffd54f;
 }
 
 .input-field span {
@@ -93,7 +93,7 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    background: #FEDD00;
+    background: #ffd54f;
     transform: scaleX(0);
     transform-origin: right;
     transition: transform 0.5s ease-in-out;

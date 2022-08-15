@@ -53,6 +53,10 @@ func SearchQuery(query string) string {
 					count += 1 * (len(query) / len(subjectName))
 				}
 			}
+			// Query vs SubjectName length
+			if i+2 > len(query)/((len(subjectName)/len(query))+1) {
+				break
+			}
 		}
 		// Check if the current subject is more accurate
 		// than the previous ones
