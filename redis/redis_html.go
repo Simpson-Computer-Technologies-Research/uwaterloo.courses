@@ -3,10 +3,6 @@ package redis
 // Import packages
 import "fmt"
 
-func AppendCourseData() {
-
-}
-
 // The GenerateCourseHTML() function will use the course
 // data map to generate an html string that is used for showing
 // the list of courses on the home page.

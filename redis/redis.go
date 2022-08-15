@@ -6,8 +6,7 @@ import (
 	"github.com/go-redis/redis/v9"
 )
 
-// Host redis database docker command:
-// docker run --name redis-test-instance -p 6379:6379 -d redis
+// RUN docker run --name redis-test-instance -p 6379:6379 -d redis
 
 // Define Variables
 var (
