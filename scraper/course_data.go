@@ -321,7 +321,8 @@ func ScrapeCourseData(client *fasthttp.Client, course string) ([]map[string]stri
 	}
 	// Define Variables
 	// resp, err -> request response and error
-	// scrapeResult: *ScrapeResult -> Holds all the scrape data, the mutex lock and the waitgroup
+	// scrapeResult: *ScrapeResult -> Holds all the scrape data,
+	// the mutex lock and the waitgroup
 	var (
 		resp, err                  = _Req.Send()
 		scrapeResult *ScrapeResult = &ScrapeResult{
