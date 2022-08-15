@@ -89,33 +89,55 @@ func SubjectCodesWithNamesHandler() http.HandlerFunc {
 func HomePageHandler() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		global.StartQueryTimer()
+
+		// Set the header for html
 		w.Header().Add("Content-Type", "text/html")
+
+		// Set the query: string variable
+		var query string = strings.ToLower(r.URL.Query().Get("q"))
 
 		// If there's a query arg, return the scraped data
 		// in html format
 		//
 		// Else, return the home page with the search bar
-		if len(r.URL.Query().Get("q")) > 0 {
+		if len(query) > 0 {
 			var (
+				// course: string -> The course code
 				course string = QueryHandler(r)
+
+				// result: []map[string]string -> The course data result map
 				result []map[string]string
-				html   string
+
+				// html: string -> The result html
+				html string
+
+				// resultAmount: int -> The amount of similar courses to add
+				resultAmount int = 0
 			)
 			// If the course key is not in the redis database
 			// then run the scraper to get the course data
-			if !redis.Contains(course) {
+			if !redis.Exists(course) {
+				// Scrape the course data
 				result, html, _ = scraper.ScrapeCourseData(RequestClient, strings.ToUpper(course))
 			} else {
-				// Else, if the course key is in the redis
-				// database, then generate an html string
-				// and set the html variable to said string
+				// Unmarshal the course data from the
+				// redis cache
 				json.Unmarshal([]byte(redis.Get(course)), &result)
-				html = redis.GenerateHTML(result)
+
+				// Iterate over the result slice
+				for i := 0; i < len(result); i++ {
+					// Append to the result html, the generated html
+					html += redis.GenerateCourseHTML(result[i])
+				}
+
+				// Get the similar courses using query keywords
+				html, resultAmount = redis.GetSimilarCourses(html, query)
 			}
 
 			// Execute the scraped data page html template
 			Template.Execute(w,
-				fmt.Sprintf("%s%s", global.EndQueryTimer(len(result)), html))
+				fmt.Sprintf("%s%s",
+					global.EndQueryTimer(len(result)+resultAmount), html))
 		} else {
 			// Execute the home page html template
 			Template.Execute(w, nil)

@@ -1,7 +1,9 @@
 package redis
 
 // Import packages
-import "fmt"
+import (
+	"fmt"
+)
 
 // The GenerateCourseHTML() function will use the course
 // data map to generate an html string that is used for showing
@@ -45,18 +47,4 @@ func GenerateCourseHTML(data map[string]string) string {
 				%s
 			</div>
 		</div>`, data["Title"], result)
-}
-
-// Create html list from data
-func GenerateHTML(data []map[string]string) string {
-	// Html result string
-	var html string = ""
-
-	// Iterate over the course data slice
-	for i := 0; i < len(data); i++ {
-		html += GenerateCourseHTML(data[i])
-	}
-
-	// Return the html
-	return html
 }

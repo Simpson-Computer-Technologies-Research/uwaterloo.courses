@@ -1,7 +1,9 @@
 package main
 
 // Import packages
-import "github.com/realTristan/The_University_of_Waterloo/api"
+import (
+	"github.com/realTristan/The_University_of_Waterloo/api"
+)
 
 // Main function
 func main() {

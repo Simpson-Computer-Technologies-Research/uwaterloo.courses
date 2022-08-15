@@ -1,6 +1,9 @@
 package redis
 
-import "fmt"
+// Import Packages
+import (
+	"fmt"
+)
 
 // The CreateSchema() function is used to create the
 // redis cache full text search schema.
