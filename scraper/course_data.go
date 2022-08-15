@@ -332,8 +332,10 @@ func ScrapeCourseData(client *fasthttp.Client, course string) ([]map[string]stri
 
 	// Set the course key in the redis database
 	// to the scrape result data
-	resultJson, _ := json.Marshal(scrapeResult.ResultSlice)
-	redis.Set(course, string(resultJson))
+	if len(scrapeResult.ResultSlice) > 1 {
+		resultJson, _ := json.Marshal(scrapeResult.ResultSlice)
+		redis.Set(course, string(resultJson))
+	}
 
 	// Return the result map containing all the
 	// course information, the html result data and the
