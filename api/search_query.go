@@ -35,14 +35,19 @@ func SearchQuery(query string) string {
 	// bestMatchValue: int -> Track the highest value for character matching
 	// bestMatch: string -> the best subject code for the query
 	var (
-		bestMatchValue int = -1
+		bestMatchValue float64 = -1
 		bestMatch      string
 	)
 
 	// Iterate over the subject names map
 	for subjectName, subjectCode := range global.SubjectNames {
 		// Add the subject code to the result map
-		var count int = 0
+		var count float64 = 0
+
+		// Check if subjectName contains query
+		if strings.Contains(subjectName, string(query)) {
+			count += 5
+		}
 
 		// Iterate over the query characters
 		for i := 0; i < len(query); i++ {
@@ -50,7 +55,7 @@ func SearchQuery(query string) string {
 			if i < len(subjectName) {
 				// Check if the characters at the indexes are the same
 				if subjectName[i] == query[i] {
-					count += 1 * (len(query) / len(subjectName))
+					count += float64(1 * (len(query) / len(subjectName)))
 				}
 			}
 			// Query vs SubjectName length
@@ -67,7 +72,7 @@ func SearchQuery(query string) string {
 	}
 	// Print the best match data for testing
 	fmt.Printf(
-		"Query BestMatchValue: %d\nQueryBestMatch %s\n", bestMatchValue, bestMatch)
+		"Query BestMatchValue: %v\nQueryBestMatch %v\n", bestMatchValue, bestMatch)
 
 	// Check if the bestMatch is valid
 	if bestMatchValue > 4 {

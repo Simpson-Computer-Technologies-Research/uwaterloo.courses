@@ -19,7 +19,7 @@ func HomePageSearchBar() string {
         <form>
             <div class="input-field">
                 <input
-					minlength="4"
+					minlength="3"
                     type="text" 
                     name="q" 
                     required="" 
@@ -42,7 +42,7 @@ func EndQueryTimer(resultCount int) string {
         <form>
             <div class="input-field">
                 <input 
-					minlength="4"
+					minlength="3"
                     type="text" 
                     name="q" 
                     required="" 
