@@ -72,7 +72,7 @@ func ScrapeSubjectTitle() string {
 	)
 	// Handle any errors
 	if err != nil {
-		fmt.Printf(" [LOG] Scrape Subject Title Error: %e", err)
+		fmt.Printf(" >> Scrape Subject Title Error: %e", err)
 		return ""
 	}
 	// Convert the response body to a string
