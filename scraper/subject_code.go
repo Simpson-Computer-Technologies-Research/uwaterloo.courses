@@ -51,7 +51,7 @@ func _ScrapeSubjectCodes(html *string) []string {
 // "https://classes.uwaterloo.ca/uwpcshtm.html" website
 //
 // The Subject Codes will be used to get information about the courses
-// from the "https://ucalendar.uwaterloo.ca/2021/COURSE/course-CS.html"
+// from the "https://ucalendar.uwaterloo.ca/2223/COURSE/course-CS.html"
 // website.
 //
 // The function takes the client: *fasthttp.Client parameter to send

@@ -122,7 +122,7 @@ func HomePageHandler() http.HandlerFunc {
 
 				// Iterate over the result slice
 				for i := 0; i < len(result); i++ {
-					// Append to the result html, the generated html
+					// Append the generated html to the result html
 					html += global.GenerateCourseHTML(result[i])
 				}
 			} else {

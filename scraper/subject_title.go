@@ -57,11 +57,11 @@ func _ScrapeSubjectTitle(body *string) string {
 // The ScrapeSubjectTitle() is used to send an http request to the
 // official university of waterloo website and return the scraped
 // subject codes using the _ScrapeSubjectTitle(&response_body) function
-func ScrapeSubjectTitle() string {
+func ScrapeSubjectTitle(course string) string {
 	var (
 		// Create the request object used for sending the http request
 		_Req *requests.HttpRequest = &requests.HttpRequest{
-			Url:    "https://classes.uwaterloo.ca/uwpcshtm.html",
+			Url:    fmt.Sprintf("https://ucalendar.uwaterloo.ca/2223/COURSE/course-%s.html", course),
 			Method: "GET",
 			Headers: map[string]string{
 				"User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/15.2 Safari/605.1.15",

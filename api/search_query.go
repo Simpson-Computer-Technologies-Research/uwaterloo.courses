@@ -54,7 +54,7 @@ func GetSubjectNames() []string {
 }
 
 // The GetBestMatch() function uses the cleaned query (ex: computerscience)
-// and find the best match using it against the global.SubjectNames map
+// to find the best match using the global.SubjectNames map
 // It returns the best subject code match (ex: CS)
 //
 // I tried my best to use non constants when adding to the
