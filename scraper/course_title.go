@@ -33,15 +33,13 @@ func CleanCourseTitle(title string) string {
 //
 // The function uses the scraped title to return the cleaned course title string
 func ScrapeCourseTitle(body *string) string {
-	// First split
+	// First header split
 	var temp []string = strings.Split(*body, "<h2 class=\"subject\">")
 	// Check length of first split
 	if len(temp) > 1 {
-		// First split
-		var (
-			_title string   = temp[1]
-			_temp  []string = strings.Split(_title, "</h2>")
-		)
+		// Second header split
+		var _temp []string = strings.Split(temp[1], "</h2>")
+
 		// Check the length of the secind split
 		if len(_temp) > 0 {
 			// Clean the course title and return it

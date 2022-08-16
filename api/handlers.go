@@ -139,7 +139,7 @@ func HomePageHandler() http.HandlerFunc {
 			// Execute the scraped data page html template
 			Template.Execute(w,
 				fmt.Sprintf("%s%s",
-					global.EndQueryTimer(len(result)+resultAmount), html))
+					global.SearchPageMenu(len(result)+resultAmount), html))
 		} else {
 			// Execute the home page html template
 			Template.Execute(w, global.HomePageSearchBar())

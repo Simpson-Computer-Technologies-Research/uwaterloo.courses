@@ -33,9 +33,9 @@ func HomePageSearchBar() string {
 	`
 }
 
-// The EndQueryTimer() function is used to return the
+// The SearchPageMenu() function is used to return the
 // query speed in an html div
-func EndQueryTimer(resultCount int) string {
+func SearchPageMenu(resultCount int) string {
 	return fmt.Sprintf(
 		`
 		<div class="container">
