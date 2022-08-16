@@ -2,9 +2,7 @@ package global
 
 import (
 	"fmt"
-	"math"
 	"strings"
-	"time"
 )
 
 // The EmptyDiv() function returns
@@ -68,8 +66,8 @@ func QueryMenu(resultCount int) string {
 				</div>
 			</div>
 		</div>
-		`, _QueryInputField(), resultCount,
-		math.Round(time.Since(SearchTime).Seconds()*100)/100)
+		`, _QueryInputField(), resultCount, EndQueryTimer())
+
 }
 
 // The GenerateCourseHTML() function will use the course

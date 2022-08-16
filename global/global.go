@@ -2,6 +2,7 @@ package global
 
 // Import packages
 import (
+	"math"
 	"time"
 )
 
@@ -13,6 +14,15 @@ var SearchTime time.Time
 // SearchTime variable to the current time which will
 // be used at the end of the query to determine query speed
 func StartQueryTimer() { SearchTime = time.Now() }
+
+// The EndQueryTimer() function is used to return
+// the time since the start of the query as a decimal
+// in seconds
+// for example: 0.01s
+// instead of 10ms
+func EndQueryTimer() float64 {
+	return math.Round(time.Since(SearchTime).Seconds()*100) / 100
+}
 
 // The slice that contains all the university of waterloo's subject codes
 // I'm going to set them manually for now, but there is a webscrape section
