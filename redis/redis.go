@@ -98,7 +98,7 @@ func GetSimilarCourses(html string, query string) (string, int) {
 				for v := 0; v < len(data); v++ {
 					// Check if the data contains the queryArg
 					if strings.Contains(
-						strings.ToLower(fmt.Sprint(data[v])), " "+queryArgs[q]+" ") {
+						strings.ToLower(fmt.Sprint(data[v])), queryArgs[q]) {
 
 						// Check if course is already present
 						if !strings.Contains(html, data[v]["ID"]) {

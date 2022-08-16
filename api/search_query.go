@@ -108,7 +108,7 @@ func GetBestMatch(query string) string {
 	fmt.Printf(" >> Query: BestMatch (%v) (%s)\n\n", BestMatchValue, BestMatch)
 
 	// Make sure best match is valid/accurate
-	if BestMatchValue > 400 {
+	if BestMatchValue > 370 {
 		// Return the best match subject code
 		return global.SubjectNames[BestMatch]
 	}
