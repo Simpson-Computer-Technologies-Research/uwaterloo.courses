@@ -22,7 +22,6 @@ type ScrapeTable struct {
 	Row    []string
 	Table  *string
 	Result map[string]string
-	HTML   string
 }
 
 // The Course Scrape struct holds four keys
@@ -260,7 +259,6 @@ func (sr *ScrapeResult) _ScrapeCourseData(t string) {
 	// Scrape course data, pass the ScrapeTable object
 	var courseData = _ScrapeCourseData_(&ScrapeTable{
 		Result: make(map[string]string),
-		HTML:   "",
 		Table:  &t,
 	})
 
