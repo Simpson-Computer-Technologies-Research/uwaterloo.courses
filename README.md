@@ -1,24 +1,21 @@
 # The University of Waterloo Course Catalog
-This was made by Tristan Simpson
-<br>
-This project is unfinished but I wanted to put it on github for any suggestions on what I should add or any improvements to my code
-<br>
-The license will be converted to an Official MIT Copyright License once an official Github Release of this repository has been created :)
+This was project made by Tristan Simpson
 
 # Challenge
 My challenge for this project is to use solely native golang modules such as
 strings, net/http, html/template, etc. This also includes natively webscraping
-data from websites. God help my soul for webscraping..
+data from websites (god help my soul..)
 
 <h3> Challenge Exceptions </h3>
 
 - mux module -> Used for api routing
 - fasthttp module -> Used for low memory http requests
 - redis module > Used for Caching data
-- External Services -> Ex: Svelte, Redis, Fly.io, etc.
+- External Services -> Ex: Svelte, Redis, Hosting, etc.
 
 # Notes
 - I'm not the best at frontend developement, so go easy on me
+
 
 # API
 <h3>Why make an API?</h3>
@@ -97,14 +94,31 @@ $ curl -X GET http://localhost:8000/subjects/names
 ```
 
 # Project Showcase
-<img width="1401" alt="Screen Shot 2022-08-15 at 4 07 23 PM" src="https://user-images.githubusercontent.com/75189508/184709727-a1835949-216a-4468-a3ca-fd342bf3fb95.png">
+<img width="1408" alt="Screen Shot 2022-08-16 at 4 43 18 PM" src="https://user-images.githubusercontent.com/75189508/184981440-b4a35613-123b-417d-9626-4cc468fb1f17.png">
 
 
 
 
 # License
-Copyright (C) 2022 Tristan Simpson <heytristaann@gmail.com>
+MIT License
 
-This file is part of the University of Waterloo Course Catalog project.
+Copyright (c) 2022 Tristan Simpson
 
-The University of Waterloo Course Catalog project can not be copied and/or distributed without the express permission of Tristan Simpson <heytristaann@gmail.com>. 
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
