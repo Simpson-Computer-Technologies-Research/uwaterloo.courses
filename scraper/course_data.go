@@ -318,7 +318,7 @@ func ScrapeCourseData(client *fasthttp.Client, course string) ([]map[string]stri
 	scrapeResult.WaitGroup.Wait()
 
 	// Log the time it took to scrape the course data
-	// It usually takes around 1-20ms
+	// It usually takes around 500µs -> 3ms
 	fmt.Printf(" >> Scraped Course Data [%v]\n\n", time.Since(scrapeStartTime))
 
 	// Set the course key in the redis database
