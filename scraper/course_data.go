@@ -15,7 +15,6 @@ import (
 )
 
 // The Course Scrape struct holds three keys
-/* - Index: int -> used to select which Result key to use 		*/
 /* - Row: []string -> the row with data							*/
 /* - Result: map[string]string -> the course data result map	*/
 type ScrapeTable struct {
@@ -330,7 +329,6 @@ func ScrapeCourseData(client *fasthttp.Client, course string) ([]map[string]stri
 	}
 
 	// Return the result map containing all the
-	// course information, the html result data and the
-	// http request error
+	// course information, and the http request error
 	return scrapeResult.ResultSlice, nil
 }
