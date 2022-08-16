@@ -17,69 +17,58 @@ func EmptyDiv() string {
 	`
 }
 
+// The _QueryInputField() function returns
+// the search bar input html
+func _QueryInputField() string {
+	return `<form>
+		<div class="input-field">
+			<input 
+				minlength="3"
+				type="text" 
+				name="q" 
+				required="" 
+				id="name" 
+				formaction="/">
+			<label style="font-size: 21px;">Search</label>
+			<span></span>
+		</div>
+	</form>`
+}
+
 // The HomePageSearchBar() function returns the home page
 // search bar html string
 func HomePageSearchBar() string {
-	return `
+	return fmt.Sprintf(`
 	<div class="container">
-	<img 
-		src="static/images/waterloo_title_logo.png" 
-		alt=""
-		style="margin-top: -30%; display: block; margin-left: -13%; margin-right: auto; width: 120%;"
-	>
-        <form>
-            <div class="input-field">
-                <input
-					minlength="3"
-                    type="text" 
-                    name="q" 
-                    required="" 
-                    id="name" 
-                    formaction="/">
-                <label style="font-size: 21px;">Search</label>
-                <span></span>
-            </div>
-        </form>
-	</div>
-	`
+	<img src="static/images/waterloo_title_logo.png" alt="" style="
+		margin-top: -30%%; 
+		display: block; 
+		margin-left: -13%%; 
+		margin-right: auto; 
+		width: 120%%;">%s
+	</div>`, _QueryInputField())
 }
 
-// The SearchPageMenu() function is used to return the
-// query speed in an html div
-func SearchPageMenu(resultCount int) string {
+// The QueryMenu() function is used to return the
+// query speed and search bar in a div
+func QueryMenu(resultCount int) string {
 	return fmt.Sprintf(
-		`
-		<div class="container">
-        <form>
-            <div class="input-field">
-                <input 
-					minlength="3"
-                    type="text" 
-                    name="q" 
-                    required="" 
-                    id="name" 
-                    formaction="/">
-                <label style="font-size: 21px;">Search</label>
-                <span></span>
-            </div>
-        </form>
-		<div 
-			style="
+		`<div class="container">%s
+			<div style="
 				background-color: #fff; 
 				padding: 1.2%%; 
 				border-radius: 7px;
 				margin: 5%%;
 				text-align: center;
-			"
-		>
-			<div>
-				<strong>%d</strong> 
-					results in 
-				<strong style="color: #ffd54f">%vs</strong>
+			">
+				<div>
+					<strong>%d</strong> 
+						results in 
+					<strong style="color: #ffd54f">%vs</strong>
+				</div>
 			</div>
 		</div>
-		</div>
-		`, resultCount,
+		`, _QueryInputField(), resultCount,
 		math.Round(time.Since(SearchTime).Seconds()*100)/100)
 }
 
