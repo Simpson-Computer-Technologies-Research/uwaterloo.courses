@@ -72,7 +72,7 @@ func SearchQuery(query string) string {
 	}
 	// Print the best match data for testing
 	fmt.Printf(
-		" >> Query BestMatchValue: %v\n >> QueryBestMatch %v\n\n", bestMatchValue, bestMatch)
+		"\n >> Query: BestMatchValue: %v\n >> Query: BestMatch %v\n", bestMatchValue, bestMatch)
 
 	// Check if the bestMatch is valid
 	if bestMatchValue > 4 {
