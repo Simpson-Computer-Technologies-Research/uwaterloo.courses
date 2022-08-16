@@ -91,7 +91,6 @@ func (st *ScrapeTable) SetCourseId() {
 		// Make sure the split length is greater than one
 		if len(split) > 1 {
 			// Set the id key in the result map
-			// Append the id to the html result
 			st.Result["ID"] = split[1]
 		}
 	}
@@ -104,7 +103,6 @@ func (st *ScrapeTable) SetCourseId() {
 func (st *ScrapeTable) SetCourseName() {
 	if len(st.Row) > 2 {
 		// Set the name key in the result map
-		// Append the name to the html result
 		st.Result["Name"] = st.Row[2]
 	}
 }
@@ -116,7 +114,6 @@ func (st *ScrapeTable) SetCourseName() {
 func (st *ScrapeTable) SetCourseDescription() {
 	if len(st.Row) > 1 {
 		// Set the description in the result map
-		// Append the description to the html result
 		st.Result["Description"] = st.Row[1]
 	}
 }
@@ -131,7 +128,6 @@ func (st *ScrapeTable) SetCourseNote(data string) {
 	var split []string = strings.Split(data, "[Note: ")
 	if len(split) > 1 {
 		// Set the note in the result map
-		// Append the note to the result html
 		st.Result["Note"] = "[" + split[1]
 	}
 }

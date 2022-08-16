@@ -23,7 +23,7 @@ func main() {
 # UNIVERSITY OF WATERLOO COURSE FINDER
 
 WHAT TO DO NEXT:
-- Make Frontend look better (Svelte or React)
+- Make Frontend look better (Svelte)
 - Learn Docker
 
 
