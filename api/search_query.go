@@ -24,7 +24,8 @@ func CleanQuery(query string) string {
 	return strings.ToLower(res)
 }
 
-// Get the largest byte out of the two
+// The GetLargest() function returns the
+// largest byte out of the two
 func GetLargest(a []byte, b []byte) []byte {
 	if len(a) > len(b) {
 		return a
@@ -32,7 +33,8 @@ func GetLargest(a []byte, b []byte) []byte {
 	return b
 }
 
-// Get the smallest byte out of the two
+// The GetSmallest() function returns the
+// smallest byte out of the two
 func GetSmallest(a []byte, b []byte) []byte {
 	if len(a) > len(b) {
 		return b
@@ -40,7 +42,9 @@ func GetSmallest(a []byte, b []byte) []byte {
 	return a
 }
 
-// Get the subjectnames as a string golang
+// The GetSubjectNames() function returns the
+// subject names from the global.SubjectNames map
+// as a slice
 func GetSubjectNames() []string {
 	var result []string = []string{}
 	for k := range global.SubjectNames {
@@ -52,7 +56,6 @@ func GetSubjectNames() []string {
 // The GetBestMatch() function uses the cleaned query (ex: computerscience)
 // and find the best match using it against the global.SubjectNames map
 // It returns the best subject code match (ex: CS)
-
 func GetBestMatch(query string) string {
 	// Define the bestmatch beginning values
 	var (
@@ -72,9 +75,12 @@ func GetBestMatch(query string) string {
 			smallestKey []byte = GetSmallest([]byte(subjectName), queryBytes)
 		)
 
-		// Iterations
+		// Iterate using the smallest key length
 		for i := 0; i < len(smallestKey); i++ {
-			var tempIndex float64 = 1.0
+			var (
+				tempIndex    float64 = 1.0
+				containCheck string  = ""
+			)
 
 			// If the keys equal the same
 			if queryBytes[i] == subjectName[i] {
@@ -82,13 +88,30 @@ func GetBestMatch(query string) string {
 			} else {
 				largestResult -= float64(int(queryBytes[i]) / len(largestKey))
 			}
+
 			// Iterate over the smallest key
 			for j := 0; j < len(smallestKey); j++ {
-				tempIndex++
+				// Add the letter to the contain check string
+				containCheck += string(string(queryBytes[j]))
+
+				// Check if the subjectName contains the containCheck
+				if strings.Contains(subjectName, containCheck) {
+					// Make sure the length of the contain check
+					// is greater than 2, or else you'll use single letters
+					if len(containCheck) > 2 {
+						largestResult += float64(
+							float64(queryBytes[j]) / float64(len(containCheck)))
+					}
+				} else {
+					// Reset the contain check
+					containCheck = ""
+				}
 				// Get the distance the same letters are from eachother
 				// using the tempIndex
+				tempIndex++
 				if subjectName[i] == smallestKey[j] {
-					largestResult += float64(tempIndex / float64(len(smallestKey)*len(largestKey)))
+					largestResult += float64(
+						tempIndex / float64(len(smallestKey)*len(largestKey)))
 				}
 			}
 			// Check if smallest key contains the subject name letter
@@ -105,10 +128,11 @@ func GetBestMatch(query string) string {
 		}
 	}
 	// Log the best match
-	fmt.Printf(" >> Query: BestMatch (%v) (%s)\n\n", BestMatchValue, BestMatch)
+	fmt.Printf(" >> Query: BestMatch (%v) (%s) (%v) \n\n",
+		BestMatchValue, BestMatch, float64(370-(len(BestMatch)/2)))
 
 	// Make sure best match is valid/accurate
-	if BestMatchValue > 370 {
+	if BestMatchValue > float64(370-(len(BestMatch)/2)) {
 		// Return the best match subject code
 		return global.SubjectNames[BestMatch]
 	}
