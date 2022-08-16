@@ -90,10 +90,10 @@ func (_req *HttpRequest) Send() (*fasthttp.Response, error) {
 	// Http Request Logs
 	if err != nil {
 		fmt.Printf(
-			" [LOG] Http Request Error [%v] [%v]\n", time.Since(sendStartTime), err)
+			" [LOG] Http Request Error [%v] [%v]\n\n", time.Since(sendStartTime), err)
 	} else {
 		fmt.Printf(
-			" [LOG] Http Request Sent [%v]\n", time.Since(sendStartTime))
+			" [LOG] Http Request Sent [%v]\n\n", time.Since(sendStartTime))
 	}
 
 	// Release the request once no longer needed

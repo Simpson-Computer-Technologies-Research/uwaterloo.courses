@@ -26,12 +26,10 @@ type ScrapeTable struct {
 }
 
 // The Course Scrape struct holds four keys
-/* - ResultHTML: string -> The scraped data html result 				 */
 /* - ResultSlice: string -> The scraped data result slice 				 */
 /* - Mutex: *sync.RWMutex -> The Mutex Lock for prevent data overwrites  */
 /* - WaitGroup: *sync.WaitGroup -> The Wait Group for goroutines         */
 type ScrapeResult struct {
-	ResultHTML  string
 	ResultSlice []map[string]string
 	Mutex       *sync.RWMutex
 	WaitGroup   *sync.WaitGroup
@@ -44,25 +42,6 @@ func RefreshCache() {
 	for _, k := range global.SubjectCodes {
 		ScrapeCourseData(RequestClient, k)
 	}
-}
-
-// The AppendCourseKeyHTML() function takes the course key and the
-// course info and puts it into an html div.
-// This html div is used as a value in the final html list
-func (st *ScrapeTable) AppendCourseKeyHTML(key string, value string) {
-	st.HTML += fmt.Sprintf(
-		`<div style="font-size:13px;">
-			<strong> %v</strong> %v
-		</div>`, key, value)
-}
-
-// The WrapHTML() function wraps the final course data list html
-// into a div that is then styled using the style.css static file
-func (st *ScrapeTable) WrapHTML() string {
-	return fmt.Sprintf(
-		`<div style="width: 100%%"> 
-			<div class="course_div">%s</div>
-		</div>`, st.HTML)
 }
 
 // Convert the course course info into categories
@@ -102,11 +81,6 @@ func (st *ScrapeTable) SetCourseInfo() {
 		st.Result["Title"] = title
 		st.Result["Components"] = comps
 		st.Result["Unit"] = unit
-
-		// Append values to the html
-		st.AppendCourseKeyHTML(title, "")
-		st.AppendCourseKeyHTML("Components", comps)
-		st.AppendCourseKeyHTML("Unit", unit)
 	}
 }
 
@@ -125,7 +99,6 @@ func (st *ScrapeTable) SetCourseId() {
 			// Set the id key in the result map
 			// Append the id to the html result
 			st.Result["ID"] = split[1]
-			st.AppendCourseKeyHTML("ID", split[1])
 		}
 	}
 }
@@ -139,7 +112,6 @@ func (st *ScrapeTable) SetCourseName() {
 		// Set the name key in the result map
 		// Append the name to the html result
 		st.Result["Name"] = st.Row[2]
-		st.AppendCourseKeyHTML("Name", st.Row[2])
 	}
 }
 
@@ -152,7 +124,6 @@ func (st *ScrapeTable) SetCourseDescription() {
 		// Set the description in the result map
 		// Append the description to the html result
 		st.Result["Description"] = st.Row[1]
-		st.AppendCourseKeyHTML("Description", st.Row[1])
 	}
 }
 
@@ -168,7 +139,6 @@ func (st *ScrapeTable) SetCourseNote(data string) {
 		// Set the note in the result map
 		// Append the note to the result html
 		st.Result["Note"] = "[" + split[1]
-		st.AppendCourseKeyHTML("Note", "["+split[1])
 	}
 }
 
@@ -200,7 +170,6 @@ func (st *ScrapeTable) SetCourseAnti_Co_PreReqs() {
 			// Set the key in the result map
 			// Append the key to the html result
 			st.Result[name] = split[1]
-			st.AppendCourseKeyHTML(name, split[1])
 		}
 	}
 }
@@ -238,7 +207,7 @@ func (st *ScrapeTable) IndexScrapeResult(index int) {
 // The function takes the table: *string parameter
 //
 // The function returns the result map[string]string
-func _ScrapeCourseData_(st *ScrapeTable) (map[string]string, string) {
+func _ScrapeCourseData_(st *ScrapeTable) map[string]string {
 	// Define Variables
 	// splitTable: []string -> The table into the segments that contain the course info
 	// tableIndex: int -> Track table index
@@ -268,8 +237,9 @@ func _ScrapeCourseData_(st *ScrapeTable) (map[string]string, string) {
 			}
 		}
 	}
+
 	// Return the course id and the course info map (result)
-	return st.Result, st.WrapHTML()
+	return st.Result
 }
 
 // The _ScrapeCourseData_() function uses the ScrapeResult
@@ -288,7 +258,7 @@ func (sr *ScrapeResult) _ScrapeCourseData(t string) {
 	defer sr.Mutex.Unlock()
 
 	// Scrape course data, pass the ScrapeTable object
-	var courseData, htmlData = _ScrapeCourseData_(&ScrapeTable{
+	var courseData = _ScrapeCourseData_(&ScrapeTable{
 		Result: make(map[string]string),
 		HTML:   "",
 		Table:  &t,
@@ -296,9 +266,6 @@ func (sr *ScrapeResult) _ScrapeCourseData(t string) {
 
 	// Append the course data to the result map
 	sr.ResultSlice = append(sr.ResultSlice, courseData)
-
-	// Append the html data to the html result
-	sr.ResultHTML += fmt.Sprintf("<br><br>%s", htmlData)
 }
 
 // The ScrapeCourseData() function is the main course scraper function
@@ -309,7 +276,7 @@ func (sr *ScrapeResult) _ScrapeCourseData(t string) {
 //
 // The function returns the course data result slice,
 // the result html and the http request error
-func ScrapeCourseData(client *fasthttp.Client, course string) ([]map[string]string, string, error) {
+func ScrapeCourseData(client *fasthttp.Client, course string) ([]map[string]string, error) {
 	// Utilize the HttpRequest struct to easily send an http request
 	var _Req *http.HttpRequest = &http.HttpRequest{
 		Client: client,
@@ -329,12 +296,11 @@ func ScrapeCourseData(client *fasthttp.Client, course string) ([]map[string]stri
 			ResultSlice: []map[string]string{},
 			Mutex:       &sync.RWMutex{},
 			WaitGroup:   &sync.WaitGroup{},
-			ResultHTML:  "",
 		}
 	)
 	// Handle response error
 	if err != nil || resp.StatusCode() != 200 {
-		return []map[string]string{}, "", err
+		return []map[string]string{}, err
 	}
 
 	// Define Variables
@@ -358,7 +324,7 @@ func ScrapeCourseData(client *fasthttp.Client, course string) ([]map[string]stri
 
 	// Log the time it took to scrape the course data
 	// It usually takes around 1-20ms
-	fmt.Printf(" [LOG] Scraped Course Data [%v]\n", time.Since(scrapeStartTime))
+	fmt.Printf(" [LOG] Scraped Course Data [%v]\n\n", time.Since(scrapeStartTime))
 
 	// Set the course key in the redis database
 	// to the scrape result data
@@ -370,5 +336,5 @@ func ScrapeCourseData(client *fasthttp.Client, course string) ([]map[string]stri
 	// Return the result map containing all the
 	// course information, the html result data and the
 	// http request error
-	return scrapeResult.ResultSlice, scrapeResult.ResultHTML, nil
+	return scrapeResult.ResultSlice, nil
 }

@@ -9,6 +9,7 @@ import (
 	"sync"
 
 	"github.com/go-redis/redis/v9"
+	"github.com/realTristan/The_University_of_Waterloo/global"
 )
 
 // RUN docker run --name redis-test-instance -p 6379:6379 -d redis
@@ -104,7 +105,7 @@ func GetSimilarCourses(html string, query string) (string, int) {
 							resultAmount++
 
 							// Append to the html string
-							html += GenerateCourseHTML(data[v])
+							html += global.GenerateCourseHTML(data[v])
 						}
 					}
 				}
@@ -116,67 +117,4 @@ func GetSimilarCourses(html string, query string) (string, int) {
 
 	// Return the html, resultAmount
 	return html, resultAmount
-}
-
-// The GenerateCourseHTML() function will use the course
-// data map to generate an html string that is used for showing
-// the list of courses on the home page.
-func GenerateCourseHTML(data map[string]string) string {
-	// Define Variables
-	var (
-		// Result: string -> The html result
-		result string = ""
-
-		// keys: []string -> They keys from the course data map
-		keys []string = []string{
-			"Components", "Unit", "ID", "Name",
-			"Description", "Notes", "Pre Requisites",
-			"Anti Requisites",
-		}
-	)
-
-	// Iterate over the keys and add them
-	// to the html result. The html result
-	// will be returned inside styled divs
-	for i := 0; i < len(keys); i++ {
-		if len(data[keys[i]]) > 0 {
-			// Add the div with the key and value
-			// to the html result
-			result += fmt.Sprintf(`
-			<div style="font-size:13px;">
-				<strong>%s</strong> %v
-			</div>
-			`, keys[i], data[keys[i]])
-
-			// Seperate the Title, Components, Unit and ID
-			// from the Name, Description, and so on
-			if i == 2 {
-				result += `
-					<div style="font-size:13px;">
-						<strong>‏‏‎ ‎</strong>
-					</div>
-				`
-			}
-		}
-	}
-
-	// Return the html wrapped in styled divs
-	// If anyone has any suggestions for this part of the
-	// code, please tell me!
-	return fmt.Sprintf(`
-		<div style="width: 100%%; margin-top: 5%%; margin-bottom: -1.3%%">
-			<div class="course_div" style="position: relative;">
-			<img 
-				src="static/images/waterloo_logo.png" 
-				alt="" 
-				width="80"
-				height="80"
-				style="position: absolute; top: 8.3%%; right: 1.7%%;"
-			>
-				<div style="font-size:13px;">
-					<strong>%v</strong>
-				</div>
-				%s
-			</div>
-		</div>`, data["Title"], result)
 }

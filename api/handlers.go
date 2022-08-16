@@ -32,8 +32,8 @@ func CourseDataHandler() http.HandlerFunc {
 		// course: string -> Get the course to search for
 		// result, err -> Scrape the course data
 		var (
-			course         string = QueryHandler(r)
-			result, _, err        = scraper.ScrapeCourseData(RequestClient, strings.ToUpper(course))
+			course      string = QueryHandler(r)
+			result, err        = scraper.ScrapeCourseData(RequestClient, strings.ToUpper(course))
 		)
 
 		// Handle the error
@@ -118,7 +118,13 @@ func HomePageHandler() http.HandlerFunc {
 			// then run the scraper to get the course data
 			if !redis.Exists(course) && len(course) > 0 {
 				// Scrape the course data
-				result, html, _ = scraper.ScrapeCourseData(RequestClient, strings.ToUpper(course))
+				result, _ = scraper.ScrapeCourseData(RequestClient, strings.ToUpper(course))
+
+				// Iterate over the result slice
+				for i := 0; i < len(result); i++ {
+					// Append to the result html, the generated html
+					html += global.GenerateCourseHTML(result[i])
+				}
 			} else {
 				// Check to make sure the course isn't empty
 				if len(course) > 0 {
@@ -129,7 +135,7 @@ func HomePageHandler() http.HandlerFunc {
 					// Iterate over the result slice
 					for i := 0; i < len(result); i++ {
 						// Append to the result html, the generated html
-						html += redis.GenerateCourseHTML(result[i])
+						html += global.GenerateCourseHTML(result[i])
 					}
 				}
 				// Get the similar courses using query keywords
