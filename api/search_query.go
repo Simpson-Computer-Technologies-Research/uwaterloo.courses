@@ -48,6 +48,7 @@ func GetSmallest(a []byte, b []byte) []byte {
 //
 // I tried my best to use non constants when adding to the
 // best match value. The searching is actually pretty accurate
+// For Example, I was able to match "cheistyr" with "chemistry"
 //
 // I set everything to float64 so the decimals can play a role
 // in micro differences
