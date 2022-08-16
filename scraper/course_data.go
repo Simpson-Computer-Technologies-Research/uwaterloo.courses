@@ -9,8 +9,8 @@ import (
 	"time"
 
 	"github.com/realTristan/The_University_of_Waterloo/global"
-	"github.com/realTristan/The_University_of_Waterloo/http"
 	"github.com/realTristan/The_University_of_Waterloo/redis"
+	"github.com/realTristan/The_University_of_Waterloo/requests"
 	"github.com/valyala/fasthttp"
 )
 
@@ -204,12 +204,12 @@ func (st *ScrapeTable) IndexScrapeResult(index int) {
 // The function takes the table: *string parameter
 //
 // The function returns the result map[string]string
-func _ScrapeCourseData_(st *ScrapeTable, table *string) map[string]string {
+func _ScrapeCourseData_(st *ScrapeTable, table string) map[string]string {
 	// Define Variables
 	// splitTable: []string -> The table into the segments that contain the course info
 	// tableIndex: int -> Track table index
 	var (
-		splitTable []string = strings.Split(*table, "</")[1:]
+		splitTable []string = strings.Split(table, "</")[1:]
 		tableIndex int      = 0
 	)
 
@@ -245,7 +245,7 @@ func _ScrapeCourseData_(st *ScrapeTable, table *string) map[string]string {
 //
 // The function is called through a goroutine to maximize
 // scrape speed
-func (sr *ScrapeResult) _ScrapeCourseData(table *string) {
+func (sr *ScrapeResult) _ScrapeCourseData(table string) {
 	// Finish goroutine wait once function returns
 	defer sr.WaitGroup.Done()
 
@@ -273,9 +273,9 @@ func (sr *ScrapeResult) _ScrapeCourseData(table *string) {
 // the result html and the http request error
 func ScrapeCourseData(client *fasthttp.Client, course string) ([]map[string]string, error) {
 	// Utilize the HttpRequest struct to easily send an http request
-	var _Req *http.HttpRequest = &http.HttpRequest{
+	var _Req *requests.HttpRequest = &requests.HttpRequest{
 		Client: client,
-		Url:    fmt.Sprintf("https://ucalendar.uwaterloo.ca/2021/COURSE/course-%s.html", course),
+		Url:    fmt.Sprintf("https://ucalendar.uwaterloo.ca/2223/COURSE/course-%s.html", course),
 		Method: "GET",
 		Headers: map[string]string{
 			"User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/15.2 Safari/605.1.15",
@@ -311,7 +311,7 @@ func ScrapeCourseData(client *fasthttp.Client, course string) ([]map[string]stri
 	// Iterate over the html tables
 	for _, table := range courseTables {
 		scrapeResult.WaitGroup.Add(1)
-		go scrapeResult._ScrapeCourseData(&table)
+		go scrapeResult._ScrapeCourseData(table)
 	}
 
 	// Wait for scraping to finish

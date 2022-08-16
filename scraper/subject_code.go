@@ -4,7 +4,7 @@ import (
 	"strings"
 
 	"github.com/realTristan/The_University_of_Waterloo/global"
-	"github.com/realTristan/The_University_of_Waterloo/http"
+	"github.com/realTristan/The_University_of_Waterloo/requests"
 	"github.com/valyala/fasthttp"
 )
 
@@ -61,7 +61,7 @@ func _ScrapeSubjectCodes(html *string) []string {
 // and the http request error
 func ScrapeSubjectCodes(client *fasthttp.Client) ([]string, error) {
 	// Utilize the _Request struct to easily send an http request
-	var _Req *http.HttpRequest = &http.HttpRequest{
+	var _Req *requests.HttpRequest = &requests.HttpRequest{
 		Client: client,
 		Url:    "https://classes.uwaterloo.ca/uwpcshtm.html",
 		Method: "GET",

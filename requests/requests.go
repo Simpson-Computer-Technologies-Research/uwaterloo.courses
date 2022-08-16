@@ -1,4 +1,4 @@
-package http
+package requests
 
 // Import packages
 import (

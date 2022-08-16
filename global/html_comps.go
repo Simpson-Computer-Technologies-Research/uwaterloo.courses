@@ -62,7 +62,7 @@ func QueryMenu(resultCount int) string {
 				<div>
 					<strong>%d</strong> 
 						results in 
-					<strong style="color: #ffd54f">%fs</strong>
+					<strong style="color: #ffd54f">%vs</strong>
 				</div>
 			</div>
 		</div>
