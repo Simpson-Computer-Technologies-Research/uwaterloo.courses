@@ -56,6 +56,12 @@ func GetSubjectNames() []string {
 // The GetBestMatch() function uses the cleaned query (ex: computerscience)
 // and find the best match using it against the global.SubjectNames map
 // It returns the best subject code match (ex: CS)
+//
+// I tried my best to use non constants when adding to the
+// best match value. The searching is actually pretty accurate
+//
+// I set everything to float64 so the decimals can play a role
+// in micro differences
 func GetBestMatch(query string) string {
 	// Define the bestmatch beginning values
 	var (
@@ -86,21 +92,21 @@ func GetBestMatch(query string) string {
 			if queryBytes[i] == subjectName[i] {
 				largestResult += float64(queryBytes[i])
 			} else {
-				largestResult -= float64(int(queryBytes[i]) / len(largestKey))
+				largestResult -= float64(queryBytes[i]) / float64(len(largestKey))
 			}
 
 			// Iterate over the smallest key
 			for j := 0; j < len(smallestKey); j++ {
 				// Add the letter to the contain check string
-				containCheck += string(string(queryBytes[j]))
+				containCheck += string(queryBytes[j])
 
 				// Check if the subjectName contains the containCheck
 				if strings.Contains(subjectName, containCheck) {
 					// Make sure the length of the contain check
 					// is greater than 2, or else you'll use single letters
 					if len(containCheck) > 2 {
-						largestResult += float64(
-							float64(queryBytes[j]) / float64(len(containCheck)))
+						largestResult +=
+							float64(queryBytes[j]) / float64(len(containCheck))
 					}
 				} else {
 					// Reset the contain check
@@ -110,8 +116,8 @@ func GetBestMatch(query string) string {
 				// using the tempIndex
 				tempIndex++
 				if subjectName[i] == smallestKey[j] {
-					largestResult += float64(
-						tempIndex / float64(len(smallestKey)*len(largestKey)))
+					largestResult +=
+						tempIndex / float64(len(smallestKey)*len(largestKey))
 				}
 			}
 			// Check if smallest key contains the subject name letter
