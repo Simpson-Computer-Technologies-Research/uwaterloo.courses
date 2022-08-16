@@ -161,7 +161,6 @@ func QueryHandler(r *http.Request) string {
 		course string = string(r.URL.Query().Get("course"))
 		query  string = string(r.URL.Query().Get("q"))
 	)
-
 	if len(course) == 0 && len(query) > 0 {
 		// Check if the user is searching for a specific subject code
 		if strings.Contains(query, "@code") {
