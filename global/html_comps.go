@@ -123,7 +123,7 @@ func GenerateCourseHTML(data map[string]string) string {
 				target="_blank"
 				rel="noreferrer noopener"
 			>
-				Official
+				Official Course Information
 			</a>
 		</div>
 	`, info[0], info[0], info[1])

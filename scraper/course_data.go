@@ -72,12 +72,9 @@ func IndexCourseInfo(title string) (string, string, string) {
 func (st *ScrapeTable) SetCourseInfo() {
 	if len(st.Row) > 0 {
 		// Index the course info
-		var title, comps, unit = IndexCourseInfo(st.Row[0])
-
-		// Append values to the result map
-		st.Result["Title"] = title
-		st.Result["Components"] = comps
-		st.Result["Unit"] = unit
+		st.Result["Title"],
+			st.Result["Components"],
+			st.Result["Unit"] = IndexCourseInfo(st.Row[0])
 	}
 }
 
