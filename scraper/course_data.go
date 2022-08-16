@@ -20,7 +20,6 @@ import (
 /* - Result: map[string]string -> the course data result map	*/
 type ScrapeTable struct {
 	Row    []string
-	Table  *string
 	Result map[string]string
 }
 
@@ -206,12 +205,12 @@ func (st *ScrapeTable) IndexScrapeResult(index int) {
 // The function takes the table: *string parameter
 //
 // The function returns the result map[string]string
-func _ScrapeCourseData_(st *ScrapeTable) map[string]string {
+func _ScrapeCourseData_(st *ScrapeTable, table *string) map[string]string {
 	// Define Variables
 	// splitTable: []string -> The table into the segments that contain the course info
 	// tableIndex: int -> Track table index
 	var (
-		splitTable []string = strings.Split(*st.Table, "</")[1:]
+		splitTable []string = strings.Split(*table, "</")[1:]
 		tableIndex int      = 0
 	)
 
@@ -247,7 +246,7 @@ func _ScrapeCourseData_(st *ScrapeTable) map[string]string {
 //
 // The function is called through a goroutine to maximize
 // scrape speed
-func (sr *ScrapeResult) _ScrapeCourseData(t string) {
+func (sr *ScrapeResult) _ScrapeCourseData(table *string) {
 	// Finish goroutine wait once function returns
 	defer sr.WaitGroup.Done()
 
@@ -259,8 +258,7 @@ func (sr *ScrapeResult) _ScrapeCourseData(t string) {
 	// Scrape course data, pass the ScrapeTable object
 	var courseData = _ScrapeCourseData_(&ScrapeTable{
 		Result: make(map[string]string),
-		Table:  &t,
-	})
+	}, table)
 
 	// Append the course data to the result map
 	sr.ResultSlice = append(sr.ResultSlice, courseData)
@@ -314,7 +312,7 @@ func ScrapeCourseData(client *fasthttp.Client, course string) ([]map[string]stri
 	// Iterate over the html tables
 	for _, table := range courseTables {
 		scrapeResult.WaitGroup.Add(1)
-		go scrapeResult._ScrapeCourseData(table)
+		go scrapeResult._ScrapeCourseData(&table)
 	}
 
 	// Wait for scraping to finish
