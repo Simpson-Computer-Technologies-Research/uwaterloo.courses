@@ -132,7 +132,10 @@ func GenerateCourseHTML(data map[string]string) string {
 	result += fmt.Sprintf(`
 		<div style="font-size: 13px;">
 			<a 
-				href="https://ucalendar.uwaterloo.ca/2223/COURSE/course-%s.html#%s%s">
+				href="https://ucalendar.uwaterloo.ca/2223/COURSE/course-%s.html#%s%s"
+				target="_blank"
+				rel="noreferrer noopener"
+			>
 				Official
 			</a>
 		</div>
