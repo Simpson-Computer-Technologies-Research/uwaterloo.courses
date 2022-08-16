@@ -24,61 +24,97 @@ func CleanQuery(query string) string {
 	return strings.ToLower(res)
 }
 
-// The SearchQuery() function uses the cleaned query (ex: computerscience)
+// Get the largest byte out of the two
+func GetLargest(a []byte, b []byte) []byte {
+	if len(a) > len(b) {
+		return a
+	}
+	return b
+}
+
+// Get the smallest byte out of the two
+func GetSmallest(a []byte, b []byte) []byte {
+	if len(a) > len(b) {
+		return b
+	}
+	return a
+}
+
+// Get the subjectnames as a string golang
+func GetSubjectNames() []string {
+	var result []string = []string{}
+	for k := range global.SubjectNames {
+		result = append(result, k)
+	}
+	return result
+}
+
+// The GetBestMatch() function uses the cleaned query (ex: computerscience)
 // and find the best match using it against the global.SubjectNames map
 // It returns the best subject code match (ex: CS)
-func SearchQuery(query string) string {
-	// Clean the query
-	query = CleanQuery(query)
 
-	// Define Variables
-	// bestMatchValue: int -> Track the highest value for character matching
-	// bestMatch: string -> the best subject code for the query
+func GetBestMatch(query string) string {
+	// Define the bestmatch beginning values
 	var (
-		bestMatchValue float64 = -1
-		bestMatch      string
+		BestMatch      string  = ""
+		BestMatchValue float64 = -1.0
 	)
 
-	// Iterate over the subject names map
-	for subjectName, subjectCode := range global.SubjectNames {
-		// Add the subject code to the result map
-		var count float64 = 0
+	// Iterate over the subject names
+	for subjectName := range global.SubjectNames {
+		var (
+			// Largest result and the search query as bytes + replace all spaces
+			largestResult float64 = 0.0
+			queryBytes    []byte  = []byte(strings.ReplaceAll(query, " ", ""))
 
-		// Check if subjectName contains query
-		if strings.Contains(subjectName, string(query)) {
-			count += 5
-		}
+			// Get the largest / smallest keys
+			largestKey  []byte = GetLargest([]byte(subjectName), queryBytes)
+			smallestKey []byte = GetSmallest([]byte(subjectName), queryBytes)
+		)
 
-		// Iterate over the query characters
-		for i := 0; i < len(query); i++ {
-			// Check length so we don't get an error
-			if i < len(subjectName) {
-				// Check if the characters at the indexes are the same
-				if subjectName[i] == query[i] {
-					count += float64(1 * (len(query) / len(subjectName)))
+		// Iterations
+		for i := 0; i < len(smallestKey); i++ {
+			var tempIndex float64 = 1.0
+
+			// If the keys equal the same
+			if queryBytes[i] == subjectName[i] {
+				largestResult += float64(queryBytes[i])
+			} else {
+				largestResult -= float64(int(queryBytes[i]) / len(largestKey))
+			}
+			// Iterate over the smallest key
+			for j := 0; j < len(smallestKey); j++ {
+				tempIndex++
+				// Get the distance the same letters are from eachother
+				// using the tempIndex
+				if subjectName[i] == smallestKey[j] {
+					largestResult += float64(tempIndex / float64(len(smallestKey)*len(largestKey)))
 				}
 			}
-			// Query vs SubjectName length
-			if i+2 > len(query)/((len(subjectName)/len(query))+1) {
-				break
+			// Check if smallest key contains the subject name letter
+			if !strings.Contains(string(smallestKey), string(subjectName[i])) {
+				largestResult -= float64(len(smallestKey))
 			}
 		}
-		// Check if the current subject is more accurate
-		// than the previous ones
-		if count > bestMatchValue {
-			bestMatchValue = count
-			bestMatch = subjectCode
+
+		// Check if bestmatchvalue is greater than
+		// the previous bestmatchvalues
+		if largestResult > BestMatchValue {
+			BestMatchValue = largestResult
+			BestMatch = subjectName
 		}
 	}
-	// Print the best match data for testing
-	fmt.Printf(
-		"\n >> Query: BestMatchValue: %v\n >> Query: BestMatch %v\n", bestMatchValue, bestMatch)
+	// Log the best match
+	fmt.Printf(" >> Query: BestMatch (%v) (%s)\n\n", BestMatchValue, BestMatch)
 
-	// Check if the bestMatch is valid
-	if bestMatchValue > 4 {
-		return bestMatch
+	// Make sure best match is valid/accurate
+	if BestMatchValue > 400 {
+		// Return the best match subject code
+		return global.SubjectNames[BestMatch]
 	}
+	// Return None
 	return ""
+
 }
 
 // The QueryHandler() function handles the search query and whether
@@ -104,7 +140,7 @@ func QueryHandler(r *http.Request) string {
 		}
 		// If using a search query (ex: computerscience) then match the query
 		// to a subject code
-		return SearchQuery(query)
+		return GetBestMatch(query)
 	}
 	// Return the course arg
 	return course

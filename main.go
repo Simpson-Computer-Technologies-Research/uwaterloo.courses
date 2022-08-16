@@ -1,14 +1,15 @@
 package main
 
-// Import packages
 import (
 	"github.com/realTristan/The_University_of_Waterloo/api"
 )
 
+// Import packages
+
 /*
-git add .
-git commit -m "c"
-git push heroku master
+	git add .
+	git commit -m "c"
+	git push heroku master
 */
 
 // Main function
