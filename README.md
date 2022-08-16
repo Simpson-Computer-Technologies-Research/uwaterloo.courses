@@ -1,21 +1,17 @@
 # The University of Waterloo Course Catalog
-This was made by Tristan Simpson
-<br>
-This project is unfinished but I wanted to put it on github for any suggestions on what I should add or any improvements to my code
-<br>
-The license will be converted to an Official MIT Copyright License once an official Github Release of this repository has been created :)
+This was project made by Tristan Simpson
 
 # Challenge
 My challenge for this project is to use solely native golang modules such as
 strings, net/http, html/template, etc. This also includes natively webscraping
-data from websites. God help my soul for webscraping..
+data from websites (god help my soul..)
 
 <h3> Challenge Exceptions </h3>
 
 - mux module -> Used for api routing
 - fasthttp module -> Used for low memory http requests
 - redis module > Used for Caching data
-- External Services -> Ex: Svelte, Redis, Fly.io, etc.
+- External Services -> Ex: Svelte, Redis, Hosting, etc.
 
 # Notes
 - I'm not the best at frontend developement, so go easy on me
@@ -101,10 +97,5 @@ $ curl -X GET http://localhost:8000/subjects/names
 
 
 
-
 # License
-Copyright (C) 2022 Tristan Simpson <heytristaann@gmail.com>
 
-This file is part of the University of Waterloo Course Catalog project.
-
-The University of Waterloo Course Catalog project can not be copied and/or distributed without the express permission of Tristan Simpson <heytristaann@gmail.com>. 
