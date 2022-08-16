@@ -26,11 +26,11 @@ func EndQueryTimer() float64 {
 
 // The SliceContains() function returns whether or not the provided
 // slice contains the provided string
-func SliceContains(s *[]string, str string) bool {
+func SliceContains(slice []string, str string) bool {
 	// Iterate over the slice
-	for _, v := range *s {
+	for i := 0; i < len(slice); i++ {
 		// if the slice value equals the string then return true
-		if v == str {
+		if slice[i] == str {
 			return true
 		}
 	}

@@ -28,15 +28,15 @@ func _ScrapeSubjectCodes(html *string) []string {
 	html = &strings.Split(*html, "</table>")[1]
 
 	// Iterate over the split strings
-	for i, p := range strings.Split(*html, "<td>") {
+	for i, r := range strings.Split(*html, "<td>") {
 		// Get every 7th table value (the Subject table)
 		if i == tableIndex {
 			// Increase tableIndex by 7
 			tableIndex += 7
 			// Split by closing tag
-			var s []string = strings.Split(p, "</td>")
+			var s []string = strings.Split(r, "</td>")
 			// If the result slice doesn't contains the subject
-			if !global.SliceContains(&res, s[0]) {
+			if !global.SliceContains(res, s[0]) {
 				// Append the subject to the result slice
 				res = append(res, s[0])
 			}

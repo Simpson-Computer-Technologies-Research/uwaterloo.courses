@@ -42,17 +42,6 @@ func GetSmallest(a []byte, b []byte) []byte {
 	return a
 }
 
-// The GetSubjectNames() function returns the
-// subject names from the global.SubjectNames map
-// as a slice
-func GetSubjectNames() []string {
-	var result []string = []string{}
-	for k := range global.SubjectNames {
-		result = append(result, k)
-	}
-	return result
-}
-
 // The GetBestMatch() function uses the cleaned query (ex: computerscience)
 // to find the best match using the global.SubjectNames map
 // It returns the best subject code match (ex: CS)

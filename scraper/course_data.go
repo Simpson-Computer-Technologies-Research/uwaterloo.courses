@@ -36,8 +36,8 @@ type ScrapeResult struct {
 // the keys in the redis cache database to the scrape result
 func RefreshCache() {
 	var RequestClient *fasthttp.Client = &fasthttp.Client{}
-	for _, k := range global.SubjectCodes {
-		ScrapeCourseData(RequestClient, k)
+	for _, v := range global.SubjectCodes {
+		ScrapeCourseData(RequestClient, v)
 	}
 }
 
@@ -302,9 +302,9 @@ func ScrapeCourseData(client *fasthttp.Client, course string) ([]map[string]stri
 	)
 
 	// Iterate over the html tables
-	for _, table := range courseTables {
+	for i := 0; i < len(courseTables); i++ {
 		scrapeResult.WaitGroup.Add(1)
-		go scrapeResult._ScrapeCourseData(table)
+		go scrapeResult._ScrapeCourseData(courseTables[i])
 	}
 
 	// Wait for scraping to finish
