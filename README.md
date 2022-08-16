@@ -16,6 +16,7 @@ data from websites (god help my soul..)
 # Notes
 - I'm not the best at frontend developement, so go easy on me
 
+
 # API
 <h3>Why make an API?</h3>
 I decided to make an api because it will be used for refreshing
@@ -93,7 +94,8 @@ $ curl -X GET http://localhost:8000/subjects/names
 ```
 
 # Project Showcase
-<img width="1401" alt="Screen Shot 2022-08-15 at 4 07 23 PM" src="https://user-images.githubusercontent.com/75189508/184709727-a1835949-216a-4468-a3ca-fd342bf3fb95.png">
+<img width="1408" alt="Screen Shot 2022-08-16 at 4 43 18 PM" src="https://user-images.githubusercontent.com/75189508/184981440-b4a35613-123b-417d-9626-4cc468fb1f17.png">
+
 
 
 
