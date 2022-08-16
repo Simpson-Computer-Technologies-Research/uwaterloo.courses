@@ -7,7 +7,7 @@ import (
 
 // The EmptyDiv() function returns
 // a div with empty spaces
-func EmptyDiv() string {
+func _EmptyDiv() string {
 	return `
 		<div style="font-size:13px;">
 			‏‏‎ ‎
@@ -62,7 +62,7 @@ func QueryMenu(resultCount int) string {
 				<div>
 					<strong>%d</strong> 
 						results in 
-					<strong style="color: #ffd54f">%vs</strong>
+					<strong style="color: #ffd54f">%fs</strong>
 				</div>
 			</div>
 		</div>
@@ -103,13 +103,13 @@ func GenerateCourseHTML(data map[string]string) string {
 			// Seperate the Title, Components, Unit and ID
 			// from the Name, Description, and so on
 			if i == 2 {
-				result += EmptyDiv()
+				result += _EmptyDiv()
 			}
 		}
 	}
 	// Append an empty div to seperate the href
 	// urls from the course data
-	result += EmptyDiv()
+	result += _EmptyDiv()
 
 	// Split the course title to get the subject code
 	// and the course code

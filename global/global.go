@@ -24,6 +24,20 @@ func EndQueryTimer() float64 {
 	return math.Round(time.Since(SearchTime).Seconds()*100) / 100
 }
 
+// The SliceContains() function returns whether or not the provided
+// slice contains the provided string
+func SliceContains(s *[]string, str string) bool {
+	// Iterate over the slice
+	for _, v := range *s {
+		// if the slice value equals the string then return true
+		if v == str {
+			return true
+		}
+	}
+	// Else return false
+	return false
+}
+
 // The slice that contains all the university of waterloo's subject codes
 // I'm going to set them manually for now, but there is a webscrape section
 // for getting them from https://classes.uwaterloo.ca/uwpcshtm.html
@@ -186,18 +200,4 @@ var SubjectNames map[string]string = map[string]string{
 	"university":                             "UNIV",
 	"visualculture":                          "VCULT",
 	"worktermreport":                         "WKRPT",
-}
-
-// The SliceContains() function returns whether or not the provided
-// slice contains the provided string
-func SliceContains(s *[]string, str string) bool {
-	// Iterate over the slice
-	for _, v := range *s {
-		// if the slice value equals the string then return true
-		if v == str {
-			return true
-		}
-	}
-	// Else return false
-	return false
 }
