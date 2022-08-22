@@ -1,9 +1,9 @@
 package scraper
 
 import (
+	"fmt"
 	"strings"
 
-	"github.com/realTristan/The_University_of_Waterloo/global"
 	"github.com/realTristan/The_University_of_Waterloo/requests"
 	"github.com/valyala/fasthttp"
 )
@@ -36,7 +36,7 @@ func _ScrapeSubjectCodes(html *string) []string {
 			// Split by closing tag
 			var s []string = strings.Split(r, "</td>")
 			// If the result slice doesn't contains the subject
-			if !global.SliceContains(res, s[0]) {
+			if !strings.Contains(fmt.Sprint(res), s[0]) {
 				// Append the subject to the result slice
 				res = append(res, s[0])
 			}

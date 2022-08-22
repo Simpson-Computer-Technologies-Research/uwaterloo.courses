@@ -78,50 +78,67 @@ func GetSimilarCourses(result *[]map[string]string, html string, query string) (
 	)
 
 	// Iterate over all the keys in the database
-	for keyIndex, key := range GetAllKeys() {
+	for _, key := range GetAllKeys() {
 		waitGroup.Add(1)
 
 		// Goroutine for faster query time
-		go func(key interface{}, keyIndex int) {
+		go func(key interface{}) {
 			defer waitGroup.Done()
 
 			// Json unmarshal the json encoded map
 			var data []map[string]string
 			json.Unmarshal([]byte(Get(key.(string))), &data)
 
+			// Get the amount of iterations to perform
+			var (
+				rec     int = len(data)
+				pre_rec int = rec * (len(query) / rec)
+			)
+			// Set the amount of iterations to pre_rec
+			if pre_rec < rec {
+				rec = pre_rec
+			}
+
 			// For every query arg check if the
 			// map contains the arg
-			var rec int = len(data)
-			if len(data)*(len(query)/len(data)) < len(data) {
-				rec = len(data) * (len(query) / len(data))
-			}
 			for v := 0; v < rec; v++ {
-				waitGroup.Add(1)
-				go func(v int) {
-					defer waitGroup.Done()
+				// Check if the data contains the queryArg
+				if strings.Contains(
+					strings.ToLower(fmt.Sprint(data[v])), query) {
 
-					// Check if the data contains the queryArg
-					if strings.Contains(
-						strings.ToLower(fmt.Sprint(data[v])), query) {
+					// Check if course is already present
+					if !strings.Contains(fmt.Sprint(*result), data[v]["ID"]) {
+						resultAmount++
 
-						// Check if course is already present
-						if !strings.Contains(html, data[v]["ID"]) {
-							resultAmount++
-
-							// Append to the html string
+						// Append to the html string
+						if len(*result) == 0 {
 							html += global.GenerateCourseHTML(data[v])
-
-							// Add data to the result map
-							*result = append(*result, data[v])
 						}
+
+						// Add data to the result map
+						*result = append(*result, data[v])
 					}
-				}(v)
+				}
 			}
-		}(key, keyIndex)
+		}(key)
 	}
 	// Wait for all goroutines
 	waitGroup.Wait()
 
 	// Return the html, resultAmount
 	return result, html, resultAmount
+}
+
+// The SliceContains() function returns whether or not the provided
+// slice contains the provided map
+func SliceContainsMap(slice []map[string]string, _map map[string]string) bool {
+	// Iterate over the slice
+	for i := 0; i < len(slice); i++ {
+		// if the slice value equals the string then return true
+		if fmt.Sprint(slice[i]) == fmt.Sprint(_map) {
+			return true
+		}
+	}
+	// Else return false
+	return false
 }
