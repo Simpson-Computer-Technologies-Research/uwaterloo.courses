@@ -27,6 +27,13 @@ var (
 	})
 )
 
+type SimilarCourses struct {
+	ResultArray []map[string]string
+	ResultHTML  string
+	Subject     string
+	Query       string
+}
+
 // The Exists() function checks whether
 // or not the redis cache contains the given key
 func Exists(key string) bool {
@@ -65,8 +72,8 @@ func GetQueryArgs(query string) []string {
 
 // The GetSimilarCourses() function iterates through the redis
 // cache and gets any courses that contain the query args
-func GetSimilarCourses(result *[]map[string]string, html string, query string) (*[]map[string]string, string, int) {
-	query = strings.ToLower(strings.TrimSpace(query))
+func GetSimilarCourses(rsc *SimilarCourses) ([]map[string]string, string, int) {
+	rsc.Query = strings.ToLower(strings.TrimSpace(rsc.Query))
 
 	// Define Variables
 	var (
@@ -92,7 +99,7 @@ func GetSimilarCourses(result *[]map[string]string, html string, query string) (
 			// Get the amount of iterations to perform
 			var (
 				rec     int = len(data)
-				pre_rec int = rec * (len(query) / rec)
+				pre_rec int = rec * (len(rsc.Query) / rec)
 			)
 			// Set the amount of iterations to pre_rec
 			if pre_rec < rec {
@@ -104,19 +111,19 @@ func GetSimilarCourses(result *[]map[string]string, html string, query string) (
 			for v := 0; v < rec; v++ {
 				// Check if the data contains the queryArg
 				if strings.Contains(
-					strings.ToLower(fmt.Sprint(data[v])), query) {
+					strings.ToLower(fmt.Sprint(data[v])), rsc.Query) {
 
 					// Check if course is already present
-					if !strings.Contains(fmt.Sprint(*result), data[v]["ID"]) {
+					if !strings.Contains(fmt.Sprint(rsc.ResultArray), data[v]["ID"]) {
 						resultAmount++
 
 						// Append to the html string
-						if len(*result) == 0 {
-							html += global.GenerateCourseHTML(data[v])
+						if len(rsc.ResultHTML) > 0 {
+							rsc.ResultHTML += global.GenerateCourseHTML(data[v])
+						} else {
+							// Add data to the result map
+							rsc.ResultArray = append(rsc.ResultArray, data[v])
 						}
-
-						// Add data to the result map
-						*result = append(*result, data[v])
 					}
 				}
 			}
@@ -126,7 +133,7 @@ func GetSimilarCourses(result *[]map[string]string, html string, query string) (
 	waitGroup.Wait()
 
 	// Return the html, resultAmount
-	return result, html, resultAmount
+	return rsc.ResultArray, rsc.ResultHTML, resultAmount
 }
 
 // The SliceContains() function returns whether or not the provided

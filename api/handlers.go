@@ -56,8 +56,14 @@ func CourseDataHandler() http.HandlerFunc {
 				// Marshal the redis course json data
 				json.Unmarshal([]byte(redis.Get(strings.ToUpper(subject))), &result)
 
-				// Marshal the data result
-				redis.GetSimilarCourses(&result, "", query)
+				// Get the similar courses from the redis database
+				var rsc *redis.SimilarCourses = &redis.SimilarCourses{
+					ResultArray: result,
+					Subject:     subject,
+					ResultHTML:  "",
+					Query:       query,
+				}
+				result, _, _ = redis.GetSimilarCourses(rsc)
 
 				// Convert the result map into a json string
 				var res, _ = json.Marshal(result)
@@ -119,8 +125,8 @@ func HomePageHandler() http.HandlerFunc {
 		// Else, return the home page with the search bar
 		if len(query) > 0 {
 			var (
-				// course: string -> The course code
-				course string = QueryHandler(r)
+				// subject: string -> The subject code
+				subject string = QueryHandler(r)
 
 				// result: []map[string]string -> The course data result map
 				result []map[string]string
@@ -133,9 +139,9 @@ func HomePageHandler() http.HandlerFunc {
 			)
 			// If the course key is not in the redis database
 			// then run the scraper to get the course data
-			if !redis.Exists(course) && len(course) > 0 {
+			if !redis.Exists(subject) && len(subject) > 0 {
 				// Scrape the course data
-				result, _ = scraper.ScrapeCourseData(RequestClient, strings.ToUpper(course))
+				result, _ = scraper.ScrapeCourseData(RequestClient, strings.ToUpper(subject))
 
 				// Iterate over the result slice
 				for i := 0; i < len(result); i++ {
@@ -144,10 +150,10 @@ func HomePageHandler() http.HandlerFunc {
 				}
 			} else {
 				// Check to make sure the course isn't empty
-				if len(course) > 0 {
+				if len(subject) > 0 {
 					// Unmarshal the course data from the
 					// redis cache
-					json.Unmarshal([]byte(redis.Get(course)), &result)
+					json.Unmarshal([]byte(redis.Get(subject)), &result)
 
 					// Iterate over the result slice
 					for i := 0; i < len(result); i++ {
@@ -155,12 +161,14 @@ func HomePageHandler() http.HandlerFunc {
 						html += global.GenerateCourseHTML(result[i])
 					}
 				}
-				// Create a temp result map for the get similar courses function
-				var tempResultMap []map[string]string = []map[string]string{}
-
-				// Get the similar courses using query keywords
-				_, html, resultAmount = redis.GetSimilarCourses(
-					&tempResultMap, html, query)
+				// Get the similar courses from the redis database
+				var rsc *redis.SimilarCourses = &redis.SimilarCourses{
+					ResultArray: []map[string]string{},
+					Subject:     subject,
+					ResultHTML:  html,
+					Query:       query,
+				}
+				_, html, resultAmount = redis.GetSimilarCourses(rsc)
 			}
 
 			// Execute the scraped data page html template
