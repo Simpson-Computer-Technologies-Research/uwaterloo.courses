@@ -32,8 +32,9 @@ func CourseDataHandler() http.HandlerFunc {
 		// course: string -> Get the course to search for
 		// result, err -> Scrape the course data
 		var (
-			course      string = QueryHandler(r)
-			result, err        = scraper.ScrapeCourseData(RequestClient, strings.ToUpper(course))
+			subject string = QueryHandler(r)
+			err     error  = nil
+			result  []map[string]string
 		)
 
 		// Handle the error
@@ -41,13 +42,29 @@ func CourseDataHandler() http.HandlerFunc {
 			w.WriteHeader(http.StatusInternalServerError)
 			fmt.Fprintf(w, "{\"error\": \"%v\"}", err)
 		} else {
-			// Marshal the data result
-			_json, _ := json.Marshal(map[string]interface{}{
-				course: result,
-			})
+			// Enable CORS
+			w.Header().Set("Access-Control-Allow-Origin", "*")
 
-			// Set the response body
-			fmt.Fprint(w, string(_json))
+			// Set the query: string variable
+			var query string = strings.ToLower(r.URL.Query().Get("q"))
+
+			// Make sure the query length is greater than 3
+			if len(query) < 3 {
+				// Set the response body
+				fmt.Fprint(w, "Query needs to be greater than 3 characters!")
+			} else {
+				// Marshal the redis course json data
+				json.Unmarshal([]byte(redis.Get(strings.ToUpper(subject))), &result)
+
+				// Marshal the data result
+				redis.GetSimilarCourses(&result, "", query)
+
+				// Convert the result map into a json string
+				var res, _ = json.Marshal(result)
+
+				// Set the response body
+				fmt.Fprint(w, string(res))
+			}
 		}
 	}
 }
@@ -138,8 +155,12 @@ func HomePageHandler() http.HandlerFunc {
 						html += global.GenerateCourseHTML(result[i])
 					}
 				}
+				// Create a temp result map for the get similar courses function
+				var tempResultMap []map[string]string = []map[string]string{}
+
 				// Get the similar courses using query keywords
-				html, resultAmount = redis.GetSimilarCourses(html, query)
+				_, html, resultAmount = redis.GetSimilarCourses(
+					&tempResultMap, html, query)
 			}
 
 			// Execute the scraped data page html template

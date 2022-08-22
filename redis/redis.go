@@ -65,14 +65,11 @@ func GetQueryArgs(query string) []string {
 
 // The GetSimilarCourses() function iterates through the redis
 // cache and gets any courses that contain the query args
-func GetSimilarCourses(html string, query string) (string, int) {
-	query = strings.TrimSpace(query)
+func GetSimilarCourses(result *[]map[string]string, html string, query string) (*[]map[string]string, string, int) {
+	query = strings.ToLower(strings.TrimSpace(query))
 
 	// Define Variables
 	var (
-		// queryArgs: []string -> Used to find similar courses
-		queryArgs []string = GetQueryArgs(query)
-
 		// resultAmount: int -> The amount of similar courses
 		resultAmount int = 0
 
@@ -81,11 +78,11 @@ func GetSimilarCourses(html string, query string) (string, int) {
 	)
 
 	// Iterate over all the keys in the database
-	for _, key := range GetAllKeys() {
+	for keyIndex, key := range GetAllKeys() {
 		waitGroup.Add(1)
 
 		// Goroutine for faster query time
-		go func(key interface{}) {
+		go func(key interface{}, keyIndex int) {
 			defer waitGroup.Done()
 
 			// Json unmarshal the json encoded map
@@ -94,11 +91,18 @@ func GetSimilarCourses(html string, query string) (string, int) {
 
 			// For every query arg check if the
 			// map contains the arg
-			for q := 0; q < len(queryArgs); q++ {
-				for v := 0; v < len(data); v++ {
+			var rec int = len(data)
+			if len(data)*(len(query)/len(data)) < len(data) {
+				rec = len(data) * (len(query) / len(data))
+			}
+			for v := 0; v < rec; v++ {
+				waitGroup.Add(1)
+				go func(v int) {
+					defer waitGroup.Done()
+
 					// Check if the data contains the queryArg
 					if strings.Contains(
-						strings.ToLower(fmt.Sprint(data[v])), queryArgs[q]) {
+						strings.ToLower(fmt.Sprint(data[v])), query) {
 
 						// Check if course is already present
 						if !strings.Contains(html, data[v]["ID"]) {
@@ -106,15 +110,18 @@ func GetSimilarCourses(html string, query string) (string, int) {
 
 							// Append to the html string
 							html += global.GenerateCourseHTML(data[v])
+
+							// Add data to the result map
+							*result = append(*result, data[v])
 						}
 					}
-				}
+				}(v)
 			}
-		}(key)
+		}(key, keyIndex)
 	}
 	// Wait for all goroutines
 	waitGroup.Wait()
 
 	// Return the html, resultAmount
-	return html, resultAmount
+	return result, html, resultAmount
 }

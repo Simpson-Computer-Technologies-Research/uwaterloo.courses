@@ -15,7 +15,7 @@ import (
 // Main function
 func main() {
 	// scraper.RefreshCache()
-	api.ListenAndServe(":8080")
+	api.ListenAndServe(":8000")
 }
 
 /*
