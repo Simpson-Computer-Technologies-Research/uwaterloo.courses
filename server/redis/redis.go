@@ -78,15 +78,11 @@ func GetSimilarCourses(rsc *SimilarCourses) []map[string]string {
 
 	// Iterate over all the keys in the database
 	for _, key := range GetAllKeys() {
-		waitGroup.Add(1)
-
-		// Goroutine for faster query time
 		go func(key interface{}) {
-			defer waitGroup.Done()
 
 			// Json unmarshal the json encoded map
 			var data []map[string]string
-			json.Unmarshal([]byte(Get(key.(string))), &data)
+			json.Unmarshal([]byte(strings.ToLower(Get(key.(string)))), &data)
 
 			// Get the amount of iterations to perform
 			var (
@@ -101,15 +97,21 @@ func GetSimilarCourses(rsc *SimilarCourses) []map[string]string {
 			// For every query arg check if the
 			// map contains the arg
 			for v := 0; v < rec; v++ {
-				// Check if the data contains the queryArg
-				if strings.Contains(
-					strings.ToLower(fmt.Sprint(data[v])), rsc.Query) {
+				waitGroup.Add(1)
 
-					// Check if course is already present
-					if !strings.Contains(fmt.Sprint(rsc.ResultArray), data[v]["ID"]) {
-						rsc.ResultArray = append(rsc.ResultArray, data[v])
+				go func(v int) {
+					defer waitGroup.Done()
+
+					// Check if the data contains the queryArg
+					if strings.Contains(fmt.Sprint(data[v]), rsc.Query) {
+
+						// Check if course is already present
+						if !strings.Contains(fmt.Sprint(rsc.ResultArray), data[v]["ID"]) {
+							rsc.ResultArray = append(rsc.ResultArray, data[v])
+						}
 					}
-				}
+				}(v)
+
 			}
 		}(key)
 	}
