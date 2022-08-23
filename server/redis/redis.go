@@ -26,6 +26,10 @@ var (
 	})
 )
 
+// The SimilarCourses struct holds three keys
+/* - ResultArray: []map[string]string -> result data		*/
+/* - Subject: string -> the handled subject					*/
+/* - Query: string -> the original query					*/
 type SimilarCourses struct {
 	ResultArray []map[string]string
 	Subject     string
@@ -57,15 +61,6 @@ func Get(key string) string {
 func GetAllKeys() []interface{} {
 	keys, _ := RedisCache.Do(Context, "KEYS", "*").Result()
 	return keys.([]interface{})
-}
-
-// Get the query args from a query
-// Example: query = computer science
-// Returns [computer, science]
-func GetQueryArgs(query string) []string {
-	var res []string = strings.Split(query, " ")
-	res = append(res, strings.ToLower(query))
-	return res
 }
 
 // The GetSimilarCourses() function iterates through the redis
