@@ -2,6 +2,11 @@
 This was project made by Tristan Simpson
 <br> 
 Design Inspiration by @ericzhang
+<br>
+Heads up that I did not copy/paste anything from his project.
+<br>
+I Solely got the design and the project idea from him!!
+
 
 # Challenge
 My challenge for this project is to use solely native golang modules such as
