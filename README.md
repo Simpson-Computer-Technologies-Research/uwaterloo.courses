@@ -13,10 +13,6 @@ data from websites (god help my soul..)
 - redis module > Used for Caching data
 - External Services -> Ex: Svelte, Redis, Hosting, etc.
 
-# Notes
-- I'm not the best at frontend developement, so go easy on me
-
-
 # API
 <h3>Why make an API?</h3>
 I decided to make an api because it will be used for refreshing
