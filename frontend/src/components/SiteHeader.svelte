@@ -34,6 +34,6 @@
         color: #8b5cf6;
         font-size: 4em;
         font-weight: 700;
-        margin-bottom: 25px;
+        margin-bottom: 20px;
     }
 </style>
