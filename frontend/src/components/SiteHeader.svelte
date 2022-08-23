@@ -1,4 +1,3 @@
-
 <main>
     <!-- uwaterloo.courses Header -->
     <h1>

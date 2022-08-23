@@ -73,7 +73,11 @@
 	{/await}
 </main>
 
-<style>
+<style global lang="postcss">
+	@tailwind base;
+	@tailwind components;
+	@tailwind utilities;
+
 	main {
 		width: 92%;
 		padding: 1em;
@@ -130,5 +134,4 @@
 	:root::-webkit-scrollbar-thumb:hover {
 		background: #474af2;
 	}
-
 </style>
