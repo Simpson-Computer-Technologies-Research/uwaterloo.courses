@@ -21,7 +21,7 @@ func CleanQuery(query string) string {
 		}
 	}
 	// Return the res string in lowercase
-	return strings.ToLower(res)
+	return res
 }
 
 // The GetLargest() function returns the
@@ -149,7 +149,7 @@ func QueryHandler(r *http.Request) string {
 	// query: string -> the course search query arg
 	var (
 		course string = string(r.URL.Query().Get("course"))
-		query  string = string(r.URL.Query().Get("q"))
+		query  string = strings.ToLower(string(r.URL.Query().Get("q")))
 	)
 	if len(course) == 0 && len(query) > 0 {
 		// Check if the user is searching for a specific subject code

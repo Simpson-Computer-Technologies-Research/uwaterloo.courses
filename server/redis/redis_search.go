@@ -32,4 +32,5 @@ func QuerySearch(query string) {
 		"RETURN", "0", "LIMIT", "0", "100",
 	).Slice()
 	fmt.Println(res)
+	// Try the RedisCache.Pipeline
 }
