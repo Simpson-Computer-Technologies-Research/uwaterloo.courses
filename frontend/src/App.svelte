@@ -2,6 +2,10 @@
 	import CourseInfo from './components/CourseInfo.svelte';
 	import SiteHeader from './components/SiteHeader.svelte';
 
+	// Used for pasting the @code:cs into the search
+	// query when it is clicked on
+	let handleCodeClick = () => subject_query = "@code:cs";
+
 	// Promise for query http requests
 	let promise = Promise.resolve([]);
 
@@ -51,12 +55,13 @@
 </script>
 
 <main>
-	<SiteHeader/>
+	<SiteHeader handleCodeClick={handleCodeClick}/>
 
 	<!-- Input course to search for -->
 	<div>
 		<!-- svelte-ignore a11y-autofocus -->
 		<input
+			value={subject_query}
 			placeholder="Search"
 			class="course_input" 
 			on:keyup={({ target: { value } }) => courseInputDebounce(value)} 
