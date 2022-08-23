@@ -6,21 +6,15 @@ import (
 	"fmt"
 	"net/http"
 	"strings"
-	"text/template"
 
 	"github.com/realTristan/The_University_of_Waterloo/global"
 	"github.com/realTristan/The_University_of_Waterloo/redis"
-	"github.com/realTristan/The_University_of_Waterloo/scraper"
 	"github.com/valyala/fasthttp"
 )
 
 // Global Variables
 /* - RequestClient *fasthttp.Client -> Used for sending http requests */
-/* - Template *template.Template -> Used for rendering html templates */
-var (
-	RequestClient *fasthttp.Client   = &fasthttp.Client{}
-	Template      *template.Template = template.Must(template.ParseGlob("static/templates/*.html"))
-)
+var RequestClient *fasthttp.Client = &fasthttp.Client{}
 
 // The CourseDataHandler() function handles the incoming requests
 // using the "/courses?course={course_code}" path.
@@ -50,7 +44,7 @@ func CourseDataHandler() http.HandlerFunc {
 
 			// Make sure the query length is greater than 3
 			if len(query) < 3 {
-				// Set the response body
+				// Return the query error
 				fmt.Fprint(w, "Query needs to be greater than 3 characters!")
 			} else {
 				// Marshal the redis course json data
@@ -60,10 +54,9 @@ func CourseDataHandler() http.HandlerFunc {
 				var rsc *redis.SimilarCourses = &redis.SimilarCourses{
 					ResultArray: result,
 					Subject:     subject,
-					ResultHTML:  "",
 					Query:       query,
 				}
-				result, _, _ = redis.GetSimilarCourses(rsc)
+				result = redis.GetSimilarCourses(rsc)
 
 				// Convert the result map into a json string
 				var res, _ = json.Marshal(result)
@@ -107,77 +100,8 @@ func SubjectCodesWithNamesHandler() http.HandlerFunc {
 
 // The HomePageHandler() function handles the incoming requests
 // using the "/" path.
-//
-// The function renders the index.html file
 func HomePageHandler() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		global.StartQueryTimer()
-
-		// Set the header for html
-		w.Header().Add("Content-Type", "text/html")
-
-		// Set the query: string variable
-		var query string = strings.ToLower(r.URL.Query().Get("q"))
-
-		// If there's a query arg, return the scraped data
-		// in html format
-		//
-		// Else, return the home page with the search bar
-		if len(query) > 0 {
-			var (
-				// subject: string -> The subject code
-				subject string = QueryHandler(r)
-
-				// result: []map[string]string -> The course data result map
-				result []map[string]string
-
-				// html: string -> The result html
-				html string
-
-				// resultAmount: int -> The amount of similar courses to add
-				resultAmount int = 0
-			)
-			// If the course key is not in the redis database
-			// then run the scraper to get the course data
-			if !redis.Exists(subject) && len(subject) > 0 {
-				// Scrape the course data
-				result, _ = scraper.ScrapeCourseData(RequestClient, strings.ToUpper(subject))
-
-				// Iterate over the result slice
-				for i := 0; i < len(result); i++ {
-					// Append the generated html to the result html
-					html += global.GenerateCourseHTML(result[i])
-				}
-			} else {
-				// Check to make sure the course isn't empty
-				if len(subject) > 0 {
-					// Unmarshal the course data from the
-					// redis cache
-					json.Unmarshal([]byte(redis.Get(subject)), &result)
-
-					// Iterate over the result slice
-					for i := 0; i < len(result); i++ {
-						// Append to the result html, the generated html
-						html += global.GenerateCourseHTML(result[i])
-					}
-				}
-				// Get the similar courses from the redis database
-				var rsc *redis.SimilarCourses = &redis.SimilarCourses{
-					ResultArray: []map[string]string{},
-					Subject:     subject,
-					ResultHTML:  html,
-					Query:       query,
-				}
-				_, html, resultAmount = redis.GetSimilarCourses(rsc)
-			}
-
-			// Execute the scraped data page html template
-			Template.Execute(w,
-				fmt.Sprintf("%s%s",
-					global.QueryMenu(len(result)+resultAmount), html))
-		} else {
-			// Execute the home page html template
-			Template.Execute(w, global.HomePageSearchBar())
-		}
+		fmt.Fprint(w, "uwaterloo.courses Public API")
 	}
 }

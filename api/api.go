@@ -18,12 +18,12 @@ func ListenAndServe(port string) {
 	// Establish a new gorilla mux router
 	var router *mux.Router = mux.NewRouter()
 
-	// Show course data with the paramter ?course={course_code}
-	router.HandleFunc("/courses", CourseDataHandler()).Methods("GET")
-
 	// Show the home page of the course catalog
 	// This is the area where you can search for courses
 	router.HandleFunc("/", HomePageHandler()).Methods("GET")
+
+	// Show course data with the paramter ?course={course_code}
+	router.HandleFunc("/courses", CourseDataHandler()).Methods("GET")
 
 	// Show the list of subjects at the university of waterloo
 	router.HandleFunc("/subjects", SubjectCodesHandler()).Methods("GET")
@@ -34,9 +34,6 @@ func ListenAndServe(port string) {
 
 	// Handle Router
 	http.Handle("/", router)
-
-	// Serve Static Files: html, css, images, etc.
-	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
 
 	// Listen and Serve to the corresponding port
 	http.ListenAndServe(port, nil)

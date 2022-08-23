@@ -9,7 +9,6 @@ import (
 	"sync"
 
 	"github.com/go-redis/redis/v9"
-	"github.com/realTristan/The_University_of_Waterloo/global"
 )
 
 // RUN docker run --name redis-test-instance -p 6379:6379 -d redis
@@ -29,7 +28,6 @@ var (
 
 type SimilarCourses struct {
 	ResultArray []map[string]string
-	ResultHTML  string
 	Subject     string
 	Query       string
 }
@@ -72,17 +70,11 @@ func GetQueryArgs(query string) []string {
 
 // The GetSimilarCourses() function iterates through the redis
 // cache and gets any courses that contain the query args
-func GetSimilarCourses(rsc *SimilarCourses) ([]map[string]string, string, int) {
+func GetSimilarCourses(rsc *SimilarCourses) []map[string]string {
 	rsc.Query = strings.ToLower(strings.TrimSpace(rsc.Query))
 
-	// Define Variables
-	var (
-		// resultAmount: int -> The amount of similar courses
-		resultAmount int = 0
-
-		// WwaitGroup: sync.WaitGroup -> wait group for goroutines
-		waitGroup sync.WaitGroup = sync.WaitGroup{}
-	)
+	// WaitGroup: sync.WaitGroup -> wait group for goroutines
+	var waitGroup sync.WaitGroup = sync.WaitGroup{}
 
 	// Iterate over all the keys in the database
 	for _, key := range GetAllKeys() {
@@ -115,15 +107,7 @@ func GetSimilarCourses(rsc *SimilarCourses) ([]map[string]string, string, int) {
 
 					// Check if course is already present
 					if !strings.Contains(fmt.Sprint(rsc.ResultArray), data[v]["ID"]) {
-						resultAmount++
-
-						// Append to the html string
-						if len(rsc.ResultHTML) > 0 {
-							rsc.ResultHTML += global.GenerateCourseHTML(data[v])
-						} else {
-							// Add data to the result map
-							rsc.ResultArray = append(rsc.ResultArray, data[v])
-						}
+						rsc.ResultArray = append(rsc.ResultArray, data[v])
 					}
 				}
 			}
@@ -132,8 +116,8 @@ func GetSimilarCourses(rsc *SimilarCourses) ([]map[string]string, string, int) {
 	// Wait for all goroutines
 	waitGroup.Wait()
 
-	// Return the html, resultAmount
-	return rsc.ResultArray, rsc.ResultHTML, resultAmount
+	// Return the result array, resultAmount
+	return rsc.ResultArray
 }
 
 // The SliceContains() function returns whether or not the provided
