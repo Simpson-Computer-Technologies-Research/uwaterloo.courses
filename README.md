@@ -93,9 +93,12 @@ $ curl -X GET http://localhost:8000/subjects/names
 
 ```
 
+<br>
+
 # Project Showcase
 <img width="1122" alt="Screen Shot 2022-08-22 at 10 18 09 PM" src="https://user-images.githubusercontent.com/75189508/186062009-49d2782a-7e81-4f05-893c-cfb047223b7c.png">
 
+<br>
 
 # Acknowledgements
 I was inspired to create this project after seeing Eric Zhang's (@ekzhang)
@@ -103,6 +106,8 @@ I was inspired to create this project after seeing Eric Zhang's (@ekzhang)
 Harvard course catalog. I want to point out that I did not copy/paste any
 <br>
 code from his project.
+
+<br>
 
 # License
 MIT License
