@@ -1,5 +1,7 @@
 # The University of Waterloo Course Catalog
 This was project made by Tristan Simpson
+<br> 
+Inspiration by @ericzhang
 
 # Challenge
 My challenge for this project is to use solely native golang modules such as
