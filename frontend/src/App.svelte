@@ -110,4 +110,25 @@
 		width: 45%;
 		color:#525252;
 	}
+
+	:root::-webkit-scrollbar {
+		width: 20px;
+		height: 20px;
+	}
+
+	/* Track */
+	:root::-webkit-scrollbar-track {
+		background: #f1f1f1; 
+	}
+	
+	/* Handle */
+	:root::-webkit-scrollbar-thumb {
+		background: #6366f1;
+	}
+
+	/* Handle on hover */
+	:root::-webkit-scrollbar-thumb:hover {
+		background: #474af2;
+	}
+
 </style>
