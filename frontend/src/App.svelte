@@ -55,9 +55,12 @@
 
 	<!-- Input course to search for -->
 	<div>
-		<input 
+		<!-- svelte-ignore a11y-autofocus -->
+		<input
+			placeholder="Search"
 			class="course_input" 
 			on:keyup={({ target: { value } }) => courseInputDebounce(value)} 
+			autofocus
 		/>
 	</div>
 

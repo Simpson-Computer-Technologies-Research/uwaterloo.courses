@@ -22,9 +22,24 @@
             rel="noreferrer noopener"
         >
         <nobr>@realTristan</nobr></a> using 
-            <mark style="color: #00aed9; background: none; font-weight: 600;"> Go</mark>, 
-            <mark style="color: #ff3c00; background: none; font-weight: 600;"> Svelte </mark> and 
-            <mark style="color: #c6302b; background: none; font-weight: 600;"> Redis </mark>
+
+        <!-- Go -->
+        <a href="https://go.dev" target="_blank" rel="noopener noreferrer">
+            <img src="./images/go_logo.png" alt="" width="43" height="43" style="margin-bottom: -2.2%; margin-left: -2px;">
+        </a>,
+        
+        <!-- Svelte -->
+        <a href="https://svelte.dev" style="text-decoration:none;" target="_blank" rel="noopener noreferrer">
+            <img src="./images/svelte_logo.png" alt="" width="16" height="20" style="margin-bottom: -0.6%; margin-left: 4px;"> 
+            <mark style="color: #ff3c00; background: none; font-weight: 400; margin-right: 3px;">Svelte</mark>
+        </a>
+        and
+
+        <!-- Redis -->
+        <a href="https://redis.io" style="text-decoration:none;" target="_blank" rel="noopener noreferrer">
+            <img src="./images/redis_logo.png" alt="" width="18" height="22" style="margin-bottom: -0.8%; margin-left: 5px;">
+            <mark style="color: #6b7280; background: none; font-weight: 400;">Redis</mark>
+        </a>
     </p>
 </main>
 
