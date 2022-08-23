@@ -106,7 +106,6 @@ func GetSimilarCourses(rsc *SimilarCourses) []map[string]string {
 						}
 					}
 				}(v)
-
 			}
 		}(key)
 	}
@@ -115,18 +114,4 @@ func GetSimilarCourses(rsc *SimilarCourses) []map[string]string {
 
 	// Return the result array, resultAmount
 	return rsc.ResultArray
-}
-
-// The SliceContains() function returns whether or not the provided
-// slice contains the provided map
-func SliceContainsMap(slice []map[string]string, _map map[string]string) bool {
-	// Iterate over the slice
-	for i := 0; i < len(slice); i++ {
-		// if the slice value equals the string then return true
-		if fmt.Sprint(slice[i]) == fmt.Sprint(_map) {
-			return true
-		}
-	}
-	// Else return false
-	return false
 }
