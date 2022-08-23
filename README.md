@@ -44,7 +44,7 @@ $ curl -X GET http://localhost:8000/courses?q=computer+science
 
 ```json
 {
-    "003352": {
+    [
         "title": "CS 476",
         "name": "Numeric Computation for Financial Modeling",
         "desc": "The interaction of financial models, numerical methods, and computing environments. Basic  computational aspects of option pricing and hedging. Numerical methods for stochastic differential equations, strong and weak convergence. Generating correlated random numbers. Time-stepping methods. Finite difference methods for the Black-Scholes equation. Discretization, stability, convergence. Methods for portfolio optimization, effect of data errors on portfolio weights. ",
@@ -53,7 +53,7 @@ $ curl -X GET http://localhost:8000/courses?q=computer+science
         "anti_reqs": "None",
         "co_reqs": "None",
         "unit":"0.50"
-    }
+    ]
 }
 ```
 
@@ -96,8 +96,6 @@ $ curl -X GET http://localhost:8000/subjects/names
 ```
 
 # Project Showcase
-<img width="1408" alt="Screen Shot 2022-08-16 at 4 43 18 PM" src="https://user-images.githubusercontent.com/75189508/184981440-b4a35613-123b-417d-9626-4cc468fb1f17.png">
-
 
 
 
