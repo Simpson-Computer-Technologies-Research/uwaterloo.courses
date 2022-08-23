@@ -1,12 +1,5 @@
 # The University of Waterloo Course Catalog
 This was project made by Tristan Simpson
-<br> 
-Design Inspiration by @ericzhang
-<br>
-Heads up that I did not copy/paste anything from his project.
-<br>
-I Solely got the design and the project idea from him!!
-
 
 # Challenge
 My challenge for this project is to use solely native golang modules such as
@@ -103,6 +96,13 @@ $ curl -X GET http://localhost:8000/subjects/names
 # Project Showcase
 <img width="1122" alt="Screen Shot 2022-08-22 at 10 18 09 PM" src="https://user-images.githubusercontent.com/75189508/186062009-49d2782a-7e81-4f05-893c-cfb047223b7c.png">
 
+
+# Acknowledgements
+I was inspired to create this project after seeing Eric Zhang's (@ekzhang)
+<br>
+Harvard course catalog. I want to point out that I did not copy/paste any
+<br>
+code from his project.
 
 # License
 MIT License
