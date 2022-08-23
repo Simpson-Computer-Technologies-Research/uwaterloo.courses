@@ -9,6 +9,7 @@ import (
 	"sync"
 
 	"github.com/go-redis/redis/v9"
+	"github.com/realTristan/The_University_of_Waterloo/server/global"
 )
 
 // RUN docker run --name redis-test-instance -p 6379:6379 -d redis
@@ -34,6 +35,7 @@ type SimilarCourses struct {
 	ResultArray []map[string]string
 	Subject     string
 	Query       string
+	Mutex       *sync.RWMutex
 }
 
 // The Exists() function checks whether
@@ -56,13 +58,6 @@ func Get(key string) string {
 	return v
 }
 
-// The GetAllKeys() function returns all the
-// keys from the redis cache
-func GetAllKeys() []interface{} {
-	keys, _ := RedisCache.Do(Context, "KEYS", "*").Result()
-	return keys.([]interface{})
-}
-
 // The GetSimilarCourses() function iterates through the redis
 // cache and gets any courses that contain the query args
 func GetSimilarCourses(rsc *SimilarCourses) []map[string]string {
@@ -72,42 +67,40 @@ func GetSimilarCourses(rsc *SimilarCourses) []map[string]string {
 	var waitGroup sync.WaitGroup = sync.WaitGroup{}
 
 	// Iterate over all the keys in the database
-	for _, key := range GetAllKeys() {
+	for i := 0; i < len(global.SubjectCodes); i++ {
+		waitGroup.Add(1)
+
 		go func(key interface{}) {
+			defer waitGroup.Done()
 
-			// Json unmarshal the json encoded map
-			var data []map[string]string
-			json.Unmarshal([]byte(strings.ToLower(Get(key.(string)))), &data)
+			// Make sure not to add duplicate courses
+			if key != rsc.Subject {
 
-			// Get the amount of iterations to perform
-			var (
-				rec     int = len(data)
-				pre_rec int = rec * (len(rsc.Query) / rec)
-			)
-			// Set the amount of iterations to pre_rec
-			if pre_rec < rec {
-				rec = pre_rec
-			}
+				// Json unmarshal the json encoded map
+				var data []map[string]string
+				json.Unmarshal([]byte(Get(key.(string))), &data)
 
-			// For every query arg check if the
-			// map contains the arg
-			for v := 0; v < rec; v++ {
-				waitGroup.Add(1)
+				// For every query arg check if the
+				// map contains the arg
+				if strings.Contains(fmt.Sprint(data), rsc.Query) {
+					for v := 0; v < len(data); v++ {
+						go func(v int) {
+							// Check if the data contains the queryArg
+							if strings.Contains(strings.ToLower(fmt.Sprint(data[v])), rsc.Query) {
+								// Append data to the result array
+								rsc.ResultArray = append(rsc.ResultArray, data[v])
+							}
+						}(v)
 
-				go func(v int) {
-					defer waitGroup.Done()
-
-					// Check if the data contains the queryArg
-					if strings.Contains(fmt.Sprint(data[v]), rsc.Query) {
-
-						// Check if course is already present
-						if !strings.Contains(fmt.Sprint(rsc.ResultArray), data[v]["ID"]) {
-							rsc.ResultArray = append(rsc.ResultArray, data[v])
+						// Break the loop if the result array is
+						// too large
+						if len(rsc.ResultArray) > 500 {
+							break
 						}
 					}
-				}(v)
+				}
 			}
-		}(key)
+		}(global.SubjectCodes[i])
 	}
 	// Wait for all goroutines
 	waitGroup.Wait()

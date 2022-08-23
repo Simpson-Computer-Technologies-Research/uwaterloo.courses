@@ -14,51 +14,54 @@
         <!-- Course Title -->
         <div class="course_div" style="display: flex; align-items: center;">
             <img 
-                src="./static/images/waterloo_logo.png" 
+                src="./images/waterloo_logo.png" 
                 alt="" 
                 width="40"
                 height="40"
                 style="margin-right: 10px;"
             >
             <p>
-                <strong>{course.Title}: {course.Name}</strong>
+                <strong>{course.title}: {course.name}</strong>
             </p>
         </div>
 
         <!-- Course Description -->
         <div class="course_div">
             <p style="font-size: 14.5px;">
-                {course.Description}
+                {course.description}
             </p>
         </div>
 
         <!-- Course Pre-Requisites -->
         <div class="course_div" style="font-size: 13px; margin-top: 1px;">
             <p>
-                <strong>Pre Requisites </strong>{course["Pre Requisites"]}
+                <strong>Pre Requisites </strong>{course["pre requisites"]}
             </p>
         </div>
 
         <!-- Course Anti-Requisites -->
         <div class="course_div" style="font-size: 13px;">
             <p>
-                <strong>Anti Requisites </strong>{course["Anti Requisites"]}
+                <strong>Anti Requisites </strong>{course["anti requisites"]}
             </p>
         </div>
 
         <!-- Official Course Website -->
-        <div style="font-size: 12px;">
-            <a 
-                href="https://ucalendar.uwaterloo.ca/2223/COURSE/course-{course.Title.split(" ")[0]}.html#{course.Title.split(" ")[0]}{course.Title.split(" ")[1]}"
-                target="_blank"
-                rel="noreferrer noopener"
-            >
-                Official Website
-                {emptySpace(4)} Components {course.Components}
-                {emptySpace(4)} Unit {course.Unit}
-                {emptySpace(4)} ID {course.ID}
-            </a>
-        </div>
+        {#if course.title != undefined}
+        {@const splitTitle = course.title.split(" ")}
+            <div style="font-size: 12px;">
+                <a 
+                    href="https://ucalendar.uwaterloo.ca/2223/COURSE/course-{splitTitle[0]}.html#{splitTitle[0]}{splitTitle[1]}"
+                    target="_blank"
+                    rel="noreferrer noopener"
+                >
+                    Official Website
+                    {emptySpace(4)} Components {course.components}
+                    {emptySpace(4)} Unit {course.unit}
+                    {emptySpace(4)} ID {course.id}
+                </a>
+            </div>
+        {/if}
     </div>
 </main>
 

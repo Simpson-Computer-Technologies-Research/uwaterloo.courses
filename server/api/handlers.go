@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"net/http"
 	"strings"
+	"sync"
 
 	"github.com/realTristan/The_University_of_Waterloo/server/global"
 	"github.com/realTristan/The_University_of_Waterloo/server/redis"
@@ -55,6 +56,7 @@ func CourseDataHandler() http.HandlerFunc {
 					ResultArray: result,
 					Subject:     subject,
 					Query:       query,
+					Mutex:       &sync.RWMutex{},
 				}
 				result = redis.GetSimilarCourses(rsc)
 
