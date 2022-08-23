@@ -8,6 +8,9 @@
 	// The subject querying for
 	let subject_query = "";
 
+	// Track the amount of results
+	let query_result_amount = 0;
+
 	// The time it took to query the subject
 	let query_time = 0;
 
@@ -19,15 +22,18 @@
 		let startTime = Date.now();
 
 		// Send the http request to the golang api
-		const response = await self.fetch("http://127.0.0.1:8000/courses?q=" + subject);
+		await self.fetch("http://127.0.0.1:8000/courses?q=" + subject)
+			.then((response) => response.json())
+			.then((data) => {
+				// Set the query result amount
+				query_result_amount = data.length;
 
-		// Set the query time variable
-		query_time = Date.now() - startTime
+				// Set the query time variable
+				query_time = Date.now() - startTime;
 
-		// Return the response json
-		if (response.ok) {
-  			return response.json();
-		}
+				// Set the promise to the data
+				promise = data;
+			})
 	}
 
 	// Handle the course input on key up
@@ -37,7 +43,9 @@
 		// Fetch the courses if query length
 		// is greater than 3
 		if (query.length >= 3) {
-			promise = fetchCourses(query);
+			fetchCourses(query);
+		} else {
+			promise = Promise.resolve([]);
 		}
 	}
 </script>
@@ -52,23 +60,29 @@
 			on:keyup={({ target: { value } }) => courseInputDebounce(value)} 
 		/>
 	</div>
+
+	<!-- Result header -->
+	<div class="result_div">
+		<h3 class="result_header">
+			{#if subject_query.length >= 3}
+				{query_result_amount} 
+			{:else}
+				0
+			{/if}
+				results 
+			{#if subject_query.length > 0}
+				for 
+			{/if}
+				{subject_query} in {query_time}ms
+		</h3>
+	</div>
 	
+	<!-- List of courses and their info -->
 	<!-- svelte-ignore empty-block -->
 	{#await promise}
 		{:then courses}
-
-		<!-- Result header -->
-		{#if subject_query.length > 0}
-			<div class="result_div">
-				<h3 class="result_header">
-					{courses.length} results for {subject_query} in {query_time}ms
-				</h3>
-			</div>
-		{/if}
-		
-		<!-- List of courses and their info -->
 	  	{#each courses as course}
-		  	<CourseInfo course={course}/>
+		  <CourseInfo course={course}/>
 		{/each}
 	{/await}
 </main>
