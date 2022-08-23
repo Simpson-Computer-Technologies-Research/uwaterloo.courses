@@ -1,3 +1,6 @@
+# The University of Waterloo Course Catalog
+This was project made by Tristan Simpson
+
 # Challenge
 My challenge for this project is to use solely native golang modules such as
 strings, net/http, html/template, etc. This also includes natively webscraping
