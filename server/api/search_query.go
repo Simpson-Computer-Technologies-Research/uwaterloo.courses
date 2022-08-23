@@ -6,7 +6,7 @@ import (
 	"strings"
 	"unicode"
 
-	"github.com/realTristan/The_University_of_Waterloo/global"
+	"github.com/realTristan/The_University_of_Waterloo/server/global"
 )
 
 // The CleanQuery() function removes all spaces from the query
