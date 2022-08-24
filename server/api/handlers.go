@@ -7,8 +7,8 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/realTristan/The_University_of_Waterloo/server/cache"
-	"github.com/realTristan/The_University_of_Waterloo/server/global"
+	"github.com/realTristan/uwaterloo.courses/server/cache"
+	"github.com/realTristan/uwaterloo.courses/server/global"
 	"github.com/valyala/fasthttp"
 )
 

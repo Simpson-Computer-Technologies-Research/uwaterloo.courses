@@ -1,8 +1,8 @@
 package main
 
 import (
-	"github.com/realTristan/The_University_of_Waterloo/server/api"
-	"github.com/realTristan/The_University_of_Waterloo/server/scraper"
+	"github.com/realTristan/uwaterloo.courses/server/api"
+	"github.com/realTristan/uwaterloo.courses/server/scraper"
 )
 
 // Main function

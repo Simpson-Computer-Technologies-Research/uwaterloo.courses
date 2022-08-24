@@ -7,9 +7,9 @@ import (
 	"sync"
 	"time"
 
-	"github.com/realTristan/The_University_of_Waterloo/server/cache"
-	"github.com/realTristan/The_University_of_Waterloo/server/global"
-	"github.com/realTristan/The_University_of_Waterloo/server/requests"
+	"github.com/realTristan/uwaterloo.courses/server/cache"
+	"github.com/realTristan/uwaterloo.courses/server/global"
+	"github.com/realTristan/uwaterloo.courses/server/requests"
 	"github.com/valyala/fasthttp"
 )
 
