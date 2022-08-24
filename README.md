@@ -1,4 +1,4 @@
-# uwaterloo.courses
+# uwaterloo.courses ![Stars](https://img.shields.io/github/stars/realTristan/uwaterloo.courses?color=brightgreen) ![Watchers](https://img.shields.io/github/watchers/realTristan/uwaterloo.courses?label=Watchers)
 <img width="1383" alt="Screen Shot 2022-08-23 at 7 41 53 PM" src="https://user-images.githubusercontent.com/75189508/186290354-a5ed2710-f1a5-43c8-ae19-c0252d874fa3.png">
 
 
@@ -13,8 +13,6 @@ data from websites (god help my soul..)
 - fasthttp module -> Used for low memory http requests
 - redis module > Used for Caching data
 - External Services -> Ex: Svelte, Redis, Hosting, etc.
-
-<br>
 
 # API
 <h3>Why make an API?</h3>
@@ -68,7 +66,6 @@ $ curl -X GET http://localhost:8000/subjects
 ```
 
 <h3>Get Subjects and Names</h3>
-<br>
 
 ```
 $ curl -X GET http://localhost:8000/subjects/names
