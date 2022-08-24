@@ -57,6 +57,9 @@ func GetBestMatch(query string) string {
 	var (
 		BestMatch      string  = ""
 		BestMatchValue float64 = -1.0
+
+		// Query converted to bytes with all spaces removed
+		queryBytes []byte = []byte(strings.ReplaceAll(query, " ", ""))
 	)
 
 	// Iterate over the subject names
@@ -64,7 +67,6 @@ func GetBestMatch(query string) string {
 		var (
 			// Largest result and the search query as bytes + replace all spaces
 			largestResult float64 = 0.0
-			queryBytes    []byte  = []byte(strings.ReplaceAll(query, " ", ""))
 
 			// Get the largest / smallest keys
 			largestKey  []byte = GetLargest([]byte(subjectName), queryBytes)
@@ -148,8 +150,8 @@ func QueryHandler(r *http.Request) string {
 	// course: string -> the course code arg
 	// query: string -> the course search query arg
 	var (
-		course string = string(r.URL.Query().Get("course"))
-		query  string = strings.ToLower(string(r.URL.Query().Get("q")))
+		course string = r.URL.Query().Get("course")
+		query  string = strings.ToLower(r.URL.Query().Get("q"))
 	)
 	if len(course) == 0 && len(query) > 0 {
 		// Check if the user is searching for a specific subject code

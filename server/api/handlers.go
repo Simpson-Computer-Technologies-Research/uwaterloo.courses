@@ -8,8 +8,8 @@ import (
 	"strings"
 	"sync"
 
+	"github.com/realTristan/The_University_of_Waterloo/server/cache"
 	"github.com/realTristan/The_University_of_Waterloo/server/global"
-	"github.com/realTristan/The_University_of_Waterloo/server/redis"
 	"github.com/valyala/fasthttp"
 )
 
@@ -34,38 +34,42 @@ func CourseDataHandler() http.HandlerFunc {
 
 		// Handle the error
 		if err != nil {
+			// 500 error code
 			w.WriteHeader(http.StatusInternalServerError)
+			// Write the error
 			fmt.Fprintf(w, "{\"error\": \"%v\"}", err)
-		} else {
-			// Enable CORS
-			w.Header().Set("Access-Control-Allow-Origin", "*")
+			// Return the handler
+			return
+		}
 
-			// Set the query: string variable
-			var query string = strings.ToLower(r.URL.Query().Get("q"))
+		// Enable CORS
+		w.Header().Set("Access-Control-Allow-Origin", "*")
 
-			// Make sure the query length is greater than 3
-			if len(query) < 3 {
-				// Return the query error
-				fmt.Fprint(w, "Query needs to be greater than 3 characters!")
-			} else {
-				// Marshal the redis course json data
-				json.Unmarshal([]byte(redis.Get(strings.ToUpper(subject))), &result)
+		// Set the query: string variable
+		var query string = strings.ToLower(r.URL.Query().Get("q"))
 
-				// Get the similar courses from the redis database
-				var rsc *redis.SimilarCourses = &redis.SimilarCourses{
-					ResultArray: result,
-					Subject:     subject,
-					Query:       query,
-					Mutex:       &sync.RWMutex{},
-				}
-				result = redis.GetSimilarCourses(rsc)
+		// Make sure the query length is greater than 3
+		if len(query) >= 3 {
+			// Scrape the data which will update the cache behind the scenes
+			// go scraper.ScrapeCourseData(RequestClient, subject)
 
-				// Convert the result map into a json string
-				var res, _ = json.Marshal(result)
+			// Marshal the redis course json data
+			result = cache.Get(strings.ToUpper(subject))
 
-				// Set the response body
-				fmt.Fprint(w, string(res))
+			// Get the similar courses from the redis database
+			var rsc *cache.SimilarCourses = &cache.SimilarCourses{
+				ResultArray: result,
+				Subject:     subject,
+				Query:       query,
+				Mutex:       &sync.RWMutex{},
 			}
+			result = cache.GetSimilarCourses(rsc)
+
+			// Convert the result map into a json string
+			var res, _ = json.Marshal(result)
+
+			// Set the response body
+			fmt.Fprint(w, string(res))
 		}
 	}
 }

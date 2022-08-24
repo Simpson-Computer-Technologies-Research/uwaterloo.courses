@@ -1,9 +1,9 @@
 # The University of Waterloo Course Catalog
-This was project made by Tristan Simpson
+<img width="960" height="540" alt="Screen Shot 2022-08-22 at 10 18 09 PM" src="https://user-images.githubusercontent.com/75189508/186062009-49d2782a-7e81-4f05-893c-cfb047223b7c.png">
 
 # Challenge
 My challenge for this project is to use solely native golang modules such as
-strings, net/http, html/template, etc. This also includes natively webscraping
+strings, net/http, sync, etc. This also includes natively webscraping
 data from websites (god help my soul..)
 
 <h3> Challenge Exceptions </h3>
@@ -18,17 +18,16 @@ data from websites (god help my soul..)
 # API
 <h3>Why make an API?</h3>
 I decided to make an api because it will be used for refreshing
-the redis database whenever somebody calls the /course endpoint.
+the cache whenever somebody calls the /course endpoint.
 I also chose to make an api because the university of waterloo
 api only allows 5000 requests per month and the data is quite limited.
 <br>
-Although my api is not as fast and big as the university of waterloo's,
+Although my api is not as fast nor as big as the university of waterloo's,
 I just thought it'd be a good addition to the project
 
-<h3>Usage</h3>
+<h2>Usage</h2>
 
-Example Response (Get Computer Science Data)
-<br>
+<h3>Get Subject Data (Computer Science)</h3>
 
 ```
 $ curl -X GET http://localhost:8000/courses?course=CS
@@ -39,7 +38,7 @@ $ curl -X GET http://localhost:8000/courses?q=computer+science
 ```
 
 ```json
-{
+"Example Response": {
     [
         "title": "CS 476",
         "name": "Numeric Computation for Financial Modeling",
@@ -53,22 +52,21 @@ $ curl -X GET http://localhost:8000/courses?q=computer+science
 }
 ```
 
-Example Response (Get Subjects List)
-<br>
+<h3>Get Subjects</h3>
 
 ```
 $ curl -X GET http://localhost:8000/subjects
 ```
 
 ```json
-{
+"Example Response": {
     "subjects": [
         "CS", "PHYS", "CHEM", "ART", "HLTH"
     ]
 }
 ```
 
-Example Response (Get Subjects and Names)
+<h3>Get Subjects and Names</h3>
 <br>
 
 ```
@@ -76,7 +74,7 @@ $ curl -X GET http://localhost:8000/subjects/names
 ```
 
 ```json
-{
+"Example Response": {
     "actuarialscience":                       "ACTSC",
 	"architecturalengineering":               "AE",
 	"accountingfinancialmanagement":          "AFM",
@@ -91,21 +89,10 @@ $ curl -X GET http://localhost:8000/subjects/names
 
 ```
 
-<br>
-
-# Project Showcase
-<img width="1122" alt="Screen Shot 2022-08-22 at 10 18 09 PM" src="https://user-images.githubusercontent.com/75189508/186062009-49d2782a-7e81-4f05-893c-cfb047223b7c.png">
-
-<br>
-
 # Acknowledgements
-I was inspired to create this project after seeing Eric Zhang's (@ekzhang)
+This project was inspired by Eric Zhang's (@ekzhang) Harvard course catalog. 
 <br>
-Harvard course catalog. I want to point out that I did not copy/paste any
-<br>
-code from his project.
-
-<br>
+I want to point out that I did not copy/paste any code from his project.
 
 # License
 MIT License

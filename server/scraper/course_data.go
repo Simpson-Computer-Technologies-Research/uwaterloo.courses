@@ -2,14 +2,13 @@ package scraper
 
 // Import packages
 import (
-	"encoding/json"
 	"fmt"
 	"strings"
 	"sync"
 	"time"
 
+	"github.com/realTristan/The_University_of_Waterloo/server/cache"
 	"github.com/realTristan/The_University_of_Waterloo/server/global"
-	"github.com/realTristan/The_University_of_Waterloo/server/redis"
 	"github.com/realTristan/The_University_of_Waterloo/server/requests"
 	"github.com/valyala/fasthttp"
 )
@@ -264,11 +263,13 @@ func (sr *ScrapeResult) _ScrapeCourseData(table string) {
 //
 // The function returns the course data result slice,
 // the result html and the http request error
-func ScrapeCourseData(client *fasthttp.Client, course string) ([]map[string]string, error) {
+func ScrapeCourseData(client *fasthttp.Client, subjectCode string) ([]map[string]string, error) {
+	subjectCode = strings.ToUpper(subjectCode)
+
 	// Utilize the HttpRequest struct to easily send an http request
 	var _Req *requests.HttpRequest = &requests.HttpRequest{
 		Client: client,
-		Url:    fmt.Sprintf("https://ucalendar.uwaterloo.ca/2223/COURSE/course-%s.html", course),
+		Url:    fmt.Sprintf("https://ucalendar.uwaterloo.ca/2223/COURSE/course-%s.html", subjectCode),
 		Method: "GET",
 		Headers: map[string]string{
 			"User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/15.2 Safari/605.1.15",
@@ -316,9 +317,8 @@ func ScrapeCourseData(client *fasthttp.Client, course string) ([]map[string]stri
 
 	// Set the course key in the redis database
 	// to the scrape result data
-	if len(scrapeResult.ResultSlice) > 1 {
-		resultJson, _ := json.Marshal(scrapeResult.ResultSlice)
-		redis.Set(course, string(resultJson))
+	if len(scrapeResult.ResultSlice) > 2 {
+		cache.Set(subjectCode, scrapeResult.ResultSlice)
 	}
 
 	// Return the result map containing all the

@@ -4,9 +4,9 @@
 
 <main>
     <!-- uwaterloo.courses Header -->
-    <a href="https://github.com/realTristan/uwaterloo.courses" style="text-decoration:none;" target="_blank" rel="noopener noreferrer">
-        <h1><mark style="color: black; background: none;">uwaterloo.</mark>courses</h1>
-    </a>
+    <h1>
+        <mark style="color: black; background: none;">uwaterloo.</mark>courses
+    </h1>
 
     <!-- Site Summary -->
     <p style="color: #52525b; margin-left: 1.2%; margin-right: 45%;">

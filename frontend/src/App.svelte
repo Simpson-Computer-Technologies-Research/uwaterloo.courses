@@ -21,12 +21,12 @@
 	// The fetchCourses() function returns the response json
 	// from the golang api. The golang api scrapes/grabs the
 	// course information from the waterloo website/redis database
-	async function fetchCourses(subject) {
+	async function fetchCourses(query) {
 		// Create a query starting time
 		let startTime = Date.now();
 
 		// Send the http request to the golang api
-		await self.fetch("http://127.0.0.1:8000/courses?q=" + subject)
+		await self.fetch("http://127.0.0.1:8000/courses?q=" + query)
 			.then((response) => response.json())
 			.then((data) => {
 				// Set the query result amount
@@ -46,10 +46,12 @@
 
 		// Fetch the courses if query length
 		// is greater than 3
-		if (query.length >= 3) {
+		if (query.length >= 3 && query.length <= 40) {
 			fetchCourses(query);
 		} else {
+			// Reset course list and query time
 			promise = Promise.resolve([]);
+			query_time = 0;
 		}
 	}
 </script>
@@ -61,11 +63,11 @@
 	<div>
 		<!-- svelte-ignore a11y-autofocus -->
 		<input
+			autofocus
 			value={subject_query}
 			placeholder="Search"
 			class="course_input" 
 			on:keyup={({ target: { value } }) => courseInputDebounce(value)} 
-			autofocus
 		/>
 	</div>
 
@@ -113,8 +115,7 @@
 	.result_header {
 		font-weight: 300;
 		border-radius: 3px;
-		margin-left: 1.2%;
-		background-color: #d5ffdf;
+		margin-left: 1%;
 		padding: 0.5%;
 		padding-left: 10px;
 		font-size: 15px;
@@ -123,7 +124,7 @@
 
 	.course_input {
 		margin-left: 1.2%;
-		margin-bottom: -0.05%;
+		margin-bottom: -1%;
 		outline: none;
 		border-top: 0;
 		border-right: 0;
@@ -139,7 +140,6 @@
 
 	:root::-webkit-scrollbar {
 		width: 20px;
-		height: 20px;
 	}
 
 	/* Track */
