@@ -66,29 +66,30 @@ func GetSimilarCourses(rsc *SimilarCourses) []map[string]string {
 			defer waitGroup.Done()
 
 			// Make sure not to add duplicate courses
-			if key != rsc.Subject {
-				// For every query arg check if the
-				// map contains the arg
-				if strings.Contains(fmt.Sprint(Cache[key]), rsc.Query) {
-					for v := 0; v < len(Cache[key]); v++ {
-						go func(v int) {
-							// Check if the data contains the queryArg
-							if strings.Contains(strings.ToLower(fmt.Sprint(Cache[key][v])), rsc.Query) {
-								// Locking/Unlocking the mutex to prevent
-								// data overwriting
-								rsc.Mutex.Lock()
-								defer rsc.Mutex.Unlock()
+			if key == rsc.Subject {
+				return
+			}
+			// For every query arg check if the
+			// map contains the arg
+			if strings.Contains(fmt.Sprint(Cache[key]), rsc.Query) {
+				for v := 0; v < len(Cache[key]); v++ {
+					go func(v int) {
+						// Check if the data contains the queryArg
+						if strings.Contains(strings.ToLower(fmt.Sprint(Cache[key][v])), rsc.Query) {
+							// Locking/Unlocking the mutex to prevent
+							// data overwriting
+							rsc.Mutex.Lock()
+							defer rsc.Mutex.Unlock()
 
-								// Append data to the result array
-								rsc.ResultArray = append(rsc.ResultArray, Cache[key][v])
-							}
-						}(v)
-
-						// Break the loop if the result array is
-						// too large
-						if len(rsc.ResultArray) > 500 {
-							break
+							// Append data to the result array
+							rsc.ResultArray = append(rsc.ResultArray, Cache[key][v])
 						}
+					}(v)
+
+					// Break the loop if the result array is
+					// too large
+					if len(rsc.ResultArray) > 500 {
+						return
 					}
 				}
 			}

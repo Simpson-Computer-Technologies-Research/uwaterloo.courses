@@ -28,14 +28,13 @@
 		fetch("http://127.0.0.1:8000/courses?q=" + query)
 			.then((response) => response.json())
 			.then((data) => {
+				queryResult = data;
+
 				// Set the query result amount
 				queryResultAmount = data.length;
 
 				// Set the query time variable
 				queryTime = Date.now() - startTime;
-
-				// Set the promise to the data
-				queryResult = data;
 			})
 	}
 
@@ -52,7 +51,7 @@
 		// Fetch the courses if query length
 		// is greater than 3
 		if (query.length >= 3 && query.length <= 40) {
-			queryTimer = setTimeout(_QuerySubjectData, 200, query);
+			queryTimer = setTimeout(_QuerySubjectData, 220, query);
 		} else {
 			// Reset query data and query time
 			queryResult = [];
