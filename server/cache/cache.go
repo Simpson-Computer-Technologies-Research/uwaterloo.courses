@@ -5,22 +5,21 @@ import (
 	"encoding/json"
 	"fmt"
 	"strings"
-	"sync"
 )
+
+/*
+
+	Some of you might be wondering why I decided to use a string cache
+	instead of a map cache. For starters iterating over a map cache takes
+	too long. To solve that you can start a bunch of goroutines which returns
+	the same speed, but destroys your memory usage, especially if a lot of
+	users are calling the api. Secondly, in most cases the string cache is
+	faster.
+
+*/
 
 // Hold Course data in memory cache map
 var Cache string
-
-// The SimilarCourses struct holds three keys
-/* - ResultArray: []map[string]string -> result data		*/
-/* - Subject: string -> the handled subject					*/
-/* - Query: string -> the original query					*/
-type SimilarCourses struct {
-	ResultArray []map[string]string
-	Subject     string
-	Query       string
-	Mutex       *sync.RWMutex
-}
 
 // The Set() function sets the data for the
 // given key in the cache
@@ -36,20 +35,27 @@ func GetSimilarCourses(query string, subject string) []map[string]string {
 	// Define variables
 	var (
 		courseMapStart    int = -1
+		closeBracketCount int = 0
 		subjectResult     []map[string]string
 		similarResult     []map[string]string
-		closeBracketCount        = 0
 		TempCache         string = strings.ToLower(Cache)
 	)
 
 	// Iterate over the lowercase cache string
 	for i := 0; i < len(TempCache); i++ {
+
+		// Check if current index is the start of
+		// the course data map
 		if TempCache[i] == '{' {
 			if courseMapStart == -1 {
 				courseMapStart = i
 			}
 			closeBracketCount++
-		} else if TempCache[i] == '}' {
+		} else
+
+		// Check if the current index is the end of
+		// the course data map
+		if TempCache[i] == '}' {
 			if closeBracketCount == 1 {
 				// Check if the map contains the subject code
 				if strings.Contains(
