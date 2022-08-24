@@ -26,12 +26,11 @@ data from websites (god help my soul..)
 
 <h3>How does the Caching Work?</h3>
 
-- The Cache system was originally designed using redis, a fast, in memory database that managed to reach query speeds up to under 100ms. For the time being while I learn more about redis and it's many capabilities, I decided to implement an in-memory cache map that holds all the course data. This made it possible to achieve speeds up to 3-10x faster than before.
+- The Cache system was originally designed to use redis; a fast, in memory database that achieved query speeds under 100ms. For the time being as I learn more about redis and it's many capabilities, I decided to implement an in-memory cache map that holds all the course data. This made it possible to achieve speeds up to 3-10x faster than before.
 
 # API
 <h3>Why make an API?</h3>
-I decided to make an api because it will be used for refreshing
-the cache whenever somebody calls the /course endpoint.
+I decided to make an api because it will be used for refreshing the cache.
 I also chose to make an api because the university of waterloo
 api only allows 5000 requests per month and the data is quite limited.
 <br>
