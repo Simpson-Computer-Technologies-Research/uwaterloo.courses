@@ -1,5 +1,6 @@
 # The University of Waterloo Course Catalog
-<img width="960" height="540" alt="Screen Shot 2022-08-22 at 10 18 09 PM" src="https://user-images.githubusercontent.com/75189508/186062009-49d2782a-7e81-4f05-893c-cfb047223b7c.png">
+<img width="1383" alt="Screen Shot 2022-08-23 at 7 41 53 PM" src="https://user-images.githubusercontent.com/75189508/186290354-a5ed2710-f1a5-43c8-ae19-c0252d874fa3.png">
+
 
 # Challenge
 My challenge for this project is to use solely native golang modules such as
