@@ -2,12 +2,13 @@ package main
 
 import (
 	"github.com/realTristan/The_University_of_Waterloo/server/api"
+	"github.com/realTristan/The_University_of_Waterloo/server/scraper"
 )
 
 // Main function
 func main() {
 	// Refresh the course info database
-	// scraper.RefreshCache()
+	scraper.RefreshCache()
 
 	// From redis database to in memory cache
 	// cache.FromRedisToCache()

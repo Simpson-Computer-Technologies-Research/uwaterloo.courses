@@ -1,4 +1,5 @@
 <script>
+	// Component Imports
 	import CourseInfo from './components/CourseInfo.svelte';
 	import SiteHeader from './components/SiteHeader.svelte';
 
@@ -6,52 +7,60 @@
 	// query when it is clicked on
 	let handleCodeClick = () => subject_query = "@code:cs";
 
-	// Promise for query http requests
-	let promise = Promise.resolve([]);
-
-	// The subject querying for
-	let subject_query = "";
-
-	// Track the amount of results
-	let query_result_amount = 0;
+	// Track input last key up
+	var queryTimer;
 
 	// The time it took to query the subject
-	let query_time = 0;
+	var queryTime;
 
-	// The fetchCourses() function returns the response json
-	// from the golang api. The golang api scrapes/grabs the
-	// course information from the waterloo website/redis database
-	async function fetchCourses(query) {
+	// The subject querying for
+	let querySubject = "";
+
+	// Track the amount of results
+	let queryResultAmount = 0;
+
+	// Hold the subject data
+	let queryResult = [];
+
+	// The _QuerySubjectData() function is used
+	// to send the http request to the localhost api
+	function _QuerySubjectData(query) {
 		// Create a query starting time
 		let startTime = Date.now();
 
 		// Send the http request to the golang api
-		await self.fetch("http://127.0.0.1:8000/courses?q=" + query)
+		fetch("http://127.0.0.1:8000/courses?q=" + query)
 			.then((response) => response.json())
 			.then((data) => {
 				// Set the query result amount
-				query_result_amount = data.length;
+				queryResultAmount = data.length;
 
 				// Set the query time variable
-				query_time = Date.now() - startTime;
+				queryTime = Date.now() - startTime;
 
 				// Set the promise to the data
-				promise = data;
+				queryResult = data;
 			})
 	}
 
-	// Handle the course input on key up
-	function courseInputDebounce(query) {
-		subject_query = query;
+	// The QuerySubjectData() function is called when the
+	// user types a character into the course query bar
+	//
+	// It sets a timeout to prevent spam calling the api
+	function QuerySubjectData(query) {
+		querySubject = query;
+
+		// Clear previous timer
+		clearTimeout(queryTimer);
 
 		// Fetch the courses if query length
 		// is greater than 3
 		if (query.length >= 3 && query.length <= 40) {
-			fetchCourses(query);
+			queryTimer = setTimeout(_QuerySubjectData, 200, query);
 		} else {
-			// Reset course list and query time
-			promise = Promise.resolve([]);
-			query_time = 0;
+			// Reset query data and query time
+			queryResult = [];
+			queryTime = 0;
 		}
 	}
 </script>
@@ -64,37 +73,34 @@
 		<!-- svelte-ignore a11y-autofocus -->
 		<input
 			autofocus
-			value={subject_query}
+			value={querySubject}
 			placeholder="Search"
 			class="course_input" 
-			on:keyup={({ target: { value } }) => courseInputDebounce(value)} 
+			on:keyup={({ target: { value } }) => QuerySubjectData(value)} 
 		/>
 	</div>
 
 	<!-- Result header -->
 	<div class="result_div">
 		<h3 class="result_header">
-			{#if subject_query.length >= 3}
-				{query_result_amount} 
+			{#if querySubject.length >= 3}
+				{queryResultAmount} 
 			{:else}
 				0
 			{/if}
 				results 
-			{#if subject_query.length > 0}
+			{#if querySubject.length > 0}
 				for 
 			{/if}
-				{subject_query} in {query_time}ms
+				{querySubject} in 0.{queryTime}ms
 		</h3>
 	</div>
 	
 	<!-- List of courses and their info -->
 	<!-- svelte-ignore empty-block -->
-	{#await promise}
-		{:then courses}
-	  	{#each courses as course}
-		  <CourseInfo course={course}/>
-		{/each}
-	{/await}
+	{#each queryResult as course}
+		<CourseInfo course={course}/>
+	{/each}
 </main>
 
 <style global lang="postcss">
