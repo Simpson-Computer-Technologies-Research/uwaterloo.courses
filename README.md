@@ -14,6 +14,20 @@ data from websites (god help my soul..)
 - redis module > Used for Caching data
 - External Services -> Ex: Svelte, Redis, Hosting, etc.
 
+# About
+<h3>Why Golang?</h3>
+
+- Golang is fast, lightweight and easy to use for hosting API's
+
+<h3>Why Svelte?</h3>
+
+- Svelte is 30% faster than other frameworks.
+- Svelte is best when used in designing small apps
+
+<h3>How does the Caching Work?</h3>
+
+- The Cache system was originally designed using redis, a fast, in memory database that managed to reach query speeds up to under 100ms. For the time being while I learn more about redis and it's many capabilities, I decided to implement an in-memory cache map that holds all the course data. This made it possible to achieve speeds up to 3-10x faster than before.
+
 # API
 <h3>Why make an API?</h3>
 I decided to make an api because it will be used for refreshing
