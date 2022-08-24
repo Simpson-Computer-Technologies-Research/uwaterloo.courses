@@ -17,7 +17,7 @@ data from websites (god help my soul..)
 # About
 <h3>Why Golang?</h3>
 
-- Golang is fast, lightweight and easy to use for hosting API's
+- Golang is fast, lightweight and easy to use for hosting API's. I have previous experience with golang and decided it was the best option for this project.
 
 <h3>Why Svelte?</h3>
 
