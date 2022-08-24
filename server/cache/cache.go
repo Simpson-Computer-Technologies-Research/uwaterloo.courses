@@ -11,9 +11,9 @@ import (
 
 	Some of you might be wondering why I decided to use a string cache
 	instead of a map cache. For starters iterating over a map cache takes
-	too long. To solve that you can start a bunch of goroutines which returns
-	the same speed, but destroys your memory usage, especially if a lot of
-	users are calling the api. Secondly, in most cases the string cache is
+	too long. To solve that you can start a bunch of goroutines which outputs
+	the same speed but destroys your memory usage. (especially if a lot of
+	users are calling the api) Secondly, in most cases the string cache is
 	faster.
 
 */
@@ -23,10 +23,9 @@ var Cache string
 
 // The Set() function sets the data for the
 // given key in the cache
-func Set(value map[string]string) error {
+func Set(value map[string]string) {
 	tmp, _ := json.Marshal(value)
 	Cache += string(tmp)
-	return nil
 }
 
 // The GetSimilarCourses() function iterates through the
