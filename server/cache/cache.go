@@ -30,19 +30,33 @@ func Set(value map[string]string) error {
 }
 
 // The GetSimilarCourses() function iterates through the
-// cache and gets any courses that contain the query args
+// cache and gets any courses that contain the query
 func GetSimilarCourses(query string, subject string) []map[string]string {
 	// Define variables
 	var (
-		courseMapStart    int = -1
+		// courseMapStart -> Track opening bracket
+		courseMapStart int = -1
+
+		// closeBracketCount -> Track closing brackets per course map
 		closeBracketCount int = 0
-		subjectResult     []map[string]string
-		similarResult     []map[string]string
-		TempCache         string = strings.ToLower(Cache)
+
+		// subjectResult -> Array with all the courses that have the subject code
+		subjectResult []map[string]string
+
+		// similarResult -> Array with all courses that contain the query
+		similarResult []map[string]string
+
+		// TempCache -> Lowercase Cache string
+		TempCache string = strings.ToLower(Cache)
 	)
 
 	// Iterate over the lowercase cache string
 	for i := 0; i < len(TempCache); i++ {
+
+		// Break the loop if there's too many similar courses
+		if len(similarResult) > 500 {
+			break
+		}
 
 		// Check if current index is the start of
 		// the course data map
