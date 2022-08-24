@@ -1,4 +1,4 @@
-module github.com/realTristan/The_University_of_Waterloo
+module github.com/realTristan/uwaterloo.courses
 
 go 1.17
 
