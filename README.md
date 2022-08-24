@@ -42,10 +42,6 @@ I just thought it'd be a good addition to the project
 <h3>Get Subject Data (Computer Science)</h3>
 
 ```
-$ curl -X GET http://localhost:8000/courses?course=CS
-
-or query with:
-
 $ curl -X GET http://localhost:8000/courses?q=computer+science
 ```
 

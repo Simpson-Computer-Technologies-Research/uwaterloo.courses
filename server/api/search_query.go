@@ -140,20 +140,14 @@ func QueryHandler(r *http.Request) string {
 	// Define Variables
 	// course: string -> the course code arg
 	// query: string -> the course search query arg
-	var (
-		course string = r.URL.Query().Get("course")
-		query  string = strings.ToLower(r.URL.Query().Get("q"))
-	)
-	if len(course) == 0 && len(query) > 0 {
-		// Check if the user is searching for a specific subject code
-		if strings.Contains(query, "@code") {
-			return strings.ToUpper(
-				CleanQuery(strings.Split(query, "@code")[1]))
-		}
-		// If using a search query (ex: computerscience) then match the query
-		// to a subject code
-		return GetBestMatch(query)
+	var query string = strings.ToLower(r.URL.Query().Get("q"))
+
+	// Check if the user is searching for a specific subject code
+	if strings.Contains(query, "@code") {
+		return strings.ToUpper(
+			CleanQuery(strings.Split(query, "@code")[1]))
 	}
-	// Return the course arg
-	return course
+	// If using a search query (ex: computerscience) then match the query
+	// to a subject code
+	return GetBestMatch(query)
 }
