@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"net/http"
 	"strings"
-	"sync"
 
 	"github.com/realTristan/The_University_of_Waterloo/server/cache"
 	"github.com/realTristan/The_University_of_Waterloo/server/global"
@@ -23,53 +22,26 @@ var RequestClient *fasthttp.Client = &fasthttp.Client{}
 // ScrapeCourseData() function, then return it as a json string
 func CourseDataHandler() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		// Define Variables
-		// course: string -> Get the course to search for
-		// result, err -> Scrape the course data
-		var (
-			subject string = QueryHandler(r)
-			err     error  = nil
-			result  []map[string]string
-		)
-
-		// Handle the error
-		if err != nil {
-			// 500 error code
-			w.WriteHeader(http.StatusInternalServerError)
-			// Write the error
-			fmt.Fprintf(w, "{\"error\": \"%v\"}", err)
-			// Return the handler
-			return
-		}
-
 		// Enable CORS
 		w.Header().Set("Access-Control-Allow-Origin", "*")
 
-		// Set the query: string variable
-		var query string = strings.ToLower(r.URL.Query().Get("q"))
+		// Define variables
+		var (
+			subject string = QueryHandler(r)
+			query   string = strings.ToLower(r.URL.Query().Get("q"))
+		)
 
 		// Make sure the query length is greater than 3
 		if len(query) >= 3 {
-			// Scrape the data which will update the cache behind the scenes
-			// go scraper.ScrapeCourseData(RequestClient, subject)
+			// Get the similar courses from the cache
+			if !strings.Contains(query, "@") {
+				// Get the courses
+				var _res = cache.GetSimilarCourses(query, subject)
+				res, _ := json.Marshal(_res)
 
-			// Marshal the redis course json data
-			result = cache.Get(strings.ToUpper(subject))
-
-			// Get the similar courses from the redis database
-			var rsc *cache.SimilarCourses = &cache.SimilarCourses{
-				ResultArray: result,
-				Subject:     subject,
-				Query:       query,
-				Mutex:       &sync.RWMutex{},
+				// Write the response
+				w.Write(res)
 			}
-			result = cache.GetSimilarCourses(rsc)
-
-			// Convert the result map into a json string
-			var res, _ = json.Marshal(result)
-
-			// Set the response body
-			fmt.Fprint(w, string(res))
 		}
 	}
 }
@@ -109,5 +81,13 @@ func SubjectCodesWithNamesHandler() http.HandlerFunc {
 func HomePageHandler() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprint(w, "uwaterloo.courses Public API")
+	}
+}
+
+// Dev page handler
+func DevPageHandler() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		// Enable CORS
+		w.Header().Set("Access-Control-Allow-Origin", "*")
 	}
 }

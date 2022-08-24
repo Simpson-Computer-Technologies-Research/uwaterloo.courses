@@ -2,15 +2,14 @@ package cache
 
 // Import modules
 import (
+	"encoding/json"
 	"fmt"
 	"strings"
 	"sync"
-
-	"github.com/realTristan/The_University_of_Waterloo/server/global"
 )
 
 // Hold Course data in memory cache map
-var Cache map[string][]map[string]string = make(map[string][]map[string]string)
+var Cache string
 
 // The SimilarCourses struct holds three keys
 /* - ResultArray: []map[string]string -> result data		*/
@@ -23,87 +22,64 @@ type SimilarCourses struct {
 	Mutex       *sync.RWMutex
 }
 
-// The Exists() function checks whether
-// or not the cache contains the given key
-func Exists(key string) bool {
-	var _, i = Cache[key]
-	return i
-}
-
 // The Set() function sets the data for the
 // given key in the cache
-func Set(key string, value []map[string]string) error {
-	Cache[key] = value
-
-	// Add the data to the redis cache
-	/*
-		var data, _ = json.Marshal(value)
-		return redis.Set(key, string(data))
-	*/
+func Set(value map[string]string) error {
+	tmp, _ := json.Marshal(value)
+	Cache += string(tmp)
 	return nil
-}
-
-// The Get() function returns the data
-// for the given key from the cache
-func Get(key string) []map[string]string {
-	return Cache[key]
 }
 
 // The GetSimilarCourses() function iterates through the
 // cache and gets any courses that contain the query args
-func GetSimilarCourses(rsc *SimilarCourses) []map[string]string {
-	rsc.Query = strings.ToLower(rsc.Query)
+func GetSimilarCourses(query string, subject string) []map[string]string {
+	// Define variables
+	var (
+		courseMapStart    int = -1
+		subjectResult     []map[string]string
+		similarResult     []map[string]string
+		closeBracketCount        = 0
+		TempCache         string = strings.ToLower(Cache)
+	)
 
-	// WaitGroup: sync.WaitGroup -> wait group for goroutines
-	var waitGroup sync.WaitGroup = sync.WaitGroup{}
-
-	// Iterate over all the keys in the database
-	for i := 0; i < len(global.SubjectCodes); i++ {
-		waitGroup.Add(1)
-
-		// Subject goroutine
-		go func(key string) {
-			defer waitGroup.Done()
-
-			// Make sure not to add duplicate courses
-			if key == rsc.Subject {
-				return
+	// Iterate over the lowercase cache string
+	for i := 0; i < len(TempCache); i++ {
+		if TempCache[i] == '{' {
+			if courseMapStart == -1 {
+				courseMapStart = i
 			}
+			closeBracketCount++
+		} else if TempCache[i] == '}' {
+			if closeBracketCount == 1 {
+				// Check if the map contains the subject code
+				if strings.Contains(
+					Cache[courseMapStart:i+1], fmt.Sprintf(`,"title":"%s `, subject)) {
 
-			// Check to make sure the cache key contains the query
-			if !strings.Contains(
-				strings.ToLower(fmt.Sprint(Cache[key])), rsc.Query) {
-				return
-			}
+					// Convert the string to a map
+					var data map[string]string
+					json.Unmarshal([]byte(Cache[courseMapStart:i+1]), &data)
 
-			// Loop over the cache key
-			for v := 0; v < len(Cache[key]); v++ {
-				go func(v int) {
-					// Check if the cache key index contains the query
-					if !strings.Contains(strings.ToLower(
-						fmt.Sprint(Cache[key][v])), rsc.Query) {
-						return
-					}
-					// Locking/Unlocking the mutex to prevent
-					// data overwriting
-					rsc.Mutex.Lock()
-					defer rsc.Mutex.Unlock()
+					// Append the map to the result array
+					subjectResult = append(subjectResult, data)
+				} else
 
-					// Append data to the result array
-					rsc.ResultArray = append(rsc.ResultArray, Cache[key][v])
-				}(v)
+				// Check if the map contains the query string
+				if strings.Contains(TempCache[courseMapStart:i+1], query) {
+					// Convert the string to a map
+					var data map[string]string
+					json.Unmarshal([]byte(Cache[courseMapStart:i+1]), &data)
 
-				// Break the loop if the result array is
-				// too large
-				if len(rsc.ResultArray) > 500 {
-					return
+					// Append the map to the result array
+					similarResult = append(similarResult, data)
 				}
+				// Reset indexing variables
+				closeBracketCount = 0
+				courseMapStart = -1
+			} else {
+				closeBracketCount--
 			}
-		}(global.SubjectCodes[i])
+		}
 	}
-	// Wait for all goroutines
-	waitGroup.Wait()
-
-	// Return the result array, resultAmount
-	return rsc.ResultArray
+	// Return the combined arrays
+	return append(subjectResult, similarResult...)
 }

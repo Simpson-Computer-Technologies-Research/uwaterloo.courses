@@ -29,8 +29,10 @@ func CreateSchema() {
 func QuerySearch(query string) {
 	var res, _ = RedisCache.Do(Context,
 		"FT.SEARCH", "courses", query,
-		"RETURN", "0", "LIMIT", "0", "100",
+		"LIMIT", "0", "100",
 	).Slice()
 	fmt.Println(res)
 	// Try the RedisCache.Pipeline
+	// https://redis.com/blog/getting-started-with-redisearch-2-0/?_ga=2.156602744.2130219085.1661266002-830624047.1661266002
+	// https://redis.io/commands/ft.search/
 }

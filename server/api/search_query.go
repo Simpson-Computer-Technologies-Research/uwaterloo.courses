@@ -1,7 +1,6 @@
 package api
 
 import (
-	"fmt"
 	"net/http"
 	"strings"
 	"unicode"
@@ -55,18 +54,18 @@ func GetSmallest(a []byte, b []byte) []byte {
 func GetBestMatch(query string) string {
 	// Define the bestmatch beginning values
 	var (
-		BestMatch      string  = ""
-		BestMatchValue float64 = -1.0
+		bestMatch      string  = ""
+		bestMatchValue float64 = -1.0
 
 		// Query converted to bytes with all spaces removed
-		queryBytes []byte = []byte(strings.ReplaceAll(query, " ", ""))
+		queryBytes []byte = []byte(CleanQuery(query))
 	)
 
 	// Iterate over the subject names
 	for subjectName := range global.SubjectNames {
 		var (
-			// Largest result and the search query as bytes + replace all spaces
-			largestResult float64 = 0.0
+			// Result value
+			resVal float64 = 0.0
 
 			// Get the largest / smallest keys
 			largestKey  []byte = GetLargest([]byte(subjectName), queryBytes)
@@ -76,67 +75,59 @@ func GetBestMatch(query string) string {
 		// Iterate using the smallest key length
 		for i := 0; i < len(smallestKey); i++ {
 			var (
-				tempIndex    float64 = 1.0
-				containCheck string  = ""
+				tmpIndx float64 = 1.0
+				substr  string  = ""
 			)
 
 			// If the keys equal the same
 			if queryBytes[i] == subjectName[i] {
-				largestResult += float64(queryBytes[i])
+				resVal += float64(queryBytes[i])
 			} else {
-				largestResult -= float64(queryBytes[i]) / float64(len(largestKey))
+				resVal -= float64(queryBytes[i]) / float64(len(largestKey))
 			}
 
 			// Iterate over the smallest key
 			for j := 0; j < len(smallestKey); j++ {
-				// Add the letter to the contain check string
-				containCheck += string(queryBytes[j])
+				// Add the letter to the substr
+				substr += string(queryBytes[j])
 
-				// Check if the subjectName contains the containCheck
-				if strings.Contains(subjectName, containCheck) {
+				// Check if the subjectName contains the substr
+				if strings.Contains(subjectName, substr) {
 					// Make sure the length of the contain check
 					// is greater than 2, or else you'll use single letters
-					if len(containCheck) > 2 {
-						largestResult +=
-							float64(queryBytes[j]) / float64(len(containCheck))
+					if len(substr) > 2 {
+						resVal += float64(queryBytes[j]) / float64(len(substr))
 					}
 				} else {
 					// Reset the contain check
-					containCheck = ""
+					substr = ""
 				}
 				// Get the distance the same letters are from eachother
 				// using the tempIndex
-				tempIndex++
+				tmpIndx++
 				if subjectName[i] == smallestKey[j] {
-					largestResult +=
-						tempIndex / float64(len(smallestKey)*len(largestKey))
+					resVal += tmpIndx / float64(len(smallestKey)*len(largestKey))
 				}
 			}
 			// Check if smallest key contains the subject name letter
 			if !strings.Contains(string(smallestKey), string(subjectName[i])) {
-				largestResult -= float64(len(smallestKey))
+				resVal -= float64(len(smallestKey))
 			}
 		}
-
-		// Check if bestmatchvalue is greater than
+		// Check if resval is greater than
 		// the previous bestmatchvalues
-		if largestResult > BestMatchValue {
-			BestMatchValue = largestResult
-			BestMatch = subjectName
+		if resVal > bestMatchValue {
+			bestMatchValue = resVal
+			bestMatch = subjectName
 		}
 	}
-	// Log the best match
-	fmt.Printf(" >> Query: BestMatch (%v) (%s) (%v) \n\n",
-		BestMatchValue, BestMatch, float64(370-(len(BestMatch)/2)))
-
 	// Make sure best match is valid/accurate
-	if BestMatchValue > float64(370-(len(BestMatch)/2)) {
+	if bestMatchValue > float64(370-(len(bestMatch)/2)) {
 		// Return the best match subject code
-		return global.SubjectNames[BestMatch]
+		return global.SubjectNames[bestMatch]
 	}
 	// Return None
 	return ""
-
 }
 
 // The QueryHandler() function handles the search query and whether

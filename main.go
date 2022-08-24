@@ -10,14 +10,8 @@ func main() {
 	// Refresh the course info database
 	scraper.RefreshCache()
 
-	// From redis database to in memory cache
-	// cache.FromRedisToCache()
-
 	// Host the API
 	api.ListenAndServe(":8000")
-
-	// Speed Testing
-	// cache.TestGetSimilarCourses()
 }
 
 /*

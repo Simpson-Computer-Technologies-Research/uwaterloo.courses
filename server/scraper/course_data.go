@@ -251,6 +251,9 @@ func (sr *ScrapeResult) _ScrapeCourseData(table string) {
 		Result: make(map[string]string),
 	}, table)
 
+	// Append course data to the cache
+	cache.Set(courseData)
+
 	// Append the course data to the result map
 	sr.ResultSlice = append(sr.ResultSlice, courseData)
 }
@@ -263,7 +266,7 @@ func (sr *ScrapeResult) _ScrapeCourseData(table string) {
 //
 // The function returns the course data result slice,
 // the result html and the http request error
-func ScrapeCourseData(client *fasthttp.Client, subjectCode string) ([]map[string]string, error) {
+func ScrapeCourseData(client *fasthttp.Client, subjectCode string) {
 	subjectCode = strings.ToUpper(subjectCode)
 
 	// Utilize the HttpRequest struct to easily send an http request
@@ -289,7 +292,7 @@ func ScrapeCourseData(client *fasthttp.Client, subjectCode string) ([]map[string
 	)
 	// Handle response error
 	if err != nil || resp.StatusCode() != 200 {
-		return []map[string]string{}, err
+		return
 	}
 
 	// Define Variables
@@ -314,14 +317,4 @@ func ScrapeCourseData(client *fasthttp.Client, subjectCode string) ([]map[string
 	// Log the time it took to scrape the course data
 	// It usually takes around 500µs -> 3ms
 	fmt.Printf(" >> Scraped Course Data [%v]\n\n", time.Since(scrapeStartTime))
-
-	// Set the course key in the redis database
-	// to the scrape result data
-	if len(scrapeResult.ResultSlice) > 2 {
-		cache.Set(subjectCode, scrapeResult.ResultSlice)
-	}
-
-	// Return the result map containing all the
-	// course information, and the http request error
-	return scrapeResult.ResultSlice, nil
 }

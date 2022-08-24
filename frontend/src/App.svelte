@@ -28,11 +28,17 @@
 		fetch("http://127.0.0.1:8000/courses?q=" + query)
 			.then((response) => response.json())
 			.then((data) => {
-				queryResult = data;
 
-				// Set the query result amount
-				queryResultAmount = data.length;
-
+				// Set the query data
+				if (data == null) {
+					queryResult = [];
+					queryResultAmount = 0;
+				} 
+				// Data is not null
+				else {
+					queryResult = data;
+					queryResultAmount = data.length;
+				}
 				// Set the query time variable
 				queryTime = Date.now() - startTime;
 			})

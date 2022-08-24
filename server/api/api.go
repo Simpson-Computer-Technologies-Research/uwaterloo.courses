@@ -18,9 +18,11 @@ func ListenAndServe(port string) {
 	// Establish a new gorilla mux router
 	var router *mux.Router = mux.NewRouter()
 
-	// Show the home page of the course catalog
-	// This is the area where you can search for courses
+	// Home Page
 	router.HandleFunc("/", HomePageHandler()).Methods("GET")
+
+	// Dev Page
+	router.HandleFunc("/dev", DevPageHandler()).Methods("GET")
 
 	// Show course data with the paramter ?course={course_code}
 	router.HandleFunc("/courses", CourseDataHandler()).Methods("GET")
