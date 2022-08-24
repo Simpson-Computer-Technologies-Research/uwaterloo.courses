@@ -3,15 +3,11 @@
 	import CourseInfo from './components/CourseInfo.svelte';
 	import SiteHeader from './components/SiteHeader.svelte';
 
-	// Used for pasting the @code:cs into the search
-	// query when it is clicked on
-	let handleCodeClick = () => subject_query = "@code:cs";
-
 	// Track input last key up
 	var queryTimer;
 
 	// The time it took to query the subject
-	var queryTime;
+	let queryTime = 0;
 
 	// The subject querying for
 	let querySubject = "";
@@ -66,7 +62,8 @@
 </script>
 
 <main>
-	<SiteHeader handleCodeClick={handleCodeClick}/>
+	<!-- When the user clicks the @code:cs -->
+	<SiteHeader handleCodeClick={() => QuerySubjectData("@code:cs")}/>
 
 	<!-- Input course to search for -->
 	<div>
