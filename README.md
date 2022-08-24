@@ -22,7 +22,7 @@ data from websites (god help my soul..)
 <h3>Why Svelte?</h3>
 
 - Svelte is 30% faster than other frameworks.
-- Svelte is best when used in designing small apps
+- Svelte is best when used for designing small apps
 
 <h3>How does the Caching Work?</h3>
 
