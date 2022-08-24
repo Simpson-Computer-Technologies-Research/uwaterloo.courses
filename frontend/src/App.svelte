@@ -94,7 +94,7 @@
 			{#if querySubject.length > 0}
 				for 
 			{/if}
-				{querySubject} in 0.{queryTime}ms
+				{querySubject} in {queryTime}ms
 		</h3>
 	</div>
 	
