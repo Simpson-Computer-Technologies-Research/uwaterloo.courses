@@ -17,7 +17,7 @@ import (
 var RequestClient *fasthttp.Client = &fasthttp.Client{}
 
 // The CourseDataHandler() function handles the incoming requests
-// using the "/courses?course={course_code}" path.
+// using the "/courses?q={query}" path.
 // The function is used to scrape the data of a subject using the
 // ScrapeCourseData() function, then return it as a json string
 func CourseDataHandler() http.HandlerFunc {
