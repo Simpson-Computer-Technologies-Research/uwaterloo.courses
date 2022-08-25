@@ -37,7 +37,7 @@ func CourseDataHandler() http.HandlerFunc {
 		// Make sure the query length is greater than 3
 		if len(query) >= 3 {
 			// Get the courses
-			var _res = cache.GetSimilarCourses(query, subject)
+			var _res = cache.GetCourses(query, subject)
 			res, _ := json.Marshal(_res)
 
 			// Write the response

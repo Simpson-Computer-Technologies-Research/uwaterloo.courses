@@ -1,8 +1,10 @@
 package api
 
 import (
+	"fmt"
 	"net/http"
 	"strings"
+	"time"
 	"unicode"
 
 	"github.com/realTristan/uwaterloo.courses/server/global"
@@ -54,6 +56,10 @@ func GetSmallest(a []byte, b []byte) []byte {
 func GetBestMatch(query string) string {
 	// Define the bestmatch beginning values
 	var (
+		// Track get best match time
+		startTime time.Time = time.Now()
+
+		// Best match values
 		bestMatch      string  = ""
 		bestMatchValue float64 = -1.0
 
@@ -121,6 +127,9 @@ func GetBestMatch(query string) string {
 			bestMatch = subjectName
 		}
 	}
+	// Print the query time
+	fmt.Printf("\n >> Best Match Query: (%v)\n", time.Since(startTime))
+
 	// Make sure best match is valid/accurate
 	if bestMatchValue > float64(370-(len(bestMatch)/2)) {
 		// Return the best match subject code

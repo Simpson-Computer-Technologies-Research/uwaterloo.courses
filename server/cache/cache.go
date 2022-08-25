@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"strings"
+	"time"
 )
 
 /*
@@ -28,11 +29,15 @@ func Set(value map[string]string) {
 	Cache += string(tmp)
 }
 
-// The GetSimilarCourses() function iterates through the
+// The GetCourses() function iterates through the
 // cache and gets any courses that contain the query
-func GetSimilarCourses(query string, subject string) []map[string]string {
+// as well as any courses that start with the subject code
+func GetCourses(query string, subject string) []map[string]string {
 	// Define variables
 	var (
+		// Track query time
+		startTime time.Time = time.Now()
+
 		// courseMapStart -> Track opening bracket
 		courseMapStart int = -1
 
@@ -51,11 +56,10 @@ func GetSimilarCourses(query string, subject string) []map[string]string {
 
 	// Iterate over the lowercase cache string
 	for i := 0; i < len(TempCache); i++ {
-
 		// Break the loop if there's too many similar courses
 		if len(similarResult) > 500 {
 			break
-		}
+		} else
 
 		// Check if current index is the start of
 		// the course data map
@@ -99,6 +103,9 @@ func GetSimilarCourses(query string, subject string) []map[string]string {
 			}
 		}
 	}
+	// Print the query time
+	fmt.Printf("\n >> Course Query: (%v)\n", time.Since(startTime))
+
 	// Return the combined arrays
 	return append(subjectResult, similarResult...)
 }

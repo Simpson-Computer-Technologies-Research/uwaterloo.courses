@@ -1,13 +1,9 @@
-# fly.toml file generated for uwaterloocourses on 2022-08-24T18:43:55-04:00
+# fly.toml file generated for uwaterloocourses on 2022-08-25T09:11:35-04:00
 
 app = "uwaterloocourses"
 kill_signal = "SIGINT"
 kill_timeout = 5
 processes = []
-
-[build]
-  builder = "paketobuildpacks/builder:base"
-  buildpacks = ["gcr.io/paketo-buildpacks/go"]
 
 [env]
   PORT = "8080"
