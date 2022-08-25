@@ -2,37 +2,40 @@ package cache
 
 // Import modules
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
-	"strings"
 	"time"
 )
 
 /*
 
-	Some of you might be wondering why I decided to use a string cache
+	Some of you might be wondering why I decided to use a byte cache
 	instead of a map cache. For starters iterating over a map cache takes
 	too long. To solve that you can start a bunch of goroutines which outputs
 	the same speed but destroys your memory usage. (especially if a lot of
-	users are calling the api) Secondly, in most cases the string cache is
+	users are calling the api) Secondly, in most cases the byte cache is
 	faster.
 
 */
 
-// Hold Course data in memory cache map
-var Cache string
+// Hold Course data in memory cache
+var Cache []byte
 
 // The Set() function sets the data for the
 // given key in the cache
 func Set(value map[string]string) {
-	tmp, _ := json.Marshal(value)
-	Cache += string(tmp)
+	var tmp, _ = json.Marshal(value)
+	// Append to a byte array is faster than
+	// adding to a string. This makes the webscraping
+	// part of the program much faster (30x faster)
+	Cache = append(Cache, tmp...)
 }
 
 // The GetCourses() function iterates through the
 // cache and gets any courses that contain the query
 // as well as any courses that start with the subject code
-func GetCourses(query string, subject string) []map[string]string {
+func GetCourses(query []byte, subject []byte) []map[string]string {
 	// Define variables
 	var (
 		// Track query time
@@ -51,7 +54,7 @@ func GetCourses(query string, subject string) []map[string]string {
 		similarResult []map[string]string
 
 		// TempCache -> Lowercase Cache string
-		TempCache string = strings.ToLower(Cache)
+		TempCache []byte = bytes.ToLower(Cache)
 	)
 
 	// Iterate over the lowercase cache string
@@ -75,22 +78,21 @@ func GetCourses(query string, subject string) []map[string]string {
 		if TempCache[i] == '}' {
 			if closeBracketCount == 1 {
 				// Check if the map contains the subject code
-				if strings.Contains(
-					Cache[courseMapStart:i+1], fmt.Sprintf(`,"title":"%s `, subject)) {
+				if bytes.Contains(Cache[courseMapStart:i+1], subject) {
 
 					// Convert the string to a map
 					var data map[string]string
-					json.Unmarshal([]byte(Cache[courseMapStart:i+1]), &data)
+					json.Unmarshal(Cache[courseMapStart:i+1], &data)
 
 					// Append the map to the result array
 					subjectResult = append(subjectResult, data)
 				} else
 
 				// Check if the map contains the query string
-				if strings.Contains(TempCache[courseMapStart:i+1], query) {
+				if bytes.Contains(TempCache[courseMapStart:i+1], query) {
 					// Convert the string to a map
 					var data map[string]string
-					json.Unmarshal([]byte(Cache[courseMapStart:i+1]), &data)
+					json.Unmarshal(Cache[courseMapStart:i+1], &data)
 
 					// Append the map to the result array
 					similarResult = append(similarResult, data)

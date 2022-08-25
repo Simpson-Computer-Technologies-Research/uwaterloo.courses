@@ -2,11 +2,11 @@ package api
 
 // Import packages
 import (
+	"bytes"
 	"crypto/tls"
 	"encoding/json"
 	"fmt"
 	"net/http"
-	"strings"
 
 	"github.com/realTristan/uwaterloo.courses/server/cache"
 	"github.com/realTristan/uwaterloo.courses/server/global"
@@ -30,8 +30,8 @@ func CourseDataHandler() http.HandlerFunc {
 
 		// Define variables
 		var (
-			subject string = QueryHandler(r)
-			query   string = strings.ToLower(r.URL.Query().Get("q"))
+			subject []byte = QueryHandler(r)
+			query   []byte = bytes.ToLower([]byte(r.URL.Query().Get("q")))
 		)
 
 		// Make sure the query length is greater than 3

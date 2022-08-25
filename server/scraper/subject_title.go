@@ -1,6 +1,7 @@
 package scraper
 
 import (
+	"bytes"
 	"fmt"
 	"strings"
 	"unicode"
@@ -13,7 +14,7 @@ import (
 //
 // The function returns the cleaned title string
 func CleanSubjectTitle(title string) string {
-	var res string = ""
+	var res []byte
 	for i := 0; i < len(title); i++ {
 		// If the value == "&" increase by four to avoid
 		// the &nmbp string
@@ -21,11 +22,11 @@ func CleanSubjectTitle(title string) string {
 			i += 4
 		} else if unicode.IsLetter(rune(title[i])) {
 			// Append the letter to the result string
-			res += string(title[i])
+			res = append(res, title[i])
 		}
 	}
 	// Return the res string in lowercase
-	return strings.ToLower(res)
+	return string(bytes.ToLower(res))
 }
 
 // The ScrapeSubjectTitle() function will return the title of the subject at

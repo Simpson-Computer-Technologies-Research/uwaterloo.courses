@@ -1,6 +1,7 @@
 package api
 
 import (
+	"bytes"
 	"fmt"
 	"net/http"
 	"strings"
@@ -12,13 +13,13 @@ import (
 
 // The CleanQuery() function removes all spaces from the query
 // and removes all non alphabetic characters
-func CleanQuery(query string) string {
-	var res string = ""
+func CleanQuery(query []byte) []byte {
+	var res []byte
 	for i := 0; i < len(query); i++ {
 		// Check if the character at the index is a letter
 		if unicode.IsLetter(rune(query[i])) {
 			// Append the letter to the result string
-			res += string(query[i])
+			res = append(res, query[i])
 		}
 	}
 	// Return the res string in lowercase
@@ -53,7 +54,7 @@ func GetSmallest(a []byte, b []byte) []byte {
 //
 // I set everything to float64 so the decimals can play a role
 // in micro differences
-func GetBestMatch(query string) string {
+func GetBestMatch(query []byte) []byte {
 	// Define the bestmatch beginning values
 	var (
 		// Track get best match time
@@ -62,9 +63,6 @@ func GetBestMatch(query string) string {
 		// Best match values
 		bestMatch      string  = ""
 		bestMatchValue float64 = -1.0
-
-		// Query converted to bytes with all spaces removed
-		queryBytes []byte = []byte(CleanQuery(query))
 	)
 
 	// Iterate over the subject names
@@ -74,8 +72,8 @@ func GetBestMatch(query string) string {
 			resVal float64 = 0.0
 
 			// Get the largest / smallest keys
-			largestKey  []byte = GetLargest([]byte(subjectName), queryBytes)
-			smallestKey []byte = GetSmallest([]byte(subjectName), queryBytes)
+			largestKey  []byte = GetLargest([]byte(subjectName), query)
+			smallestKey []byte = GetSmallest([]byte(subjectName), query)
 		)
 
 		// Iterate using the smallest key length
@@ -86,23 +84,23 @@ func GetBestMatch(query string) string {
 			)
 
 			// If the keys equal the same
-			if queryBytes[i] == subjectName[i] {
-				resVal += float64(queryBytes[i])
+			if query[i] == subjectName[i] {
+				resVal += float64(query[i])
 			} else {
-				resVal -= float64(queryBytes[i]) / float64(len(largestKey))
+				resVal -= float64(query[i]) / float64(len(largestKey))
 			}
 
 			// Iterate over the smallest key
 			for j := 0; j < len(smallestKey); j++ {
 				// Add the letter to the substr
-				substr += string(queryBytes[j])
+				substr += string(query[j])
 
 				// Check if the subjectName contains the substr
 				if strings.Contains(subjectName, substr) {
 					// Make sure the length of the contain check
 					// is greater than 2, or else you'll use single letters
 					if len(substr) > 2 {
-						resVal += float64(queryBytes[j]) / float64(len(substr))
+						resVal += float64(query[j]) / float64(len(substr))
 					}
 				} else {
 					// Reset the contain check
@@ -133,10 +131,10 @@ func GetBestMatch(query string) string {
 	// Make sure best match is valid/accurate
 	if bestMatchValue > float64(370-(len(bestMatch)/2)) {
 		// Return the best match subject code
-		return global.SubjectNames[bestMatch]
+		return []byte(global.SubjectNames[bestMatch])
 	}
 	// Return None
-	return ""
+	return []byte{}
 }
 
 // The QueryHandler() function handles the search query and whether
@@ -145,18 +143,18 @@ func GetBestMatch(query string) string {
 // It'll also check for special searches for example: @code:
 // will search for a specific subject code instead of for example:
 // searching "computer science"
-func QueryHandler(r *http.Request) string {
+func QueryHandler(r *http.Request) []byte {
 	// Define Variables
 	// course: string -> the course code arg
 	// query: string -> the course search query arg
-	var query string = strings.ToLower(r.URL.Query().Get("q"))
+	var query []byte = bytes.ToLower([]byte(r.URL.Query().Get("q")))
 
 	// Check if the user is searching for a specific subject code
-	if strings.Contains(query, "@code") {
-		return strings.ToUpper(
-			CleanQuery(strings.Split(query, "@code")[1]))
+	if bytes.Contains(query, []byte("@code")) {
+		return bytes.ToUpper(
+			CleanQuery(bytes.Split(query, []byte("@code"))[1]))
 	}
 	// If using a search query (ex: computerscience) then match the query
 	// to a subject code
-	return GetBestMatch(query)
+	return GetBestMatch(CleanQuery(query))
 }
