@@ -5,3 +5,7 @@ COPY package.json package-lock.json ./
 RUN npm ci
 COPY . .
 RUN npm run build
+
+# RUN THE APPLICATION
+EXPOSE 8080
+CMD ["npm", "start"]
