@@ -74,8 +74,8 @@ func GetBestMatch(query []byte) []byte {
 			resVal float64 = 0.0
 
 			// Get the largest / smallest keys
-			largestKey  []byte = GetLargest([]byte(subjectName), query)
-			smallestKey []byte = GetSmallest([]byte(subjectName), query)
+			largestKey  []byte = GetLargest(subjectName, query)
+			smallestKey []byte = GetSmallest(subjectName, query)
 		)
 
 		// Iterate using the smallest key length
@@ -144,14 +144,17 @@ func GetBestMatch(query []byte) []byte {
 // searching "computer science"
 func QueryHandler(r *http.Request) []byte {
 	// Define Variables
-	// course: string -> the course code arg
 	// query: string -> the course search query arg
-	var query []byte = bytes.ToLower([]byte(r.URL.Query().Get("q")))
+	// codeByte: []byte -> the @code bytes
+	var (
+		query     []byte = bytes.ToLower([]byte(r.URL.Query().Get("q")))
+		codeBytes []byte = []byte("@code")
+	)
 
 	// Check if the user is searching for a specific subject code
-	if bytes.Contains(query, []byte("@code")) {
+	if bytes.Contains(query, codeBytes) {
 		return bytes.ToUpper(
-			CleanQuery(bytes.Split(query, []byte("@code"))[1]))
+			CleanQuery(bytes.Split(query, codeBytes)[1]))
 	}
 	// If using a search query (ex: computerscience) then match the query
 	// to a subject code

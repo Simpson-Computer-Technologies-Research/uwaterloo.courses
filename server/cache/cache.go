@@ -29,7 +29,7 @@ func Set(value map[string]string) {
 
 	// Append to a byte array is faster than
 	// adding to a string. This makes the webscraping
-	// part of the program much faster
+	// part of the program much faster (30x faster)
 	Cache = append(Cache, tmp...)
 }
 
