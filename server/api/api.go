@@ -32,7 +32,7 @@ func ListenAndServe(port string) {
 
 	// Show the list of subjects with their corresponding names
 	// at the university of waterloo
-	router.HandleFunc("/subjects/name", SubjectCodesWithNamesHandler()).Methods("GET")
+	router.HandleFunc("/subjects/names", SubjectCodesWithNamesHandler()).Methods("GET")
 
 	// Handle Router
 	http.Handle("/", router)
