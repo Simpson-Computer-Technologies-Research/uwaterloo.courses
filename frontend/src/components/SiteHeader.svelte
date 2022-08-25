@@ -28,7 +28,7 @@
 
         <!-- Go -->
         <a href="https://go.dev" target="_blank" rel="noopener noreferrer">
-            <img src="./images/go_logo.png" alt="" width="44" height="44" style="margin-bottom: -2.4%; margin-left: -2px;">
+            <img src="./images/go_logo.png" alt="" width="44" height="44" style="margin-bottom: -16px; margin-left: -4px;">
         </a>
 
         and
