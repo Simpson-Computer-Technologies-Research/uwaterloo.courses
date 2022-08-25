@@ -68,7 +68,7 @@
 
 <main>
 	<!-- When the user clicks the @code:cs -->
-	<SiteHeader handleCodeClick={() => QuerySubjectData("@code:cs")}/>
+	<SiteHeader handleHeaderClick={QuerySubjectData}/>
 
 	<!-- Input course to search for -->
 	<div>
