@@ -2,13 +2,12 @@ package main
 
 import (
 	"github.com/realTristan/uwaterloo.courses/server/api"
-	"github.com/realTristan/uwaterloo.courses/server/scraper"
 )
 
 // Main function
 func main() {
 	// Refresh the course info database
-	scraper.RefreshCache()
+	// scraper.RefreshCache()
 
 	// Host the API
 	api.ListenAndServe(":8000")

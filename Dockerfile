@@ -1,33 +1,16 @@
 # COMMANDS
 # docker build -t uwaterloocourses .
-# docker run -d -p 80:80 uwaterloocourses
-
-# NODE
-FROM node:16-alpine as client_builder
-COPY /frontend /node/app/
-WORKDIR /node/app/frontend/
-RUN npm install && npm run build
+# docker run --rm --name=uwaterloocourses -p 8000:80 uwaterloocourses
 
 # GOLANG
-FROM golang:latest as base_builder
+FROM golang:1.19 AS builder
 WORKDIR /go/app
-# copy go files
-COPY go.mod ./
-COPY go.sum ./
-# go download
+COPY . .
 RUN go mod download
-COPY *.go ./
-# download server files
-RUN go get github.com/realTristan/uwaterloo.courses
-# run the server
-RUN go build -o /server
+RUN CGO_ENABLED=0 GOOS=linux go build -o main .
 
-# FOR SMALLER CONTAINERS
-FROM gcr.io/distroless/base
-COPY --from=base_builder /go/src/app/public /public/
-COPY --from=base_builder /go/src/app/.env /
-COPY --from=base_builder /go/bin/app /
-COPY --from=client_builder /node/app/public/build/ /public/build/
-
-# RUN APP
-CMD ["/app", "/server"]
+# START THE BACKEND
+FROM scratch
+COPY --from=builder /main /app/
+WORKDIR /app
+CMD ["./main"]

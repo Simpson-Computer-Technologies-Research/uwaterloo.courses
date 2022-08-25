@@ -2,6 +2,7 @@ package api
 
 // Import packages
 import (
+	"crypto/tls"
 	"encoding/json"
 	"fmt"
 	"net/http"
@@ -14,7 +15,9 @@ import (
 
 // Global Variables
 /* - RequestClient *fasthttp.Client -> Used for sending http requests */
-var RequestClient *fasthttp.Client = &fasthttp.Client{}
+var RequestClient *fasthttp.Client = &fasthttp.Client{
+	TLSConfig: &tls.Config{InsecureSkipVerify: true},
+}
 
 // The CourseDataHandler() function handles the incoming requests
 // using the "/courses?q={query}" path.
