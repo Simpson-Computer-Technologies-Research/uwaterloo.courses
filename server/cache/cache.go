@@ -26,9 +26,10 @@ var Cache []byte
 // given key in the cache
 func Set(value map[string]string) {
 	var tmp, _ = json.Marshal(value)
+
 	// Append to a byte array is faster than
 	// adding to a string. This makes the webscraping
-	// part of the program much faster (30x faster)
+	// part of the program much faster
 	Cache = append(Cache, tmp...)
 }
 
@@ -36,6 +37,8 @@ func Set(value map[string]string) {
 // cache and gets any courses that contain the query
 // as well as any courses that start with the subject code
 func GetCourses(query []byte, subject []byte) []map[string]string {
+	subject = []byte(fmt.Sprintf(`,"title":"%s `, subject))
+
 	// Define variables
 	var (
 		// Track query time

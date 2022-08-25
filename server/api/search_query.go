@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"fmt"
 	"net/http"
-	"strings"
 	"time"
 	"unicode"
 
@@ -18,12 +17,12 @@ func CleanQuery(query []byte) []byte {
 	for i := 0; i < len(query); i++ {
 		// Check if the character at the index is a letter
 		if unicode.IsLetter(rune(query[i])) {
-			// Append the letter to the result string
+			// Append the letter to the result
 			res = append(res, query[i])
 		}
 	}
-	// Return the res string in lowercase
-	return res
+	// Return the res in lowercase
+	return bytes.ToLower(res)
 }
 
 // The GetLargest() function returns the
@@ -61,13 +60,16 @@ func GetBestMatch(query []byte) []byte {
 		startTime time.Time = time.Now()
 
 		// Best match values
-		bestMatch      string  = ""
+		bestMatch      []byte
 		bestMatchValue float64 = -1.0
 	)
 
 	// Iterate over the subject names
-	for subjectName := range global.SubjectNames {
+	for _subjectName := range global.SubjectNames {
 		var (
+			// Convert subject name to bytes
+			subjectName []byte = []byte(_subjectName)
+
 			// Result value
 			resVal float64 = 0.0
 
@@ -80,7 +82,7 @@ func GetBestMatch(query []byte) []byte {
 		for i := 0; i < len(smallestKey); i++ {
 			var (
 				tmpIndx float64 = 1.0
-				substr  string  = ""
+				substr  []byte
 			)
 
 			// If the keys equal the same
@@ -93,10 +95,10 @@ func GetBestMatch(query []byte) []byte {
 			// Iterate over the smallest key
 			for j := 0; j < len(smallestKey); j++ {
 				// Add the letter to the substr
-				substr += string(query[j])
+				substr = append(substr, query[j])
 
 				// Check if the subjectName contains the substr
-				if strings.Contains(subjectName, substr) {
+				if bytes.Contains(subjectName, substr) {
 					// Make sure the length of the contain check
 					// is greater than 2, or else you'll use single letters
 					if len(substr) > 2 {
@@ -104,7 +106,7 @@ func GetBestMatch(query []byte) []byte {
 					}
 				} else {
 					// Reset the contain check
-					substr = ""
+					substr = []byte{}
 				}
 				// Get the distance the same letters are from eachother
 				// using the tempIndex
@@ -112,10 +114,6 @@ func GetBestMatch(query []byte) []byte {
 				if subjectName[i] == smallestKey[j] {
 					resVal += tmpIndx / float64(len(smallestKey)*len(largestKey))
 				}
-			}
-			// Check if smallest key contains the subject name letter
-			if !strings.Contains(string(smallestKey), string(subjectName[i])) {
-				resVal -= float64(len(smallestKey))
 			}
 		}
 		// Check if resval is greater than
@@ -125,13 +123,14 @@ func GetBestMatch(query []byte) []byte {
 			bestMatch = subjectName
 		}
 	}
-	// Print the query time
-	fmt.Printf("\n >> Best Match Query: (%v)\n", time.Since(startTime))
+	// Print the query result
+	fmt.Printf("\n >> Best Match Query: (%s) (%f) (%v)\n",
+		bestMatch, bestMatchValue, time.Since(startTime))
 
 	// Make sure best match is valid/accurate
 	if bestMatchValue > float64(370-(len(bestMatch)/2)) {
 		// Return the best match subject code
-		return []byte(global.SubjectNames[bestMatch])
+		return []byte(global.SubjectNames[string(bestMatch)])
 	}
 	// Return None
 	return []byte{}

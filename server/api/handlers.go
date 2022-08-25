@@ -33,7 +33,6 @@ func CourseDataHandler() http.HandlerFunc {
 			subject []byte = QueryHandler(r)
 			query   []byte = bytes.ToLower([]byte(r.URL.Query().Get("q")))
 		)
-
 		// Make sure the query length is greater than 3
 		if len(query) >= 3 {
 			// Get the courses
@@ -58,7 +57,7 @@ func SubjectCodesHandler() http.HandlerFunc {
 		})
 
 		// Set the response body
-		fmt.Fprint(w, string(_json))
+		w.Write(_json)
 	}
 }
 
@@ -72,7 +71,7 @@ func SubjectCodesWithNamesHandler() http.HandlerFunc {
 		_json, _ := json.Marshal(global.SubjectNames)
 
 		// Set the response body
-		fmt.Fprint(w, string(_json))
+		w.Write(_json)
 	}
 }
 
