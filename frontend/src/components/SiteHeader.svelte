@@ -1,4 +1,5 @@
 <script>
+    // Handle header click function
     export let handleHeaderClick;
 </script>
 
@@ -11,8 +12,11 @@
     <!-- Site Summary -->
     <p style="color: #52525b; margin-left: 1.2%; margin-right: 45%;">
         Try words, phrases, titles, subjects, course numbers, etc. 
-        You can also look for exact textual phrases (like "<mark style="color: #6366f1; background: none; cursor: pointer;" on:click={() => handleHeaderClick("engineering")}>engineering</mark>") or filter by specific attributes such as 
-        <mark style="color: #6366f1; background: none; cursor: pointer;" on:click={() => handleHeaderClick("@code:cs")}>@code:cs</mark>
+        You can also look for exact textual phrases (like "<mark class="marked_text"
+            on:click={() => handleHeaderClick("engineering")}>engineering</mark>"
+        ) or filter by specific attributes such as 
+        <mark class="marked_text"
+            on:click={() => handleHeaderClick("@code:cs")}>@code:cs</mark>
     </p>
 
     <!-- Credits and languages/services used -->
@@ -54,5 +58,13 @@
         font-size: 4em;
         font-weight: 700;
         margin-bottom: 20px;
+    }
+    .marked_text {
+        color: #6366f1; 
+        background: none; 
+        cursor: pointer;
+    }
+    .marked_text:hover {
+        text-decoration: underline;
     }
 </style>
