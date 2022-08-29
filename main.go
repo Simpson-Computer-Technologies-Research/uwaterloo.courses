@@ -43,7 +43,7 @@ func main() {
 	InitCache()
 
 	// Host the API
-	api.ListenAndServe("0.0.0.0:8080")
+	api.ListenAndServe("0.0.0.0:8000")
 }
 
 /*
