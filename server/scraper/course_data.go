@@ -2,7 +2,9 @@ package scraper
 
 // Import packages
 import (
+	"encoding/json"
 	"fmt"
+	"os"
 	"strings"
 	"sync"
 	"time"
@@ -34,10 +36,19 @@ type ScrapeResult struct {
 // The RefreshCache() function re-scrapes and re-sets all
 // the keys in the redis cache database to the scrape result
 func RefreshCache() {
-	var RequestClient *fasthttp.Client = &fasthttp.Client{}
+	var (
+		RequestClient *fasthttp.Client = &fasthttp.Client{}
+		s3Result      []map[string]string
+	)
+
+	// Iterate over the subject codes
 	for _, v := range global.SubjectCodes {
-		ScrapeCourseData(RequestClient, v)
+		s3Result = append(s3Result, ScrapeCourseData(RequestClient, v).ResultSlice...)
 	}
+
+	// Write to the json file
+	var res, _ = json.Marshal(s3Result)
+	os.WriteFile("./default_data.txt", res, 0644)
 }
 
 // Convert the course course info into categories
@@ -266,7 +277,7 @@ func (sr *ScrapeResult) _ScrapeCourseData(table string) {
 //
 // The function returns the course data result slice,
 // the result html and the http request error
-func ScrapeCourseData(client *fasthttp.Client, subjectCode string) {
+func ScrapeCourseData(client *fasthttp.Client, subjectCode string) *ScrapeResult {
 	subjectCode = strings.ToUpper(subjectCode)
 
 	// Utilize the HttpRequest struct to easily send an http request
@@ -292,7 +303,7 @@ func ScrapeCourseData(client *fasthttp.Client, subjectCode string) {
 	)
 	// Handle response error
 	if err != nil || resp.StatusCode() != 200 {
-		return
+		return scrapeResult
 	}
 
 	// Define Variables
@@ -317,4 +328,7 @@ func ScrapeCourseData(client *fasthttp.Client, subjectCode string) {
 	// Log the time it took to scrape the course data
 	// It usually takes around 500µs -> 3ms
 	fmt.Printf(" >> Scraped Course Data [%v]\n\n", time.Since(scrapeStartTime))
+
+	// Return the scrape result struct
+	return scrapeResult
 }
