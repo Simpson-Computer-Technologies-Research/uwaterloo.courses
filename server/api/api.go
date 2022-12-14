@@ -13,7 +13,7 @@ import (
 // api functions
 func ListenAndServe(port string) {
 	// Print the localhost url
-	fmt.Printf(" >> Listening on: http://localhost%s\n", port)
+	fmt.Printf(" >> Listening on: http://localhost/%s\n", port)
 
 	// Establish a new gorilla mux router
 	var router *mux.Router = mux.NewRouter()
