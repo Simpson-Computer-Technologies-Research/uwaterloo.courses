@@ -13,7 +13,7 @@ fn main() {
 	if let Some(courses) = json.as_array() {
 		courses.iter().for_each(|course| {
 			if let Some(desc) = course["description"].as_str() {
-				if desc.to_lowercase().contains("computer") {
+				if desc.to_lowercase().contains("math") {
 					let course: String = serde_json::to_string(&course).unwrap();
 					res.push_str(course.as_str());
 				}
@@ -22,7 +22,7 @@ fn main() {
 	}
 
 	// Print the end time and result
-	let res: String = res.replace("\\", "");
+	let _: String = res.replace("\\", "");
 	let end: u128 = SystemTime::now().duration_since(UNIX_EPOCH).unwrap().as_nanos();
 	let end_time: u128 = end - start;
 	println!("{}", end_time);

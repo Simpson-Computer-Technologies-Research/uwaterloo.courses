@@ -33,21 +33,20 @@ type ScrapeResult struct {
 	WaitGroup   *sync.WaitGroup
 }
 
-// The RefreshCache() function re-scrapes and re-sets all
-// the keys in the redis cache database to the scrape result
+// The RefreshCache() function re-scrapes all the data
 func RefreshCache() {
 	var (
 		RequestClient *fasthttp.Client = &fasthttp.Client{}
-		s3Result      []map[string]string
+		result        []map[string]string
 	)
 
 	// Iterate over the subject codes
 	for _, v := range global.SubjectCodes {
-		s3Result = append(s3Result, ScrapeCourseData(RequestClient, v).ResultSlice...)
+		result = append(result, ScrapeCourseData(RequestClient, v).ResultSlice...)
 	}
 
 	// Write to the json file
-	var res, _ = json.Marshal(s3Result)
+	var res, _ = json.Marshal(result)
 	os.WriteFile("./default_data.txt", res, 0644)
 }
 
