@@ -35,7 +35,7 @@
         <!-- Course Pre-Requisites -->
         <div class="course_div" style="font-size: 13px; margin-top: 1px;">
             <p>
-                <strong>Pre Requisites </strong>{course["pre requisites"]}
+                <strong>Pre Requisites </strong>{course["pre_requisites"]}
             </p>
         </div>
 

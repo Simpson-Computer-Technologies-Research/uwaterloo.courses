@@ -153,15 +153,15 @@ func (st *ScrapeTable) SetCourseNote(data string) {
 func (st *ScrapeTable) SetCourseAnti_Co_PreReqs() {
 	if len(st.Row) > 2 {
 		// Start with anti reqs
-		var splitBy, name string = "Antireq: ", "Anti Requisites"
+		var splitBy, name string = "Antireq: ", "anti_requisites"
 
 		// If it shows coreqs instead of antireqs, change the names
-		if strings.Contains(st.Row[2], "Coeq: ") {
-			splitBy, name = "Coreq: ", "Co Requisites"
+		if strings.Contains(st.Row[2], "Coreq: ") {
+			splitBy, name = "Coreq: ", "co_requisites"
 
 			// If it shows prereqs instead of antireqs, change the names
 		} else if strings.Contains(st.Row[2], "Prereq: ") {
-			splitBy, name = "Prereq: ", "Pre Requisites"
+			splitBy, name = "Prereq: ", "pre_requisites"
 		}
 
 		// Split the string
@@ -169,7 +169,7 @@ func (st *ScrapeTable) SetCourseAnti_Co_PreReqs() {
 		if len(split) > 1 {
 			// Set the key in the result map
 			// Append the key to the html result
-			st.Result[strings.ToLower(name)] = split[1]
+			st.Result[name] = split[1]
 		}
 	}
 }
