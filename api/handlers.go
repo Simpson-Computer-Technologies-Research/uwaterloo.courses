@@ -8,8 +8,8 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/realTristan/uwaterloo.courses/server/cache"
-	"github.com/realTristan/uwaterloo.courses/server/global"
+	"github.com/realTristan/uwaterloo.courses/cache"
+	"github.com/realTristan/uwaterloo.courses/global"
 	"github.com/valyala/fasthttp"
 )
 

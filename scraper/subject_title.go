@@ -6,7 +6,7 @@ import (
 	"strings"
 	"unicode"
 
-	"github.com/realTristan/uwaterloo.courses/server/requests"
+	"github.com/realTristan/uwaterloo.courses/requests"
 )
 
 // The CleanSubjectTitle() function will remove all spaces and

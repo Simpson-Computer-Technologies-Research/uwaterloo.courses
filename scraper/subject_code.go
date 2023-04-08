@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/realTristan/uwaterloo.courses/server/requests"
+	"github.com/realTristan/uwaterloo.courses/requests"
 	"github.com/valyala/fasthttp"
 )
 

@@ -9,9 +9,9 @@ import (
 	"sync"
 	"time"
 
-	"github.com/realTristan/uwaterloo.courses/server/cache"
-	"github.com/realTristan/uwaterloo.courses/server/global"
-	"github.com/realTristan/uwaterloo.courses/server/requests"
+	"github.com/realTristan/uwaterloo.courses/cache"
+	"github.com/realTristan/uwaterloo.courses/global"
+	"github.com/realTristan/uwaterloo.courses/requests"
 	"github.com/valyala/fasthttp"
 )
 
@@ -152,15 +152,15 @@ func (st *ScrapeTable) SetCourseNote(data string) {
 func (st *ScrapeTable) SetCourseAnti_Co_PreReqs() {
 	if len(st.Row) > 2 {
 		// Start with anti reqs
-		var splitBy, name string = "Antireq: ", "anti_requisites"
+		var splitBy, key string = "Antireq: ", "anti_requisites"
 
-		// If it shows coreqs instead of antireqs, change the names
+		// If it shows coreqs instead of antireqs, change the key
 		if strings.Contains(st.Row[2], "Coreq: ") {
-			splitBy, name = "Coreq: ", "co_requisites"
+			splitBy, key = "Coreq: ", "co_requisites"
 
-			// If it shows prereqs instead of antireqs, change the names
+			// If it shows prereqs instead of antireqs, change the key
 		} else if strings.Contains(st.Row[2], "Prereq: ") {
-			splitBy, name = "Prereq: ", "pre_requisites"
+			splitBy, key = "Prereq: ", "pre_requisites"
 		}
 
 		// Split the string
@@ -168,7 +168,7 @@ func (st *ScrapeTable) SetCourseAnti_Co_PreReqs() {
 		if len(split) > 1 {
 			// Set the key in the result map
 			// Append the key to the html result
-			st.Result[name] = split[1]
+			st.Result[key] = split[1]
 		}
 	}
 }
@@ -180,7 +180,8 @@ func (st *ScrapeTable) SetCourseAnti_Co_PreReqs() {
 // a bunch of if and else if statements
 //
 // I also decided to use an int index for categorizing everything instead
-// of having to call if strings.Contains() a bunch of times
+// of having to call if strings.Contains() a bunch of times. This makes it
+// much faster, but open to bugs if the university of waterloo's website changes
 //
 // The function takes the cs: *ScrapeTable parameter
 func (st *ScrapeTable) IndexScrapeResult(index int) {
@@ -195,6 +196,7 @@ func (st *ScrapeTable) IndexScrapeResult(index int) {
 		7: st.SetCourseAnti_Co_PreReqs, // anti_reqs or co_reqs or pre_reqs
 		8: st.SetCourseAnti_Co_PreReqs, // anti_reqs or co_reqs or pre_reqs
 	}
+
 	// Call the function
 	indexMap[index]()
 }

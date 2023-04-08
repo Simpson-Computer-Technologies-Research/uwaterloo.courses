@@ -5,8 +5,8 @@ import (
 	"io"
 	"os"
 
-	"github.com/realTristan/uwaterloo.courses/server/api"
-	"github.com/realTristan/uwaterloo.courses/server/cache"
+	"github.com/realTristan/uwaterloo.courses/api"
+	"github.com/realTristan/uwaterloo.courses/cache"
 )
 
 // The InitCache() function is used to read the

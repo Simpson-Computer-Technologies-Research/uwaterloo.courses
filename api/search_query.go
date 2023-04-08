@@ -7,7 +7,7 @@ import (
 	"time"
 	"unicode"
 
-	"github.com/realTristan/uwaterloo.courses/server/global"
+	"github.com/realTristan/uwaterloo.courses/global"
 )
 
 // The CleanQuery() function removes all spaces from the query
