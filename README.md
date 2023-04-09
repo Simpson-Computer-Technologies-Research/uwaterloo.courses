@@ -10,8 +10,7 @@ data from websites (god help my soul..)
 <h3> Challenge Exceptions </h3>
 
 - mux module -> Used for api routing
-- fasthttp module -> Used for low memory http requests
-- redis module > Used for Caching data
+- fasthttp module -> Used for http requests
 - External Services -> Ex: Svelte, Redis, Hosting, etc.
 
 # About
