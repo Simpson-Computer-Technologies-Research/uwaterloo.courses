@@ -176,10 +176,7 @@ func (st *ScrapeTable) SetCourseAnti_Co_PreReqs() {
 // The IndexScrapeResult() uses a map to categorize all the functions
 // that will be used for indexing the scrap result
 //
-// I decided to go with this way because it was cleaner than having
-// a bunch of if and else if statements
-//
-// I also decided to use an int index for categorizing everything instead
+// I decided to use an int index for categorizing everything instead
 // of having to call if strings.Contains() a bunch of times. This makes it
 // much faster, but open to bugs if the university of waterloo's website changes
 //
