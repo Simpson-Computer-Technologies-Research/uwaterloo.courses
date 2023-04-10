@@ -108,6 +108,7 @@ func GetBestMatch(query []byte) []byte {
 					// Reset the contain check
 					substr = []byte{}
 				}
+
 				// Get the distance the same letters are from eachother
 				// using the tempIndex
 				tmpIndx++
@@ -116,6 +117,7 @@ func GetBestMatch(query []byte) []byte {
 				}
 			}
 		}
+
 		// Check if resval is greater than
 		// the previous bestmatchvalues
 		if resVal > bestMatchValue {
@@ -123,6 +125,7 @@ func GetBestMatch(query []byte) []byte {
 			bestMatch = subjectName
 		}
 	}
+
 	// Print the query result
 	fmt.Printf("\n >> Best Match Query: (%s) (%f) (%v)\n",
 		bestMatch, bestMatchValue, time.Since(startTime))
@@ -132,6 +135,7 @@ func GetBestMatch(query []byte) []byte {
 		// Return the best match subject code
 		return []byte(global.SubjectNames[string(bestMatch)])
 	}
+
 	// Return None
 	return []byte{}
 }
@@ -156,6 +160,7 @@ func QueryHandler(r *http.Request) []byte {
 		return bytes.ToUpper(
 			CleanQuery(bytes.Split(query, codeBytes)[1]))
 	}
+
 	// If using a search query (ex: computerscience) then match the query
 	// to a subject code
 	return GetBestMatch(CleanQuery(query))

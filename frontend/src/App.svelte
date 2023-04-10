@@ -34,11 +34,13 @@
 					queryResult = [];
 					queryResultAmount = 0;
 				} 
+
 				// Data is not null
 				else {
 					queryResult = data;
 					queryResultAmount = data.length;
 				}
+
 				// Set the query time variable
 				queryTime = Date.now() - startTime;
 			})
@@ -57,16 +59,16 @@
 		// Fetch the courses if query length
 		// is greater than 3
 		if (query.length >= 3 && query.length <= 40) {
-			queryTimer = setTimeout(_QuerySubjectData, 220, query);
-		} else {
-			// Reset query data and query time
-			queryResult = [];
-			queryTime = 0;
+			return queryTimer = setTimeout(_QuerySubjectData, 220, query);
 		}
+
+		// Reset query data and query time
+		queryResult = [];
+		queryTime = 0;
 	}
 </script>
 
-<main>
+<main style="width: 92%; padding: 1em; margin: 0 auto;">
 	<!-- When the user clicks the @code:cs -->
 	<SiteHeader handleHeaderClick={QuerySubjectData}/>
 
@@ -97,29 +99,17 @@
 				{querySubject} in {queryTime}ms
 		</h3>
 	</div>
-	
+
 	<!-- List of courses and their info -->
-	<!-- svelte-ignore empty-block -->
 	{#each queryResult as course}
 		<CourseInfo course={course}/>
 	{/each}
 </main>
 
-<style global lang="postcss">
-	@tailwind base;
-	@tailwind components;
-	@tailwind utilities;
-
-	main {
-		width: 92%;
-		padding: 1em;
-		margin: 0 auto;
-	}
-
+<style>
 	.result_div {
 		color: #969696;
 	}
-
 	.result_header {
 		font-weight: 300;
 		border-radius: 3px;
@@ -129,7 +119,6 @@
 		font-size: 15px;
 		margin-right: 60%;
 	}
-
 	.course_input {
 		margin-left: 1.2%;
 		margin-bottom: -1%;
@@ -146,22 +135,9 @@
 		color:#525252;
 	}
 
-	:root::-webkit-scrollbar {
-		width: 20px;
-	}
-
-	/* Track */
-	:root::-webkit-scrollbar-track {
-		background: #f1f1f1; 
-	}
-	
-	/* Handle */
-	:root::-webkit-scrollbar-thumb {
-		background: #6366f1;
-	}
-
-	/* Handle on hover */
-	:root::-webkit-scrollbar-thumb:hover {
-		background: #474af2;
-	}
+	/* Scroll bar styling */
+	:root::-webkit-scrollbar { width: 20px; }
+	:root::-webkit-scrollbar-track { background: #f1f1f1; }
+	:root::-webkit-scrollbar-thumb { background: #6366f1; }
+	:root::-webkit-scrollbar-thumb:hover { background: #474af2; }
 </style>
