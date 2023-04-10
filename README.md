@@ -3,42 +3,31 @@
 
 
 # Challenge
-My challenge for this project is to use solely native golang modules such as
-strings, net/http, sync, etc. This also includes natively webscraping
-data from websites (god help my soul..)
+My challenge for this project is to use solely native golang modules.
+This also includes natively webscraping data from websites (god help my soul..)
 
-<h3> Challenge Exceptions </h3>
+### Challenge Exceptions
 
 - mux module -> Used for api routing
 - fasthttp module -> Used for http requests
-- External Services -> Ex: Svelte, Redis, Hosting, etc.
 
 # About
-<h3>Why Golang?</h3>
+### Why Golang?
 
 - Golang is fast, lightweight and easy to use for hosting API's. I have previous experience with golang and decided it was the best option for this project.
 
-<h3>Why Svelte?</h3>
+### Why Svelte?
 
 - Svelte is 30% faster than other frameworks.
 - Svelte is best when used for designing small apps
 
-<h3>How does the Caching Work?</h3>
-
-- The Cache system was originally designed to use redis; a fast, in memory database that achieved query speeds under 100ms. For the time being as I learn more about redis and it's many capabilities, I decided to implement an in-memory cache map that holds all the course data. This made it possible to achieve speeds up to 3-10x faster than before.
-
 # API
 <h3>Why make an API?</h3>
-I decided to make an api because it will be used for refreshing the cache.
-I also chose to make an api because the university of waterloo
-api only allows 5000 requests per month and the data is quite limited.
-<br>
-Although my api is not as fast nor as big as the university of waterloo's,
-I just thought it'd be a good addition to the project
+I decided to make an api because it will be used for refreshing the cache. I also chose to make an api because the university of waterloo's api only allows 5000 requests per month and the data is quite limited.
 
-<h2>Usage</h2>
+## Usage
 
-<h3>Get Subject Data (Computer Science)</h3>
+### Get Subject Data (Computer Science)
 
 ```
 $ curl -X GET http://localhost:8000/courses?q=computer+science
@@ -59,7 +48,7 @@ $ curl -X GET http://localhost:8000/courses?q=computer+science
 }
 ```
 
-<h3>Get Subjects</h3>
+### Get Subjects
 
 ```
 $ curl -X GET http://localhost:8000/subjects
@@ -73,7 +62,7 @@ $ curl -X GET http://localhost:8000/subjects
 }
 ```
 
-<h3>Get Subjects and Names</h3>
+### Get Subjects and Names
 
 ```
 $ curl -X GET http://localhost:8000/subjects/names
@@ -95,10 +84,8 @@ $ curl -X GET http://localhost:8000/subjects/names
 
 ```
 
-# Acknowledgements
-This project was inspired by Eric Zhang's (@ekzhang) Harvard course catalog. 
-<br>
-I want to point out that I did not copy/paste any code from his project.
+# Inspiration
+This project was inspired by Eric Zhang's (@ekzhang) Harvard course catalog. I want to point out that I did not steal any code from his project.
 
 # License
 MIT License
