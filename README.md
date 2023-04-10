@@ -84,7 +84,7 @@ $ curl -X GET http://localhost:8000/subjects/names
 
 ```
 
-# Acknowledgements
+# Inspiration
 This project was inspired by Eric Zhang's (@ekzhang) Harvard course catalog. I want to point out that I did not steal any code from his project.
 
 # License
