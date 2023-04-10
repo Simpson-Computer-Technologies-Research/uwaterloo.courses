@@ -1,4 +1,10 @@
-import json, sys
+# //////////////////////////////////////////////////////////////////////////////////////
+# //
+# // Note: The average size of the cache map is about 1.3 MB for the data.json file
+# //       Using this full-text-search method for very large datasets is not recommended
+# //
+# //////////////////////////////////////////////////////////////////////////////////////
+import json
 
 # // The cache class
 class Cache:
@@ -19,16 +25,6 @@ class Cache:
                     
                     # // Append the index of the item for this word to the cache
                     self.cache[word].append(i)
-
-    # // Print the cache info
-    def print_cache_info(self) -> None:
-        print(f"Cache size: {len(self.ache)}")
-        print(f"Cache size in bytes: {sys.getsizeof(self.cache)}")
-
-    # // Print the data info
-    def print_data_info(self) -> None:
-        print(f"Data size: {len(self.data)}")
-        print(f"Data size in bytes: {sys.getsizeof(self.data)}")
 
     # // Search for a word in the cache
     def search(self, word: str) -> list[int]:
