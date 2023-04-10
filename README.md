@@ -3,15 +3,13 @@
 
 
 # Challenge
-My challenge for this project is to use solely native golang modules such as
-strings, net/http, sync, etc. This also includes natively webscraping
-data from websites (god help my soul..)
+My challenge for this project is to use solely native golang modules.
+This also includes natively webscraping data from websites (god help my soul..)
 
 <h3> Challenge Exceptions </h3>
 
 - mux module -> Used for api routing
 - fasthttp module -> Used for http requests
-- External Services -> Ex: Svelte, Redis, Hosting, etc.
 
 # About
 <h3>Why Golang?</h3>
