@@ -2,7 +2,9 @@ package api
 
 import (
 	"bytes"
+	"fmt"
 	"net/http"
+	"time"
 	"unicode"
 
 	"github.com/realTristan/uwaterloo.courses/global"
@@ -19,7 +21,6 @@ func CleanQuery(query []byte) []byte {
 			res = append(res, query[i])
 		}
 	}
-
 	// Return the res in lowercase
 	return bytes.ToLower(res)
 }
@@ -55,6 +56,9 @@ func GetSmallest(a []byte, b []byte) []byte {
 func GetBestMatch(query []byte) []byte {
 	// Define the bestmatch beginning values
 	var (
+		// Track get best match time
+		startTime time.Time = time.Now()
+
 		// Best match values
 		bestMatch      []byte
 		bestMatchValue float64 = -1.0
@@ -122,6 +126,10 @@ func GetBestMatch(query []byte) []byte {
 		}
 	}
 
+	// Print the query result
+	fmt.Printf("\n >> Best Match Query: (%s) (%f) (%v)\n",
+		bestMatch, bestMatchValue, time.Since(startTime))
+
 	// Make sure best match is valid/accurate
 	if bestMatchValue > float64(370-(len(bestMatch)/2)) {
 		// Return the best match subject code
@@ -132,13 +140,28 @@ func GetBestMatch(query []byte) []byte {
 	return []byte{}
 }
 
-// The BestMatchHandler() function handles the search query param
-func BestMatchHandler(r *http.Request) (string, string) {
+// The QueryHandler() function handles the search query and whether
+// to use the native course arg or the query arg
+//
+// It'll also check for special searches for example: @code:
+// will search for a specific subject code instead of for example:
+// searching "computer science"
+func QueryHandler(r *http.Request) []byte {
 	// Define Variables
 	// query: string -> the course search query arg
-	var query []byte = []byte(r.URL.Query().Get("q"))
+	// codeByte: []byte -> the @code bytes
+	var (
+		query     []byte = bytes.ToLower([]byte(r.URL.Query().Get("q")))
+		codeBytes []byte = []byte("@code")
+	)
 
-	// Get the best match for the query (e.g comptersince -> computerscience -> CS)
-	var bestMatch []byte = GetBestMatch(CleanQuery(query))
-	return string(query), string(bestMatch)
+	// Check if the user is searching for a specific subject code
+	if bytes.Contains(query, codeBytes) {
+		return bytes.ToUpper(
+			CleanQuery(bytes.Split(query, codeBytes)[1]))
+	}
+
+	// If using a search query (ex: computerscience) then match the query
+	// to a subject code
+	return GetBestMatch(CleanQuery(query))
 }

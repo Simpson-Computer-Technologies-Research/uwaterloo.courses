@@ -21,21 +21,29 @@
 	// The _QuerySubjectData() function is used
 	// to send the http request to the localhost api
 	function _QuerySubjectData(query) {
+		// Create a query starting time
+		let startTime = Date.now();
+
+		// Send the http request to the golang api
 		fetch("http://127.0.0.1:8000/courses?q=" + query)
 			.then((response) => response.json())
 			.then((data) => {
-				// If the data is null...
+
+				// Set the query data
 				if (data == null) {
 					queryResult = [];
 					queryResultAmount = 0;
-					return;
+				} 
+
+				// Data is not null
+				else {
+					queryResult = data;
+					queryResultAmount = data.length;
 				}
 
-				// If the data is not null, set the query data
-				queryTime = data.query_time / 1000;
-				queryResult = data.courses;
-				queryResultAmount = data.courses.length;
-			});
+				// Set the query time variable
+				queryTime = Date.now() - startTime;
+			})
 	}
 
 	// The QuerySubjectData() function is called when the
