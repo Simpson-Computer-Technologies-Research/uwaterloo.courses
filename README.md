@@ -1,5 +1,5 @@
 # uwaterloo.courses ![Stars](https://img.shields.io/github/stars/realTristan/uwaterloo.courses?color=brightgreen) ![Watchers](https://img.shields.io/github/watchers/realTristan/uwaterloo.courses?label=Watchers)
-<img width="1383" alt="Screen Shot 2022-08-23 at 7 41 53 PM" src="https://user-images.githubusercontent.com/75189508/186290354-a5ed2710-f1a5-43c8-ae19-c0252d874fa3.png">
+![image](https://user-images.githubusercontent.com/75189508/231306849-05762cdc-90d1-4120-91ab-a1eeb2cefbe8.png)
 
 
 # Challenge
