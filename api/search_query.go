@@ -3,7 +3,6 @@ package api
 import (
 	"bytes"
 	"net/http"
-	"strings"
 	"unicode"
 
 	"github.com/realTristan/uwaterloo.courses/global"
@@ -133,31 +132,13 @@ func GetBestMatch(query []byte) []byte {
 	return []byte{}
 }
 
-// The QueryHandler() function handles the search query and whether
-// to use the native course arg or the query arg
-//
-// It'll also check for special searches for example: @code:
-// will search for a specific subject code instead of for example:
-// searching "computer science"
-func QueryHandler(r *http.Request) (string, string) {
+// The BestMatchHandler() function handles the search query param
+func BestMatchHandler(r *http.Request) (string, string) {
 	// Define Variables
 	// query: string -> the course search query arg
-	// codeByte: []byte -> the @code bytes
-	var (
-		query string = r.URL.Query().Get("q")
-		code  []byte = []byte("@code:")
-	)
+	var query []byte = []byte(r.URL.Query().Get("q"))
 
-	// Check if the user is searching for a specific subject code
-	if strings.Contains(query, string(code)) {
-		// Get the subject
-		var subject []byte = CleanQuery(bytes.Split([]byte(query), code)[1])
-
-		// Return the query and subject
-		return query, string(subject)
-	}
-
-	// get the best match for the query (e.g comptersince -> computerscience -> CS)
-	var bestMatch []byte = GetBestMatch(CleanQuery([]byte(query)))
-	return query, string(bestMatch)
+	// Get the best match for the query (e.g comptersince -> computerscience -> CS)
+	var bestMatch []byte = GetBestMatch(CleanQuery(query))
+	return string(query), string(bestMatch)
 }

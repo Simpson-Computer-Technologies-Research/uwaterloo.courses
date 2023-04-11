@@ -24,7 +24,7 @@ func CourseDataHandler() http.HandlerFunc {
 		// Define variables
 		var (
 			startTime      time.Time = time.Now()
-			query, subject           = QueryHandler(r)
+			query, subject           = BestMatchHandler(r)
 		)
 
 		// Make sure the query length is greater than 3
