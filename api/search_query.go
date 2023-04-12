@@ -2,7 +2,6 @@ package api
 
 import (
 	"bytes"
-	"net/http"
 	"strings"
 	"unicode"
 
@@ -137,21 +136,18 @@ func GetBestMatch(query []byte) []byte {
 // It'll also check for special searches for example: @code:
 // will search for a specific subject code instead of for example:
 // searching "computer science"
-func QueryHandler(r *http.Request) (string, string) {
-	// Define Variables
-	var (
-		query      string = strings.ToLower(r.URL.Query().Get("q"))
-		codePrefix string = "@code"
-	)
+func QueryHandler(query string) string {
+	// Convert the query to lowercase
+	query = strings.ToLower(query)
 
 	// Check if the user is searching for a specific subject code
-	var splitQuery []string = strings.Split(query, codePrefix)
+	var splitQuery []string = strings.Split(query, "@code")
 	if len(splitQuery) > 1 {
-		return query, string(CleanQuery(splitQuery[1]))
+		return string(CleanQuery(splitQuery[1]))
 	}
 
 	// If using a search query (ex: computerscience)
 	// then match the query to a subject code
 	var cleanedQuery []byte = []byte(CleanQuery(query))
-	return query, string(GetBestMatch(cleanedQuery))
+	return string(GetBestMatch(cleanedQuery))
 }

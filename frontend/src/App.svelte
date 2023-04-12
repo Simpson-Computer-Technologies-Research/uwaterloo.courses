@@ -1,10 +1,7 @@
 <script>
-	// Component Imports
+	import VirtualList from './components/VirtualList.svelte';
 	import CourseInfo from './components/CourseInfo.svelte';
 	import SiteHeader from './components/SiteHeader.svelte';
-
-	// Track input last key up
-	var queryTimer;
 
 	// The time it took to query the subject
 	let queryTime = 0;
@@ -18,9 +15,17 @@
 	// Hold the subject data
 	let queryResult = [];
 
-	// The _QuerySubjectData() function is used
-	// to send the http request to the localhost api
-	function _QuerySubjectData(query) {
+	// The QuerySubjectData() function is used to send the http 
+	// request to the backend api and fetch all of the courses
+	function QuerySubjectData(query) {
+		// If the query is less than 3 characters
+		if (query.length < 3) {
+			queryResult = [];
+			queryResultAmount = 0;
+			return;
+		}
+
+		// Send the http request
 		fetch("http://127.0.0.1:8000/courses?q=" + query)
 			.then((response) => response.json())
 			.then((data) => {
@@ -37,32 +42,14 @@
 				queryResultAmount = data.result.length;
 			})
 	}
-
-	// The QuerySubjectData() function is called when the
-	// user types a character into the course query bar
-	//
-	// It sets a timeout to prevent spam calling the api
-	function QuerySubjectData(query) {
-		querySubject = query;
-
-		// Clear previous timer
-		clearTimeout(queryTimer);
-
-		// Fetch the courses if query length
-		// is greater than 3
-		if (query.length >= 3 && query.length <= 40) {
-			return queryTimer = setTimeout(_QuerySubjectData, 220, query);
-		}
-
-		// Reset query data and query time
-		queryResult = [];
-		queryTime = 0;
-	}
 </script>
 
 <main style="width: 92%; padding: 1em; margin: 0 auto;">
 	<!-- When the user clicks the @code:cs -->
-	<SiteHeader handleHeaderClick={QuerySubjectData}/>
+	<SiteHeader handleHeaderClick={(query) => {
+		QuerySubjectData(query);
+		querySubject = query;
+	}}/>
 
 	<!-- Input course to search for -->
 	<div>
@@ -72,7 +59,10 @@
 			value={querySubject}
 			placeholder="Search"
 			class="course_input" 
-			on:keyup={({ target: { value } }) => QuerySubjectData(value)} 
+			on:keyup={({ target: { value } }) => {
+				querySubject = value;
+				QuerySubjectData(value);
+			}} 
 		/>
 	</div>
 
@@ -92,10 +82,11 @@
 		</h3>
 	</div>
 
-	<!-- List of courses and their info -->
-	{#each queryResult as course}
-		<CourseInfo course={course}/>
-	{/each}
+	<div class="virtualList" style="width: 100%; height: 500px;">
+		<VirtualList items={queryResult} let:item>
+			<CourseInfo course={item}/>
+		  </VirtualList>
+	</div>
 </main>
 
 <style>

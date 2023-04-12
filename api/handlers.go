@@ -20,24 +20,30 @@ func CourseDataHandler() http.HandlerFunc {
 		// Enable CORS
 		w.Header().Set("Access-Control-Allow-Origin", "*")
 
-		// Define the variables
-		var (
-			startTime      = time.Now()
-			query, subject = QueryHandler(r)
-		)
+		// Get the query
+		var query = r.URL.Query().Get("q")
 
 		// Make sure the query length is greater than 3
-		if len(query) >= 3 {
-			// Marhsal the response
-			var resp, _ = json.Marshal(map[string]interface{}{
-				"query":  query,
-				"result": cache.GetCourses(query, subject),
-				"time":   time.Since(startTime).Microseconds(),
-			})
-
-			// Set the response body
-			w.Write(resp)
+		if len(query) < 3 {
+			w.Write([]byte("[]"))
+			return
 		}
+
+		// Define the variables
+		var (
+			startTime time.Time = time.Now()
+			subject   string    = QueryHandler(query)
+		)
+
+		// Marhsal the response
+		var resp, _ = json.Marshal(map[string]interface{}{
+			"query":  query,
+			"result": cache.GetCourses(query, subject),
+			"time":   time.Since(startTime).Microseconds(),
+		})
+
+		// Set the response body
+		w.Write(resp)
 	}
 }
 
