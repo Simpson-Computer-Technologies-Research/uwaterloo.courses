@@ -2,22 +2,14 @@ package api
 
 // Import packages
 import (
-	"bytes"
-	"crypto/tls"
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"time"
 
 	"github.com/realTristan/uwaterloo.courses/cache"
 	"github.com/realTristan/uwaterloo.courses/global"
-	"github.com/valyala/fasthttp"
 )
-
-// Global Variables
-/* - RequestClient *fasthttp.Client -> Used for sending http requests */
-var RequestClient *fasthttp.Client = &fasthttp.Client{
-	TLSConfig: &tls.Config{InsecureSkipVerify: true},
-}
 
 // The CourseDataHandler() function handles the incoming requests
 // using the "/courses?q={query}" path.
@@ -28,18 +20,23 @@ func CourseDataHandler() http.HandlerFunc {
 		// Enable CORS
 		w.Header().Set("Access-Control-Allow-Origin", "*")
 
-		// Define variables
+		// Define the variables
 		var (
-			subject []byte = QueryHandler(r)
-			query   []byte = bytes.ToLower([]byte(r.URL.Query().Get("q")))
+			startTime      = time.Now()
+			query, subject = QueryHandler(r)
 		)
+
 		// Make sure the query length is greater than 3
 		if len(query) >= 3 {
-			// Get the courses
-			var res = cache.GetCourses(query, subject)
+			// Marhsal the response
+			var resp, _ = json.Marshal(map[string]interface{}{
+				"query":  query,
+				"result": cache.GetCourses(query, subject),
+				"time":   time.Since(startTime).Microseconds(),
+			})
 
-			// Write the response
-			w.Write(append(append([]byte{'['}, res[:len(res)-1]...), ']'))
+			// Set the response body
+			w.Write(resp)
 		}
 	}
 }

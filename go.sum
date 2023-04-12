@@ -16,6 +16,12 @@ github.com/klauspost/compress v1.15.9/go.mod h1:PhcZ0MbTNciWF3rruxRgKxI5NkcHHrHU
 github.com/nxadm/tail v1.4.8 h1:nPr65rt6Y5JFSKQO7qToXr7pePgD6Gwiw05lkbyAQTE=
 github.com/onsi/ginkgo v1.16.5 h1:8xi0RTUf59SOSfEtZMvwTvXYMzG4gV23XVHOZiXNtnE=
 github.com/onsi/gomega v1.20.0 h1:8W0cWlwFkflGPLltQvLRB7ZVD5HuP6ng320w2IS245Q=
+github.com/realTristan/Hermes v1.1.3 h1:wxOhwqw87z9YVInEnEBEr5Myd5KYTSTEcwaNLrwI+88=
+github.com/realTristan/Hermes v1.1.3/go.mod h1:0HIRzs3oOff8POODVtZN1gjdXBAKEuzaLZdzfjvG4aw=
+github.com/realTristan/Hermes v1.1.4 h1:6oNPt05OzPXst2J8c1n/3QlWuOpVEttZDOvU5wt6MUI=
+github.com/realTristan/Hermes v1.1.4/go.mod h1:0HIRzs3oOff8POODVtZN1gjdXBAKEuzaLZdzfjvG4aw=
+github.com/realTristan/Hermes v1.1.5 h1:Bc0MO37uhXz87XibOAKB1uP9Y0OAWwuGHYsW+cvaDT8=
+github.com/realTristan/Hermes v1.1.5/go.mod h1:0HIRzs3oOff8POODVtZN1gjdXBAKEuzaLZdzfjvG4aw=
 github.com/valyala/bytebufferpool v1.0.0 h1:GqA5TC/0021Y/b9FG4Oi9Mr3q7XYx6KllzawFIhcdPw=
 github.com/valyala/bytebufferpool v1.0.0/go.mod h1:6bBcMArwyJ5K/AmCkWv1jt77kVWyCJ6HpOuEn7z0Csc=
 github.com/valyala/fasthttp v1.39.0 h1:lW8mGeM7yydOqZKmwyMTaz/PH/A+CLgtmmcjv+OORfU=

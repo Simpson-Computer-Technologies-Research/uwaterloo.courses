@@ -15,7 +15,7 @@ import (
 // The function returns the cleaned title string
 func CleanSubjectTitle(title string) string {
 	var res []byte
-	for i := 0; i < len(title); i++ {
+	for i := range title {
 		// If the value == "&" increase by four to avoid
 		// the &nmbp string
 		if title[i] == '&' {

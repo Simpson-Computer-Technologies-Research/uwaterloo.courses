@@ -2,9 +2,8 @@ package api
 
 import (
 	"bytes"
-	"fmt"
 	"net/http"
-	"time"
+	"strings"
 	"unicode"
 
 	"github.com/realTristan/uwaterloo.courses/global"
@@ -12,15 +11,16 @@ import (
 
 // The CleanQuery() function removes all spaces from the query
 // and removes all non alphabetic characters
-func CleanQuery(query []byte) []byte {
+func CleanQuery(query string) []byte {
 	var res []byte
-	for i := 0; i < len(query); i++ {
+	for i := range query {
 		// Check if the character at the index is a letter
 		if unicode.IsLetter(rune(query[i])) {
 			// Append the letter to the result
 			res = append(res, query[i])
 		}
 	}
+
 	// Return the res in lowercase
 	return bytes.ToLower(res)
 }
@@ -54,24 +54,20 @@ func GetSmallest(a []byte, b []byte) []byte {
 // I set everything to float64 so the decimals can play a role
 // in micro differences
 func GetBestMatch(query []byte) []byte {
-	// Define the bestmatch beginning values
+	// Define variables
 	var (
-		// Track get best match time
-		startTime time.Time = time.Now()
-
-		// Best match values
 		bestMatch      []byte
-		bestMatchValue float64 = -1.0
+		bestMatchScore float64 = -1.0
 	)
 
 	// Iterate over the subject names
-	for _subjectName := range global.SubjectNames {
+	for subjectName := range global.SubjectNames {
 		var (
 			// Convert subject name to bytes
-			subjectName []byte = []byte(_subjectName)
+			subjectName []byte = []byte(subjectName)
 
 			// Result value
-			resVal float64 = 0.0
+			score float64 = 0.0
 
 			// Get the largest / smallest keys
 			largestKey  []byte = GetLargest(subjectName, query)
@@ -79,21 +75,21 @@ func GetBestMatch(query []byte) []byte {
 		)
 
 		// Iterate using the smallest key length
-		for i := 0; i < len(smallestKey); i++ {
+		for i := range smallestKey {
 			var (
-				tmpIndx float64 = 1.0
-				substr  []byte
+				tempIndex float64 = 1.0
+				substr    []byte
 			)
 
 			// If the keys equal the same
 			if query[i] == subjectName[i] {
-				resVal += float64(query[i])
+				score += float64(query[i])
 			} else {
-				resVal -= float64(query[i]) / float64(len(largestKey))
+				score -= float64(query[i]) / float64(len(largestKey))
 			}
 
 			// Iterate over the smallest key
-			for j := 0; j < len(smallestKey); j++ {
+			for j := range smallestKey {
 				// Add the letter to the substr
 				substr = append(substr, query[j])
 
@@ -102,7 +98,7 @@ func GetBestMatch(query []byte) []byte {
 					// Make sure the length of the contain check
 					// is greater than 2, or else you'll use single letters
 					if len(substr) > 2 {
-						resVal += float64(query[j]) / float64(len(substr))
+						score += float64(query[j]) / float64(len(substr))
 					}
 				} else {
 					// Reset the contain check
@@ -111,28 +107,23 @@ func GetBestMatch(query []byte) []byte {
 
 				// Get the distance the same letters are from eachother
 				// using the tempIndex
-				tmpIndx++
+				tempIndex++
 				if subjectName[i] == smallestKey[j] {
-					resVal += tmpIndx / float64(len(smallestKey)*len(largestKey))
+					score += tempIndex / float64(len(smallestKey)*len(largestKey))
 				}
 			}
 		}
 
-		// Check if resval is greater than
-		// the previous bestmatchvalues
-		if resVal > bestMatchValue {
-			bestMatchValue = resVal
+		// Check if score is greater than
+		// the previous bestMatchScores
+		if score > bestMatchScore {
+			bestMatchScore = score
 			bestMatch = subjectName
 		}
 	}
 
-	// Print the query result
-	fmt.Printf("\n >> Best Match Query: (%s) (%f) (%v)\n",
-		bestMatch, bestMatchValue, time.Since(startTime))
-
 	// Make sure best match is valid/accurate
-	if bestMatchValue > float64(370-(len(bestMatch)/2)) {
-		// Return the best match subject code
+	if bestMatchScore > float64(370-(len(bestMatch)/2)) {
 		return []byte(global.SubjectNames[string(bestMatch)])
 	}
 
@@ -146,22 +137,21 @@ func GetBestMatch(query []byte) []byte {
 // It'll also check for special searches for example: @code:
 // will search for a specific subject code instead of for example:
 // searching "computer science"
-func QueryHandler(r *http.Request) []byte {
+func QueryHandler(r *http.Request) (string, string) {
 	// Define Variables
-	// query: string -> the course search query arg
-	// codeByte: []byte -> the @code bytes
 	var (
-		query     []byte = bytes.ToLower([]byte(r.URL.Query().Get("q")))
-		codeBytes []byte = []byte("@code")
+		query      string = strings.ToLower(r.URL.Query().Get("q"))
+		codePrefix string = "@code"
 	)
 
 	// Check if the user is searching for a specific subject code
-	if bytes.Contains(query, codeBytes) {
-		return bytes.ToUpper(
-			CleanQuery(bytes.Split(query, codeBytes)[1]))
+	var splitQuery []string = strings.Split(query, codePrefix)
+	if len(splitQuery) > 1 {
+		return query, string(CleanQuery(splitQuery[1]))
 	}
 
-	// If using a search query (ex: computerscience) then match the query
-	// to a subject code
-	return GetBestMatch(CleanQuery(query))
+	// If using a search query (ex: computerscience)
+	// then match the query to a subject code
+	var cleanedQuery []byte = []byte(CleanQuery(query))
+	return query, string(GetBestMatch(cleanedQuery))
 }

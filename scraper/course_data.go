@@ -9,7 +9,6 @@ import (
 	"sync"
 	"time"
 
-	"github.com/realTristan/uwaterloo.courses/cache"
 	"github.com/realTristan/uwaterloo.courses/global"
 	"github.com/realTristan/uwaterloo.courses/requests"
 	"github.com/valyala/fasthttp"
@@ -215,7 +214,7 @@ func _ScrapeCourseData_(st *ScrapeTable, table string) map[string]string {
 	)
 
 	// Iterate through the split table
-	for i := 0; i < len(splitTable); i++ {
+	for i := range splitTable {
 		// Split the splitted table by >
 		st.Row = strings.Split(splitTable[i], ">")[1:]
 
@@ -259,9 +258,6 @@ func (sr *ScrapeResult) _ScrapeCourseData(table string) {
 	var courseData = _ScrapeCourseData_(&ScrapeTable{
 		Result: make(map[string]string),
 	}, table)
-
-	// Append course data to the cache
-	cache.Set(courseData)
 
 	// Append the course data to the result map
 	sr.ResultSlice = append(sr.ResultSlice, courseData)
