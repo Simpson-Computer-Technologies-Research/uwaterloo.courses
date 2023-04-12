@@ -1,6 +1,5 @@
 # uwaterloo.courses ![Stars](https://img.shields.io/github/stars/realTristan/uwaterloo.courses?color=brightgreen) ![Watchers](https://img.shields.io/github/watchers/realTristan/uwaterloo.courses?label=Watchers)
-![image](https://user-images.githubusercontent.com/75189508/231306849-05762cdc-90d1-4120-91ab-a1eeb2cefbe8.png)
-
+![image](https://user-images.githubusercontent.com/75189508/231576310-b455740c-7b00-4c89-8c33-9465a994ff97.png)
 
 # Challenge
 My challenge for this project is to use solely native golang modules.
