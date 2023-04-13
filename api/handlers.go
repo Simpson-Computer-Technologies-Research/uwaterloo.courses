@@ -7,7 +7,6 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/realTristan/uwaterloo.courses/cache"
 	"github.com/realTristan/uwaterloo.courses/global"
 )
 
@@ -38,7 +37,7 @@ func CourseDataHandler() http.HandlerFunc {
 		// Marhsal the response
 		var resp, _ = json.Marshal(map[string]interface{}{
 			"query":  query,
-			"result": cache.GetCourses(query, subject),
+			"result": GetCourses(query, subject),
 			"time":   time.Since(startTime).Microseconds(),
 		})
 

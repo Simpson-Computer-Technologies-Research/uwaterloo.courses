@@ -1,4 +1,4 @@
-package cache
+package api
 
 // Import modules
 import (
@@ -23,5 +23,5 @@ func GetCourses(query string, subject string) []map[string]string {
 	)
 
 	// Return the two merged queries
-	return append(subjectResult, queryResult...)
+	return append(queryResult, subjectResult...)
 }
