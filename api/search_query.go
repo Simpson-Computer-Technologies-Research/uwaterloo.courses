@@ -7,19 +7,6 @@ import (
 	"github.com/realTristan/uwaterloo.courses/global"
 )
 
-// Get the subject names
-func _GetSubjectNames() []string {
-	// Create a slice of all the subject names
-	var subjectNames []string = []string{}
-	for k := range global.SubjectNames {
-		subjectNames = append(subjectNames, k)
-	}
-	return subjectNames
-}
-
-// Create a slice of all the subject names
-var SubjectNames []string = _GetSubjectNames()
-
 // The CleanQuery() function removes all spaces from the query
 // and removes all non alphabetic characters
 func CleanQuery(query string) string {
@@ -53,12 +40,12 @@ func GetSmallest(a string, b string) string {
 }
 
 // The GetBestMatch() function uses the cleaned query (ex: computerscience)
-// to find the best match using the global.SubjectNames map
+// to find the best match using the global.Subjects map
 // It returns the best subject code match (ex: CS)
 func GetBestMatch(query string) string {
 	// If the query is in the subject names
-	if _, ok := global.SubjectNames[query]; ok {
-		return global.SubjectNames[query]
+	if _, ok := global.Subjects[query]; ok {
+		return global.Subjects[query]
 	}
 
 	// Define variables
@@ -68,7 +55,7 @@ func GetBestMatch(query string) string {
 	)
 
 	// Iterate over the subject names
-	for _, subjectName := range SubjectNames {
+	for _, subjectName := range global.SubjectNames {
 		switch {
 		// If the subjectName length is less than the query name length
 		case len(subjectName) < len(query):
@@ -76,7 +63,7 @@ func GetBestMatch(query string) string {
 
 		// If the subjectName starts with the prefix
 		case strings.HasPrefix(subjectName, query):
-			return global.SubjectNames[subjectName]
+			return global.Subjects[subjectName]
 		}
 
 		// Define variables
@@ -135,7 +122,7 @@ func GetBestMatch(query string) string {
 
 	// Make sure best match is valid/accurate
 	if bestMatchScore > float64(370-(len(bestMatch)/2)) {
-		return global.SubjectNames[bestMatch]
+		return global.Subjects[bestMatch]
 	}
 	return ""
 }

@@ -23,5 +23,5 @@ func GetCourses(query string, subject string) []map[string]string {
 	)
 
 	// Return the two merged queries
-	return append(queryResult, subjectResult...)
+	return append(subjectResult, queryResult...)
 }
