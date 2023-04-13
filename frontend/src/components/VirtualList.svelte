@@ -105,9 +105,10 @@
 		-webkit-overflow-scrolling: none;
 		display: block;
 	}
-    svelte-virtual-list-viewport::-webkit-scrollbar {
-        display: none;
-    }
+	svelte-virtual-list-viewport::-webkit-scrollbar { width: 20px; }
+	svelte-virtual-list-viewport::-webkit-scrollbar-track { background: #f1f1f1; }
+	svelte-virtual-list-viewport::-webkit-scrollbar-thumb { background: #6366f1; }
+	svelte-virtual-list-viewport::-webkit-scrollbar-thumb:hover { background: #474af2; }
 	svelte-virtual-list-contents, svelte-virtual-list-row {
 		display: block;
 	}

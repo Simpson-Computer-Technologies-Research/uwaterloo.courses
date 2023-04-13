@@ -82,6 +82,7 @@
 		</h3>
 	</div>
 
+	<!-- The list of courses -->
 	<div class="virtualList" style="width: 100%; height: 500px;">
 		<VirtualList items={queryResult} let:item>
 			<CourseInfo course={item}/>
@@ -119,8 +120,5 @@
 	}
 
 	/* Scroll bar styling */
-	:root::-webkit-scrollbar { width: 20px; }
-	:root::-webkit-scrollbar-track { background: #f1f1f1; }
-	:root::-webkit-scrollbar-thumb { background: #6366f1; }
-	:root::-webkit-scrollbar-thumb:hover { background: #474af2; }
+	:root::-webkit-scrollbar { display: none; }
 </style>
