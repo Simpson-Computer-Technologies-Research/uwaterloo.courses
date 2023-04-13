@@ -56,6 +56,11 @@ func GetSmallest(a string, b string) string {
 // to find the best match using the global.SubjectNames map
 // It returns the best subject code match (ex: CS)
 func GetBestMatch(query string) string {
+	// If the query is in the subject names
+	if _, ok := global.SubjectNames[query]; ok {
+		return global.SubjectNames[query]
+	}
+
 	// Define variables
 	var (
 		bestMatch      string
@@ -65,10 +70,6 @@ func GetBestMatch(query string) string {
 	// Iterate over the subject names
 	for _, subjectName := range SubjectNames {
 		switch {
-		// If the query is the same as the subject name
-		case query == subjectName:
-			return global.SubjectNames[subjectName]
-
 		// If the subjectName length is less than the query name length
 		case len(subjectName) < len(query):
 			continue
