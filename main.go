@@ -6,7 +6,7 @@ import (
 
 // Main function
 func main() {
-	api.ListenAndServe("0.0.0.0:8000")
+	api.ListenAndServe(":8000")
 }
 
 /*

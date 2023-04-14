@@ -41,7 +41,7 @@
     <!-- Course Anti-Requisites -->
     <div class="course_div" style="font-size: 13px;">
         <p>
-            <strong>Anti Requisites </strong>{course["anti_requisites"]}
+            <strong>Anti Requisites </strong>{course.anti_requisites}
         </p>
     </div>
 
