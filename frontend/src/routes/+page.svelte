@@ -1,27 +1,21 @@
-<script>
+<script lang="ts">
 	import VirtualList from './components/VirtualList.svelte';
 	import CourseInfo from './components/CourseInfo.svelte';
 	import SiteHeader from './components/SiteHeader.svelte';
+  import { select_value } from 'svelte/internal';
 
-	// The time it took to query the subject
-	let queryTime = 0;
+	// Query variables
+	let queryTime: number = 0;
+	let querySubject: string = "";
+	let queryResultAmount: number = 0;
+	let queryResult: any[] = [];
 
-	// The subject querying for
-	let querySubject = "";
-
-	// Track the amount of results
-	let queryResultAmount = 0;
-
-	// Hold the subject data
-	let queryResult = [];
-
-	// The QuerySubjectData() function is used to send the http 
+	// The querySubjectData() function is used to send the http 
 	// request to the backend api and fetch all of the courses
-	function QuerySubjectData(query) {
+	function querySubjectData(query: string): void {
 		// If the query is less than 3 characters
 		if (query.length < 3) {
-			queryResult = [];
-			queryResultAmount = 0;
+			[queryTime, queryResult, queryResultAmount] = [0, [], 0];
 			return;
 		}
 
@@ -29,40 +23,41 @@
 		fetch("http://127.0.0.1:8000/courses?q=" + query)
 			.then((response) => response.json())
 			.then((data) => {
-				// Data is null
 				if (data == null) {
-					queryResult = [];
-					queryResultAmount = 0;
-					return;
-				} 
-
-				// Data is not null
-				queryTime = data.time / 1000;
-				queryResult = data.result;
-				queryResultAmount = data.result.length;
+					[queryTime, queryResult, queryResultAmount] = [0, [], 0];
+				} else {
+					[queryTime, queryResult, queryResultAmount] = [data.time / 1000, data.result, data.result.length];
+				}
 			})
+			.catch((error) => console.log(error));
+	}
+
+	// The onSearch() function is used to update the
+	// querySubject variable when the user types in the search bar
+	// and then call the querySubjectData() function to send the http request
+	// to the backend api.
+	function onSearch(event: any): void {
+		querySubject = event.target.value;
+		querySubjectData(querySubject);
+	}
+
+	// Method to handle the header click.
+	// This method is passed to the SiteHeader component
+	function handleHeaderClick(query: string): void {
+		querySubject = query;
+    querySubjectData(query);
 	}
 </script>
 
 <main style="width: 92%; padding: 1em; margin: 0 auto;">
 	<!-- When the user clicks the @code:cs -->
-	<SiteHeader handleHeaderClick={(query) => {
-		QuerySubjectData(query);
-		querySubject = query;
-	}}/>
+	<SiteHeader handleHeaderClick={handleHeaderClick}/>
 
 	<!-- Input course to search for -->
 	<div>
 		<!-- svelte-ignore a11y-autofocus -->
-		<input
-			autofocus
-			value={querySubject}
-			placeholder="Search"
-			class="course_input" 
-			on:keyup={({ target: { value } }) => {
-				querySubject = value;
-				QuerySubjectData(value);
-			}} 
+		<input autofocus value={querySubject} placeholder="Search" class="course_input" 
+			on:keyup={(event) => onSearch(event)}
 		/>
 	</div>
 
