@@ -22,6 +22,10 @@ github.com/realTristan/Hermes v1.1.4 h1:6oNPt05OzPXst2J8c1n/3QlWuOpVEttZDOvU5wt6
 github.com/realTristan/Hermes v1.1.4/go.mod h1:0HIRzs3oOff8POODVtZN1gjdXBAKEuzaLZdzfjvG4aw=
 github.com/realTristan/Hermes v1.1.5 h1:Bc0MO37uhXz87XibOAKB1uP9Y0OAWwuGHYsW+cvaDT8=
 github.com/realTristan/Hermes v1.1.5/go.mod h1:0HIRzs3oOff8POODVtZN1gjdXBAKEuzaLZdzfjvG4aw=
+github.com/realTristan/Hermes v1.2.0 h1:XqEOabEErk0uMEoS8icZVbLNZ8c6YvAO7ESqSKkIs2k=
+github.com/realTristan/Hermes v1.2.0/go.mod h1:0HIRzs3oOff8POODVtZN1gjdXBAKEuzaLZdzfjvG4aw=
+github.com/realTristan/Hermes v1.2.8 h1:z2weR3bAWS8Bgxelw1WyhKgQpXre9Yftrr03lVasEv8=
+github.com/realTristan/Hermes v1.2.8/go.mod h1:0HIRzs3oOff8POODVtZN1gjdXBAKEuzaLZdzfjvG4aw=
 github.com/schollz/closestmatch v2.1.0+incompatible h1:Uel2GXEpJqOWBrlyI+oY9LTiyyjYS17cCYRqP13/SHk=
 github.com/schollz/closestmatch v2.1.0+incompatible/go.mod h1:RtP1ddjLong6gTkbtmuhtR2uUrrJOpYzYRvbcPAid+g=
 github.com/valyala/bytebufferpool v1.0.0 h1:GqA5TC/0021Y/b9FG4Oi9Mr3q7XYx6KllzawFIhcdPw=

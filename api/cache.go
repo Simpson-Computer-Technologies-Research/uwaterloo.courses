@@ -1,24 +1,23 @@
 package api
 
 // Import modules
-import (
-	hermes "github.com/realTristan/Hermes"
-)
-
-// Hermes cache
-var cache *hermes.Cache = hermes.InitCache("default_data.json")
+import hermes "github.com/realTristan/Hermes"
 
 // GetCourses() returns the courses from the cache
-func GetCourses(query string, subject string) []map[string]string {
+func GetCourses(cache *hermes.Cache, query string, subject string) []map[string]interface{} {
 	var (
 		// Search for the course title
-		subjectResult, _ = cache.SearchInJsonWithKey(subject, "title", 100, false)
+		subjectResult []map[string]interface{} = cache.FT.SearchInJsonWithKey(subject, "title", 100)
 
 		// Search for query variable
-		queryResult, _ = cache.SearchWithSpaces(query, 100, false, []string{
-			"id",
-			"units",
-			"components",
+		queryResult []map[string]interface{} = cache.FT.SearchWithSpaces(query, 100, false, map[string]bool{
+			"id":             false,
+			"components":     false,
+			"units":          false,
+			"description":    true,
+			"name":           true,
+			"pre_requisites": true,
+			"title":          true,
 		})
 	)
 

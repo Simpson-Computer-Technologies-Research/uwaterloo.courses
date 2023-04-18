@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"time"
 
+	hermes "github.com/realTristan/Hermes"
 	"github.com/realTristan/uwaterloo.courses/global"
 )
 
@@ -14,7 +15,7 @@ import (
 // using the "/courses?q={query}" path.
 // The function is used to scrape the data of a subject using the
 // ScrapeCourseData() function, then return it as a json string
-func CourseDataHandler() http.HandlerFunc {
+func CourseDataHandler(cache *hermes.Cache) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		// Enable CORS
 		w.Header().Set("Access-Control-Allow-Origin", "*")
@@ -37,7 +38,7 @@ func CourseDataHandler() http.HandlerFunc {
 		// Marhsal the response
 		var resp, _ = json.Marshal(map[string]interface{}{
 			"query":  query,
-			"result": GetCourses(query, subject),
+			"result": GetCourses(cache, query, subject),
 			"time":   time.Since(startTime).Microseconds(),
 		})
 
