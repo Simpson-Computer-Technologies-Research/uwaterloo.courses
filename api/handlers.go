@@ -15,7 +15,7 @@ import (
 // using the "/courses?q={query}" path.
 // The function is used to scrape the data of a subject using the
 // ScrapeCourseData() function, then return it as a json string
-func CourseDataHandler(cache *hermes.Cache) http.HandlerFunc {
+func CourseDataHandler(cache *hermes.FullText) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		// Enable CORS
 		w.Header().Set("Access-Control-Allow-Origin", "*")

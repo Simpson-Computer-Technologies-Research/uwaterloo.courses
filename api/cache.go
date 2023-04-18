@@ -1,16 +1,18 @@
 package api
 
 // Import modules
-import hermes "github.com/realTristan/Hermes"
+import (
+	hermes "github.com/realTristan/Hermes"
+)
 
 // GetCourses() returns the courses from the cache
-func GetCourses(cache *hermes.Cache, query string, subject string) []map[string]interface{} {
+func GetCourses(ft *hermes.FullText, query string, subject string) []map[string]string {
 	var (
 		// Search for the course title
-		subjectResult []map[string]interface{} = cache.FT.SearchInJsonWithKey(subject, "title", 100)
+		subjectResult []map[string]string = ft.SearchInJsonWithKey(subject, "title", 100)
 
 		// Search for query variable
-		queryResult []map[string]interface{} = cache.FT.SearchWithSpaces(query, 100, false, map[string]bool{
+		queryResult []map[string]string = ft.SearchWithSpaces(query, 100, false, map[string]bool{
 			"id":             false,
 			"components":     false,
 			"units":          false,

@@ -14,8 +14,7 @@ import (
 // api functions
 func ListenAndServe(port string) {
 	// Hermes cache
-	var cache *hermes.Cache = hermes.InitCache()
-	cache.InitFTJson("default_data.json", -1, -1, map[string]bool{
+	var cache, err = hermes.InitJson("default_data.json", map[string]bool{
 		"id":             false,
 		"components":     false,
 		"units":          false,
@@ -24,6 +23,11 @@ func ListenAndServe(port string) {
 		"pre_requisites": true,
 		"title":          true,
 	})
+
+	// Check for errors
+	if err != nil {
+		panic(err)
+	}
 
 	// Print the localhost url
 	fmt.Printf(" >> Listening on: http://localhost%s\n", port)
