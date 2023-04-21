@@ -7,10 +7,10 @@ import hermes "github.com/realTristan/Hermes"
 func GetCourses(ft *hermes.FullText, query string, subject string) []map[string]string {
 	var (
 		// Search for the course title
-		subjectResult []map[string]string = ft.SearchInJsonWithKey(subject, "title", 100)
+		subjectResult []map[string]string = ft.SearchValuesWithKey(subject, "title", 100)
 
 		// Search for query variable
-		queryResult []map[string]string = ft.SearchWithSpaces(query, 100, false, map[string]bool{
+		queryResult []map[string]string = ft.Search(query, 100, false, map[string]bool{
 			"id":             false,
 			"components":     false,
 			"units":          false,

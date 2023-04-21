@@ -31,15 +31,17 @@ func CourseDataHandler(cache *hermes.FullText) http.HandlerFunc {
 
 		// Define the variables
 		var (
-			startTime time.Time = time.Now()
-			subject   string    = QueryHandler(query)
+			startTime time.Time           = time.Now()
+			subject   string              = QueryHandler(query)
+			courses   []map[string]string = GetCourses(cache, query, subject)
+			speed     int64               = time.Since(startTime).Microseconds()
 		)
 
 		// Marhsal the response
 		var resp, _ = json.Marshal(map[string]interface{}{
 			"query":  query,
-			"result": GetCourses(cache, query, subject),
-			"time":   time.Since(startTime).Microseconds(),
+			"result": courses,
+			"time":   speed,
 		})
 
 		// Set the response body
