@@ -28,6 +28,8 @@ github.com/realTristan/Hermes v1.2.8 h1:z2weR3bAWS8Bgxelw1WyhKgQpXre9Yftrr03lVas
 github.com/realTristan/Hermes v1.2.8/go.mod h1:0HIRzs3oOff8POODVtZN1gjdXBAKEuzaLZdzfjvG4aw=
 github.com/realTristan/Hermes v1.3.1 h1:cbyggWueSEo6qLMaTDwZxbm2HbA4iZmzbmbIIzW704I=
 github.com/realTristan/Hermes v1.3.1/go.mod h1:0HIRzs3oOff8POODVtZN1gjdXBAKEuzaLZdzfjvG4aw=
+github.com/realTristan/Hermes v1.4.2 h1:OQxNg07L96ET9hInFQxDTVquMs3jEx3aCQpK4Faz7YM=
+github.com/realTristan/Hermes v1.4.2/go.mod h1:0HIRzs3oOff8POODVtZN1gjdXBAKEuzaLZdzfjvG4aw=
 github.com/schollz/closestmatch v2.1.0+incompatible h1:Uel2GXEpJqOWBrlyI+oY9LTiyyjYS17cCYRqP13/SHk=
 github.com/schollz/closestmatch v2.1.0+incompatible/go.mod h1:RtP1ddjLong6gTkbtmuhtR2uUrrJOpYzYRvbcPAid+g=
 github.com/valyala/bytebufferpool v1.0.0 h1:GqA5TC/0021Y/b9FG4Oi9Mr3q7XYx6KllzawFIhcdPw=

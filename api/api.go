@@ -14,14 +14,14 @@ import (
 // api functions
 func ListenAndServe(port string) {
 	// Hermes cache
-	var cache, err = hermes.InitJson("default_data.json", map[string]bool{
+	var cache, err = hermes.InitWithJson("default_data.json", map[string]bool{
 		"id":             false,
 		"components":     false,
 		"units":          false,
+		"pre_requisites": false,
+		"title":          false,
 		"description":    true,
 		"name":           true,
-		"pre_requisites": true,
-		"title":          true,
 	})
 
 	// Check for errors

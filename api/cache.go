@@ -1,9 +1,7 @@
 package api
 
 // Import modules
-import (
-	hermes "github.com/realTristan/Hermes"
-)
+import hermes "github.com/realTristan/Hermes"
 
 // GetCourses() returns the courses from the cache
 func GetCourses(ft *hermes.FullText, query string, subject string) []map[string]string {
