@@ -1,16 +1,18 @@
 package api
 
 // Import modules
-import hermes "github.com/realTristan/Hermes"
+import (
+	hermes "github.com/realTristan/Hermes/nocache"
+)
 
 // GetCourses() returns the courses from the cache
 func GetCourses(ft *hermes.FullText, query string, subject string) []map[string]string {
 	var (
 		// Search for the course title
-		subjectResult []map[string]string = ft.SearchValuesWithKey(subject, "title", 100)
+		subjectResult, _ = ft.SearchValuesWithKey(subject, "title", 100)
 
 		// Search for query variable
-		queryResult []map[string]string = ft.Search(query, 100, false, map[string]bool{
+		queryResult, _ = ft.Search(query, 100, false, map[string]bool{
 			"id":             false,
 			"components":     false,
 			"units":          false,

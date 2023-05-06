@@ -6,7 +6,7 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
-	hermes "github.com/realTristan/Hermes"
+	hermes "github.com/realTristan/Hermes/nocache"
 )
 
 // The ListenAndServe() function hosts the api

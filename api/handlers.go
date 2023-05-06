@@ -7,7 +7,7 @@ import (
 	"net/http"
 	"time"
 
-	hermes "github.com/realTristan/Hermes"
+	hermes "github.com/realTristan/Hermes/nocache"
 	"github.com/realTristan/uwaterloo.courses/global"
 )
 
