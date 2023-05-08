@@ -14,16 +14,8 @@ import (
 // api functions
 func ListenAndServe(port string) {
 	// Hermes cache
-	// go get github.com/realTristan/Hermes
-	var cache, err = hermes.InitWithJson("default_data.json", map[string]bool{
-		"id":             false,
-		"components":     false,
-		"units":          false,
-		"pre_requisites": false,
-		"title":          false,
-		"description":    true,
-		"name":           true,
-	})
+	// go get -u github.com/realTristan/Hermes
+	var cache, err = hermes.InitWithJson("hermes_data.json")
 
 	// Check for errors
 	if err != nil {

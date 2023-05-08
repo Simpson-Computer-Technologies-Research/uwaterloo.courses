@@ -6,7 +6,7 @@ import (
 )
 
 // GetCourses() returns the courses from the cache
-func GetCourses(ft *hermes.FullText, query string, subject string) []map[string]string {
+func GetCourses(ft *hermes.FullText, query string, subject string) []map[string]interface{} {
 	var (
 		// Search for the course title
 		subjectResult, _ = ft.SearchValuesWithKey(subject, "title", 100)

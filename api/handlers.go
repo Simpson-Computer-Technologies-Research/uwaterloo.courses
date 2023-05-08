@@ -31,10 +31,10 @@ func CourseDataHandler(cache *hermes.FullText) http.HandlerFunc {
 
 		// Define the variables
 		var (
-			startTime time.Time           = time.Now()
-			subject   string              = QueryHandler(query)
-			courses   []map[string]string = GetCourses(cache, query, subject)
-			speed     int64               = time.Since(startTime).Microseconds()
+			startTime time.Time                = time.Now()
+			subject   string                   = QueryHandler(query)
+			courses   []map[string]interface{} = GetCourses(cache, query, subject)
+			speed     int64                    = time.Since(startTime).Microseconds()
 		)
 
 		// Marhsal the response

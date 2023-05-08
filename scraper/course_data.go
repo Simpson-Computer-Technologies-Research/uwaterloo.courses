@@ -46,7 +46,7 @@ func RefreshCache() {
 
 	// Write to the json file
 	var res, _ = json.Marshal(result)
-	os.WriteFile("./default_data.txt", res, 0644)
+	os.WriteFile("./datadata.txt", res, 0644)
 }
 
 // Convert the course course info into categories
