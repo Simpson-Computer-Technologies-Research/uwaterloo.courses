@@ -17,7 +17,8 @@
   Try words, phrases, titles, subjects, course numbers, etc. You can also look
   for exact textual phrases (like "<mark class="marked_text" on:click={() => handleHeaderClick("engineering")}>engineering</mark>") 
   or filter by specific attributes such as
-  <mark class="marked_text" on:click={() => handleHeaderClick("@code:cs")}>@code:cs</mark>
+  <mark class="marked_text" on:click={() => handleHeaderClick("@code:cs")}>@code:cs</mark>. Check out 
+  <a class="marked_text" href="https://github.com/realTristan/Hermes">Hermes</a> for ultra-fast full-text searches.
 </p>
 
 <!-- Credits and languages/services used -->

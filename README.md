@@ -6,32 +6,21 @@ My challenge for this project is to use solely native golang modules.
 This also includes natively webscraping data from websites (god help my soul..)
 
 ### Challenge Exceptions
-
+- hermes -> Extremely fast full-text search algorithm (developed by me)
 - mux module -> Used for api routing
 - fasthttp module -> Used for http requests
 
-# About
-### Why Golang?
-
-- Golang is fast, lightweight and easy to use for hosting API's. I have previous experience with golang and decided it was the best option for this project.
-
-### Why Svelte?
-
-- Svelte is 30% faster than other frameworks.
-- Svelte is best when used for designing small apps
+# Hermes
+Hermes is an extremely fast full-text search algorithm and caching system written in Go. It's designed for API implementations which can be used by wrappers in other languages.
+Hermes has two notable algorithms. The first being the with-cache algorithm. When using the with-cache algorithm, you can set, get, store, etc. keys and values into the cache. The second
+being a no-cache algorithm that reads data from a map, or json file, and uses and array to store the data. Both of these algorithms provide full-text search query times from 10µs to 300µs.
 
 # API
-<h3>Why make an API?</h3>
-I decided to make an api because it will be used for refreshing the cache. I also chose to make an api because the university of waterloo's api only allows 5000 requests per month and the data is quite limited.
-
 ## Usage
-
-### Get Subject Data (Computer Science)
-
+### Get Courses (Example: Computer Science)
 ```
 $ curl -X GET http://localhost:8000/courses?q=computer+science
 ```
-
 ```json
 "Example Response": {
     [
@@ -48,11 +37,9 @@ $ curl -X GET http://localhost:8000/courses?q=computer+science
 ```
 
 ### Get Subjects
-
 ```
 $ curl -X GET http://localhost:8000/subjects
 ```
-
 ```json
 "Example Response": {
     "subjects": [
@@ -62,11 +49,9 @@ $ curl -X GET http://localhost:8000/subjects
 ```
 
 ### Get Subjects and Names
-
 ```
 $ curl -X GET http://localhost:8000/subjects/names
 ```
-
 ```json
 "Example Response": {
     "actuarialscience":                       "ACTSC",

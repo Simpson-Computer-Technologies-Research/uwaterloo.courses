@@ -7,22 +7,25 @@ import (
 
 // GetCourses() returns the courses from the cache
 func GetCourses(ft *hermes.FullText, query string, subject string) []map[string]interface{} {
-	var (
-		// Search for the course title
-		subjectResult, _ = ft.SearchValuesWithKey(subject, "title", 100)
+	// Search for query variable
+	var queryResult, _ = ft.Search(query, 100, false, map[string]bool{
+		"id":             false,
+		"components":     false,
+		"units":          false,
+		"description":    true,
+		"name":           true,
+		"pre_requisites": true,
+		"title":          true,
+	})
 
-		// Search for query variable
-		queryResult, _ = ft.Search(query, 100, false, map[string]bool{
-			"id":             false,
-			"components":     false,
-			"units":          false,
-			"description":    true,
-			"name":           true,
-			"pre_requisites": true,
-			"title":          true,
-		})
-	)
+	// Search for the course title
+	if len(queryResult) < 100 {
+		var subjectResult, _ = ft.SearchValuesWithKey(subject, "title", 100)
 
-	// Return the two merged queries
-	return append(subjectResult, queryResult...)
+		// Return the two merged queries
+		return append(subjectResult, queryResult...)
+	}
+
+	// Return the query result
+	return queryResult
 }
