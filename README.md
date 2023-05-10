@@ -3,7 +3,7 @@
 
 # Challenge
 My challenge for this project was to use solely native go modules. Because of my already existing experience in writing go programs, I needed a challenge.
-This also includes natively webscraping data from websites (god help my soul..)
+I decided to use native go modules as well for webscraping because of the massive speed improvements.
 
 ### Challenge Exceptions
 ```
