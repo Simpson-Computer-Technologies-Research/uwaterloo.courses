@@ -10,7 +10,7 @@ This also includes natively webscraping data from websites (god help my soul..)
 hermes => An extremely fast full-text search algorithm (developed by me, and it uses native go modules)
 ```
 ```
-fiber => Used for easy api routing
+fiber => Used for fast and easy api routing
 ```
 ```
 fasthttp => Used for fast http requests
