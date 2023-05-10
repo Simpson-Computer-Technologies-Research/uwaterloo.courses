@@ -10,7 +10,7 @@ I decided to use native go modules as well for webscraping because of the massiv
 hermes => An extremely fast full-text search algorithm (developed by me, and it uses native go modules)
 ```
 ```
-fiber => Used for fast and easy api routing
+mux => Used for fast and easy api routing
 ```
 ```
 fasthttp => Used for fast http requests
