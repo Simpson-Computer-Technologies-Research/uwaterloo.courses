@@ -6,9 +6,15 @@ My challenge for this project is to use solely native go modules.
 This also includes natively webscraping data from websites (god help my soul..)
 
 ### Challenge Exceptions
-```hermes => An extremely fast full-text search algorithm (developed by me, and it uses native go modules)```
-```mux module => Used for easy api routing```
-```fasthttp module => Used for fast http requests```
+```
+hermes => An extremely fast full-text search algorithm (developed by me, and it uses native go modules)
+```
+```
+fiber => Used for easy api routing
+```
+```
+fasthttp => Used for fast http requests
+```
 
 # Hermes
 Hermes is an extremely fast full-text search algorithm and caching system written in Go. It's designed for API implementations which can be used by wrappers in other languages.
