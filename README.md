@@ -2,7 +2,7 @@
 ![image](https://user-images.githubusercontent.com/75189508/231576310-b455740c-7b00-4c89-8c33-9465a994ff97.png)
 
 # Challenge
-My challenge for this project is to use solely native go modules.
+My challenge for this project was to use solely native go modules. Because of my already existing experience in writing go programs, I needed a challenge.
 This also includes natively webscraping data from websites (god help my soul..)
 
 ### Challenge Exceptions
